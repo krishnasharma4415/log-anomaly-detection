@@ -1,0 +1,237 @@
+{
+  "dataset_registry": {
+    "Apache": {
+      "file_path": "C:\\Computer Science\\AIMLDL\\log-anomaly-detection\\dataset\\labeled_data\\Apache_2k_labeled.csv",
+      "n_records": 2000,
+      "n_columns": 10,
+      "columns": [
+        "LineId",
+        "Time",
+        "Level",
+        "Content",
+        "EventId",
+        "EventTemplate",
+        "AnomalyLabel",
+        "AnomalyLabelName",
+        "Source",
+        "timestamp_normalized"
+      ],
+      "has_labels": true,
+      "has_normalized_timestamp": true,
+      "label_stats": {
+        "normal_count": 1405,
+        "anomaly_count": 595,
+        "anomaly_rate": 29.75,
+        "unique_labels": {
+          "normal": 1405,
+          "system_failure": 563,
+          "security_anomaly": 32
+        }
+      },
+      "size_mb": 0.2876911163330078
+    },
+    "BGL": {
+      "file_path": "C:\\Computer Science\\AIMLDL\\log-anomaly-detection\\dataset\\labeled_data\\BGL_2k_labeled.csv",
+      "n_records": 2000,
+      "n_columns": 17,
+      "columns": [
+        "LineId",
+        "Label",
+        "Timestamp",
+        "Date",
+        "Node",
+        "Time",
+        "NodeRepeat",
+        "Type",
+        "Component",
+        "Level",
+        "Content",
+        "EventId",
+        "EventTemplate",
+        "AnomalyLabel",
+        "AnomalyLabelName",
+        "Source",
+        "timestamp_normalized"
+      ],
+      "has_labels": true,
+      "has_normalized_timestamp": true,
+      "label_stats": {
+        "normal_count": 501,
+        "anomaly_count": 1499,
+        "anomaly_rate": 74.95,
+        "unique_labels": {
+          "system_failure": 913,
+          "normal": 501,
+          "hardware_issue": 363,
+          "security_anomaly": 150,
+          "config_error": 73
+        }
+      },
+      "size_mb": 0.4471588134765625
+    },
+    "HPC": {
+      "file_path": "C:\\Computer Science\\AIMLDL\\log-anomaly-detection\\dataset\\labeled_data\\HPC_2k_labeled.csv",
+      "n_records": 2000,
+      "n_columns": 14,
+      "columns": [
+        "LineId",
+        "LogId",
+        "Node",
+        "Component",
+        "State",
+        "Time",
+        "Flag",
+        "Content",
+        "EventId",
+        "EventTemplate",
+        "AnomalyLabel",
+        "AnomalyLabelName",
+        "Source",
+        "timestamp_normalized"
+      ],
+      "has_labels": true,
+      "has_normalized_timestamp": true,
+      "label_stats": {
+        "normal_count": 1804,
+        "anomaly_count": 196,
+        "anomaly_rate": 9.8,
+        "unique_labels": {
+          "normal": 1804,
+          "network_anomaly": 85,
+          "system_failure": 60,
+          "performance_issue": 29,
+          "hardware_issue": 18,
+          "config_error": 4
+        }
+      },
+      "size_mb": 0.23993206024169922
+    },
+    "OpenSSH": {
+      "file_path": "C:\\Computer Science\\AIMLDL\\log-anomaly-detection\\dataset\\labeled_data\\OpenSSH_2k_labeled.csv",
+      "n_records": 2000,
+      "n_columns": 13,
+      "columns": [
+        "LineId",
+        "Date",
+        "Day",
+        "Time",
+        "Component",
+        "Pid",
+        "Content",
+        "EventId",
+        "EventTemplate",
+        "AnomalyLabel",
+        "AnomalyLabelName",
+        "Source",
+        "timestamp_normalized"
+      ],
+      "has_labels": true,
+      "has_normalized_timestamp": true,
+      "label_stats": {
+        "normal_count": 424,
+        "anomaly_count": 1576,
+        "anomaly_rate": 78.8,
+        "unique_labels": {
+          "security_anomaly": 1569,
+          "normal": 424,
+          "config_error": 7
+        }
+      },
+      "size_mb": 0.39429283142089844
+    },
+    "Proxifier": {
+      "file_path": "C:\\Computer Science\\AIMLDL\\log-anomaly-detection\\dataset\\labeled_data\\Proxifier_2k_labeled.csv",
+      "n_records": 2000,
+      "n_columns": 10,
+      "columns": [
+        "LineId",
+        "Time",
+        "Program",
+        "Content",
+        "EventId",
+        "EventTemplate",
+        "AnomalyLabel",
+        "AnomalyLabelName",
+        "Source",
+        "timestamp_normalized"
+      ],
+      "has_labels": true,
+      "has_normalized_timestamp": true,
+      "label_stats": {
+        "normal_count": 1903,
+        "anomaly_count": 97,
+        "anomaly_rate": 4.8500000000000005,
+        "unique_labels": {
+          "normal": 1903,
+          "network_anomaly": 97
+        }
+      },
+      "size_mb": 0.38474369049072266
+    },
+    "Zookeeper": {
+      "file_path": "C:\\Computer Science\\AIMLDL\\log-anomaly-detection\\dataset\\labeled_data\\Zookeeper_2k_labeled.csv",
+      "n_records": 2000,
+      "n_columns": 14,
+      "columns": [
+        "LineId",
+        "Date",
+        "Time",
+        "Level",
+        "Node",
+        "Component",
+        "Id",
+        "Content",
+        "EventId",
+        "EventTemplate",
+        "AnomalyLabel",
+        "AnomalyLabelName",
+        "Source",
+        "timestamp_normalized"
+      ],
+      "has_labels": true,
+      "has_normalized_timestamp": true,
+      "label_stats": {
+        "normal_count": 1075,
+        "anomaly_count": 925,
+        "anomaly_rate": 46.25,
+        "unique_labels": {
+          "normal": 1075,
+          "network_anomaly": 873,
+          "performance_issue": 37,
+          "config_error": 6,
+          "hardware_issue": 5,
+          "system_failure": 4
+        }
+      },
+      "size_mb": 0.4050912857055664
+    }
+  },
+  "project_config": {
+    "experiment_name": "cross_source_transfer_anomaly_detection",
+    "log_sources": [
+      "Apache",
+      "BGL",
+      "HPC",
+      "OpenSSH",
+      "Proxifier",
+      "Zookeeper"
+    ],
+    "few_shot_sizes": [
+      10,
+      50
+    ],
+    "random_seeds": [
+      42,
+      123,
+      456
+    ],
+    "max_sequence_length": 512,
+    "batch_size": 16,
+    "learning_rate": 2e-05,
+    "bert_model_name": "bert-base-uncased",
+    "template_extraction_method": "drain"
+  },
+  "total_records": 12000,
+  "total_anomalies": 4888,
+  "analysis_timestamp": "2025-09-28T22:15:45.304612"
+}
