@@ -46,7 +46,7 @@
         "bootgenvmunix": 2,
         "risboot": 1,
         "closing": 1,
-        "starting": 5,
+        "starting": 6,
         "edu": 1903,
         "proxy": 1903,
         "cse": 1903,
@@ -58,7 +58,7 @@
         "sent": 947,
         "lifetime": 947,
         "bytes": 949,
-        "received": 1246,
+        "received": 1540,
         "close": 947,
         "socks": 2,
         "request": 300,
@@ -66,7 +66,7 @@
         "sendworker": 266,
         "worker": 262,
         "leaving": 262,
-        "thread": 262,
+        "thread": 263,
         "send": 262,
         "established": 50,
         "negotiated": 50,
@@ -82,7 +82,7 @@
         "new": 44,
         "attempting": 41,
         "goodbye": 19,
-        "user": 373,
+        "user": 488,
         "corporation": 11,
         "host": 11,
         "environment": 11,
@@ -159,7 +159,7 @@
         "restart": 7,
         "startup": 14,
         "cupsd": 12,
-        "succeeded": 24,
+        "succeeded": 44,
         "udev": 8,
         "device": 9,
         "removing": 4,
@@ -189,7 +189,7 @@
         "started": 3,
         "proc": 1,
         "irqbalance": 1,
-        "root": 1,
+        "root": 116,
         "line": 1,
         "label": 1,
         "rhgb": 1,
@@ -314,7 +314,37 @@
         "time": 1,
         "jones": 1,
         "dave": 1,
-        "agpgart": 1
+        "agpgart": 1,
+        "addstoredblock": 314,
+        "block": 1900,
+        "updated": 314,
+        "added": 538,
+        "namesystem": 653,
+        "size": 608,
+        "blockmap": 314,
+        "packetresponder": 311,
+        "terminating": 311,
+        "receiving": 292,
+        "dest": 294,
+        "src": 294,
+        "deleting": 263,
+        "mnt": 263,
+        "current": 263,
+        "hadoop": 263,
+        "data": 263,
+        "file": 263,
+        "dfs": 263,
+        "invalidset": 224,
+        "delete": 229,
+        "allocateblock": 115,
+        "rand": 115,
+        "part": 115,
+        "served": 80,
+        "verification": 20,
+        "ask": 6,
+        "transfer": 1,
+        "datanode": 1,
+        "replicate": 1
       },
       "templates": [
         "Linkerror event interval expired",
@@ -443,15 +473,29 @@
         "isapnp: Scanning for PnP cards...",
         "isapnp: No Plug & Play device found",
         "Real Time Clock Driver v<*>.<*>",
-        "Linux agpgart interface v<*>.<*> (c) Dave Jones"
+        "Linux agpgart interface v<*>.<*> (c) Dave Jones",
+        "BLOCK* NameSystem.addStoredBlock: blockMap updated: <*>:<*> is added to blk_<*> size <*>",
+        "PacketResponder <*> for block blk_<*> terminating",
+        "Received block blk_<*> of size <*> from /<*>",
+        "Receiving block blk_<*> src: /<*>:<*> dest: /<*>:<*>",
+        "Deleting block blk_<*> file /<*>/blk_<*>",
+        "BLOCK* NameSystem.delete: blk_<*> is added to invalidSet of <*>:<*>",
+        "BLOCK* NameSystem.allocateBlock: /<*>/part-<*>. blk_<*>",
+        "<*>:<*> Served block blk_<*> to /<*>",
+        "Verification succeeded for blk_<*>",
+        "BLOCK* ask <*>:<*> to delete  blk_<*>",
+        "Received block blk_<*> src: /<*>:<*> dest: /<*>:<*> of size <*>",
+        "<*>:<*> Starting thread to transfer block blk_<*> to <*>:<*>",
+        "BLOCK* ask <*>:<*> to replicate blk_<*> to datanode(s) <*>:<*>"
       ],
       "sources": [
-        "HPC_2k",
-        "Proxifier_2k",
         "Linux_2k",
-        "Zookeeper_2k"
+        "HDFS_2k",
+        "Zookeeper_2k",
+        "Proxifier_2k",
+        "HPC_2k"
       ],
-      "total_logs": 6141
+      "total_logs": 8061
     },
     "1": {
       "keywords": {
@@ -535,7 +579,7 @@
         "due": 3,
         "session": 3,
         "zookeeperserver": 3,
-        "exception": 3,
+        "exception": 83,
         "causing": 3,
         "close": 3,
         "java": 3,
@@ -557,7 +601,7 @@
         "processing": 1,
         "cxid": 1,
         "path": 1,
-        "got": 1,
+        "got": 81,
         "txntype": 1,
         "type": 1,
         "alert": 43,
@@ -572,7 +616,9 @@
         "kernel": 1,
         "acpi": 1,
         "interpreter": 1,
-        "disabled": 1
+        "disabled": 1,
+        "while": 80,
+        "serving": 80
       },
       "templates": [
         "ClusterFileSystem: ServerFileSystem domain <*> is no longer served by node node-<*>",
@@ -586,14 +632,16 @@
         "ALERT exited abnormally with [1]",
         "zapping low mappings.",
         "Failure registering capabilities with the kernel",
-        "ACPI: Interpreter disabled."
+        "ACPI: Interpreter disabled.",
+        "<*>:<*>:Got exception while serving blk_<*> to /<*>:"
       ],
       "sources": [
+        "HDFS_2k",
         "HPC_2k",
         "Linux_2k",
         "Zookeeper_2k"
       ],
-      "total_logs": 110
+      "total_logs": 190
     },
     "3": {
       "keywords": {
@@ -1033,7 +1081,8 @@
       "4": 56.0
     },
     "current": {
-      "4": 56.0
+      "4": 56.0,
+      "0": 263.0
     },
     "remain": {
       "4": 56.0
@@ -1095,7 +1144,8 @@
       "3": 12.0
     },
     "served": {
-      "2": 36.0
+      "2": 36.0,
+      "0": 80.0
     },
     "domain": {
       "2": 37.0,
@@ -1247,14 +1297,15 @@
       "0": 1.0
     },
     "starting": {
-      "0": 5.0,
+      "0": 6.0,
       "5": 1.0
     },
     "subcommands": {
       "2": 1.0
     },
     "while": {
-      "4": 327.0
+      "4": 327.0,
+      "2": 80.0
     },
     "prompt": {
       "4": 1.0
@@ -1328,7 +1379,7 @@
       "3": 3.0
     },
     "received": {
-      "0": 1246.0,
+      "0": 1540.0,
       "4": 1.0
     },
     "close": {
@@ -1452,7 +1503,7 @@
       "0": 262.0
     },
     "thread": {
-      "0": 262.0
+      "0": 263.0
     },
     "send": {
       "0": 262.0
@@ -1544,7 +1595,7 @@
     },
     "exception": {
       "4": 49.0,
-      "2": 3.0,
+      "2": 83.0,
       "0": 2.0
     },
     "stream": {
@@ -1578,7 +1629,7 @@
       "4": 12.0
     },
     "user": {
-      "0": 373.0,
+      "0": 488.0,
       "2": 1.0,
       "1": 374.0,
       "3": 1.0
@@ -1791,7 +1842,7 @@
       "2": 1.0
     },
     "got": {
-      "2": 1.0
+      "2": 81.0
     },
     "txntype": {
       "2": 1.0
@@ -1863,7 +1914,7 @@
     },
     "root": {
       "1": 353.0,
-      "0": 1.0
+      "0": 116.0
     },
     "ruser": {
       "1": 490.0
@@ -1961,7 +2012,7 @@
       "0": 12.0
     },
     "succeeded": {
-      "0": 24.0
+      "0": 44.0
     },
     "udev": {
       "0": 8.0
@@ -2296,7 +2347,8 @@
       "0": 1.0
     },
     "data": {
-      "3": 1.0
+      "3": 1.0,
+      "0": 263.0
     },
     "init": {
       "3": 1.0
@@ -2658,6 +2710,90 @@
       "0": 1.0
     },
     "agpgart": {
+      "0": 1.0
+    },
+    "addstoredblock": {
+      "0": 314.0
+    },
+    "block": {
+      "0": 1900.0
+    },
+    "updated": {
+      "0": 314.0
+    },
+    "added": {
+      "0": 538.0
+    },
+    "namesystem": {
+      "0": 653.0
+    },
+    "size": {
+      "0": 608.0
+    },
+    "blockmap": {
+      "0": 314.0
+    },
+    "packetresponder": {
+      "0": 311.0
+    },
+    "terminating": {
+      "0": 311.0
+    },
+    "receiving": {
+      "0": 292.0
+    },
+    "dest": {
+      "0": 294.0
+    },
+    "src": {
+      "0": 294.0
+    },
+    "deleting": {
+      "0": 263.0
+    },
+    "mnt": {
+      "0": 263.0
+    },
+    "hadoop": {
+      "0": 263.0
+    },
+    "file": {
+      "0": 263.0
+    },
+    "dfs": {
+      "0": 263.0
+    },
+    "invalidset": {
+      "0": 224.0
+    },
+    "delete": {
+      "0": 229.0
+    },
+    "allocateblock": {
+      "0": 115.0
+    },
+    "rand": {
+      "0": 115.0
+    },
+    "part": {
+      "0": 115.0
+    },
+    "serving": {
+      "2": 80.0
+    },
+    "verification": {
+      "0": 20.0
+    },
+    "ask": {
+      "0": 6.0
+    },
+    "transfer": {
+      "0": 1.0
+    },
+    "datanode": {
+      "0": 1.0
+    },
+    "replicate": {
       "0": 1.0
     }
   }
