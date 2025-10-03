@@ -1,0 +1,29 @@
+{
+  "model_name": "lr",
+  "feature_type": "bert",
+  "is_supervised": true,
+  "best_params": "{'C': 1.0, 'penalty': 'l2', 'solver': 'lbfgs'}",
+  "metrics": {
+    "f1": 0.9898132427843803,
+    "mcc": 0.9856643101758447,
+    "bal_acc": 0.9899159663865547,
+    "acc": 0.994,
+    "roc": 0.9909853763569485,
+    "pr": 0.9895926868123296
+  },
+  "training_info": {
+    "n_samples": 12000,
+    "n_features": 768,
+    "n_sources": 6,
+    "sources": [
+      "Apache",
+      "BGL",
+      "HPC",
+      "OpenSSH",
+      "Proxifier",
+      "Zookeeper"
+    ],
+    "anomaly_rate": 0.4073333333333333
+  },
+  "timestamp": "2025-10-04T03:12:45.588933"
+}
