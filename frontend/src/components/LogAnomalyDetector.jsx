@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FileText, TrendingUp } from 'lucide-react';
-import { apiService } from '../services/apiService';
+import { apiService } from '../services/APIService';
 import Header from './Header';
 import FileUpload from './FileUpload';
 import LogTextInput from './LogTextInput';
