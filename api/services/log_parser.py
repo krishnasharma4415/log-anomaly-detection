@@ -51,7 +51,6 @@ class LogParser:
         for i, line in enumerate(lines):
             content = line
             
-            # Try to extract content portion if pattern exists
             if log_type in REGEX_PATTERNS:
                 pattern = REGEX_PATTERNS[log_type]
                 match = pattern.search(line)
@@ -80,14 +79,12 @@ class LogParser:
         Returns:
             Template string
         """
-        # Mask numbers, IPs, paths, UUIDs
         template = re.sub(r'\b\d+\b', '<NUM>', text)
         template = re.sub(r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b', '<IP>', template)
         template = re.sub(r'/[^\s]*', '<PATH>', template)
         template = re.sub(r'[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}', '<UUID>', template)
         template = re.sub(r'\b0x[a-fA-F0-9]+\b', '<HEX>', template)
         
-        # Clean up multiple spaces
         template = ' '.join(template.split())
         
         return template

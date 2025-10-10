@@ -36,7 +36,6 @@ class EmbeddingService:
             for i in range(0, len(texts), batch_size):
                 batch = texts[i:i+batch_size]
                 
-                # Tokenize
                 encoded = self.model_loader.tokenizer(
                     batch,
                     padding=True,
@@ -45,7 +44,6 @@ class EmbeddingService:
                     return_tensors='pt'
                 ).to(self.config.DEVICE)
                 
-                # Get embeddings
                 outputs = self.model_loader.bert_model(**encoded)
                 cls_embeddings = outputs.last_hidden_state[:, 0, :].cpu().numpy()
                 embeddings_list.append(cls_embeddings)

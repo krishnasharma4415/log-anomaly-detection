@@ -25,29 +25,24 @@ class FeatureAssemblyService:
         """
         feature_variants = {}
         
-        # 1. BERT only
         feature_variants['bert_only'] = bert_embeddings
         
-        # 2. BERT + BERT statistical
         feature_variants['bert_statistical'] = np.hstack([
             bert_embeddings, 
             bert_statistical
         ])
         
-        # 3. BERT + Template enhanced
         feature_variants['bert_template_enhanced'] = np.hstack([
             bert_embeddings, 
             template_features
         ])
         
-        # 4. BERT + BERT stat + Template enhanced
         feature_variants['bert_statistical_template'] = np.hstack([
             bert_embeddings, 
             bert_statistical, 
             template_features
         ])
         
-        # 5. Add temporal if available
         if temporal_features is not None:
             feature_variants['bert_statistical_template_temporal'] = np.hstack([
                 bert_embeddings, 
@@ -56,7 +51,6 @@ class FeatureAssemblyService:
                 temporal_features
             ])
         
-        # 6. ALL features including content statistical
         all_feature_components = [bert_embeddings, bert_statistical, template_features]
         if temporal_features is not None:
             all_feature_components.append(temporal_features)

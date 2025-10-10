@@ -8,7 +8,6 @@ from datetime import datetime
 
 analysis_bp = Blueprint('analysis', __name__)
 
-# Services injected during initialization
 log_parser = None
 prediction_service = None
 template_service = None
@@ -50,7 +49,6 @@ def predict_anomalies():
             'status': 'no_models_available'
         }), 503
     
-    # Parse request
     data = request.get_json()
     if not data or 'logs' not in data:
         return jsonify({
@@ -68,14 +66,12 @@ def predict_anomalies():
             'error': 'logs must be a non-empty list of strings'
         }), 400
     
-    # Get model preferences
-    model_type = data.get('model_type')  # None = use default
-    bert_variant = data.get('bert_variant')  # None = use default
+    model_type = data.get('model_type')
+    bert_variant = data.get('bert_variant')
     include_probs = data.get('include_probabilities', True)
     include_templates = data.get('include_templates', False)
     
     try:
-        # Detect log types and parse logs
         log_details = []
         for log in logs:
             log_type = log_parser.detect_log_type(log)
@@ -85,20 +81,17 @@ def predict_anomalies():
                 'parsed': parsed[0] if parsed else {'raw': log, 'content': log}
             })
         
-        # Extract templates if needed (for Hybrid-BERT or analysis)
         template_features = None
         templates = None
         
         if include_templates or (bert_variant == 'hybrid'):
             templates = [template_service.extract_template(log) for log in logs]
             if bert_variant == 'hybrid':
-                # Generate template features for Hybrid-BERT
                 template_features = np.array([
                     template_service.get_template_features(tmpl) 
                     for tmpl in templates
                 ])
         
-        # Perform prediction
         predictions, probabilities, label_names, model_info = prediction_service.predict(
             logs,
             model_type=model_type,
@@ -106,7 +99,6 @@ def predict_anomalies():
             template_features=template_features
         )
         
-        # Build response with log details
         response = {
             'status': 'success',
             'timestamp': datetime.now().isoformat(),
@@ -133,26 +125,22 @@ def predict_anomalies():
             }
         }
         
-        # Add probabilities if requested
         if include_probs:
             response['predictions']['probabilities'] = probabilities.tolist()
-            # Add confidence (max probability for each prediction)
             response['predictions']['confidence'] = np.max(probabilities, axis=1).tolist()
         
-        # Add log type distribution summary
         log_type_counts = {}
         for details in log_details:
             log_type = details['log_type']
             log_type_counts[log_type] = log_type_counts.get(log_type, 0) + 1
         
-        # Add summary statistics
         unique_classes, counts = np.unique(label_names, return_counts=True)
         response['summary'] = {
             'class_distribution': {
                 cls: int(count) for cls, count in zip(unique_classes, counts)
             },
             'log_type_distribution': log_type_counts,
-            'anomaly_rate': float(np.sum(predictions != 0) / len(predictions))  # non-normal rate
+            'anomaly_rate': float(np.sum(predictions != 0) / len(predictions))
         }
         
         return jsonify(response)
@@ -201,7 +189,6 @@ def predict_batch():
     top_k = min(data.get('return_top_k', 3), config.NUM_CLASSES)
     
     try:
-        # Extract templates for Hybrid-BERT
         template_features = None
         if bert_variant == 'hybrid':
             templates = [template_service.extract_template(log) for log in logs]
@@ -210,7 +197,6 @@ def predict_batch():
                 for tmpl in templates
             ])
         
-        # Predict
         predictions, probabilities, label_names, model_info = prediction_service.predict(
             logs,
             model_type=model_type,
@@ -218,13 +204,10 @@ def predict_batch():
             template_features=template_features
         )
         
-        # Get label map
         label_map = model_info.get('label_map', config.LABEL_MAP)
         
-        # Build detailed results for each log
         results = []
         for i, log in enumerate(logs):
-            # Get top K predictions
             top_k_indices = np.argsort(probabilities[i])[-top_k:][::-1]
             top_k_probs = probabilities[i][top_k_indices]
             top_k_classes = [label_map.get(int(idx), f'class_{idx}') for idx in top_k_indices]
@@ -292,7 +275,6 @@ def analyze_logs():
     
     try:
         if not compare_models:
-            # Single model analysis (using default)
             template_features = None
             if model_manager.default_bert_type == 'hybrid':
                 templates = [template_service.extract_template(log) for log in logs]
@@ -306,7 +288,6 @@ def analyze_logs():
                 template_features=template_features
             )
             
-            # Calculate statistics
             unique_classes, counts = np.unique(label_names, return_counts=True)
             
             return jsonify({
@@ -328,7 +309,6 @@ def analyze_logs():
             })
         
         else:
-            # Compare all available models
             available_models = model_manager.get_available_models()
             if len(available_models) < 2:
                 return jsonify({
@@ -343,7 +323,6 @@ def analyze_logs():
                 model_type = model_info_dict['type']
                 variant = model_info_dict['variant']
                 
-                # Prepare template features for hybrid
                 template_features = None
                 if variant == 'hybrid':
                     templates = [template_service.extract_template(log) for log in logs]
@@ -352,7 +331,6 @@ def analyze_logs():
                         for tmpl in templates
                     ])
                 
-                # Predict
                 predictions, probabilities, label_names, model_info = prediction_service.predict(
                     logs,
                     model_type=model_type,
@@ -360,7 +338,6 @@ def analyze_logs():
                     template_features=template_features
                 )
                 
-                # Statistics
                 unique_classes, counts = np.unique(label_names, return_counts=True)
                 
                 comparison_results.append({
@@ -458,10 +435,8 @@ def switch_default_model():
     bert_variant = data.get('bert_variant')
     
     try:
-        # Verify model is available
         loader, model_used = model_manager.get_model(model_type, bert_variant)
         
-        # Update defaults
         model_manager.default_model_type = model_type
         if model_type == 'bert' and bert_variant:
             model_manager.default_bert_type = bert_variant

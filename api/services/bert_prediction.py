@@ -47,7 +47,6 @@ class BERTPredictionService:
             for i in range(0, len(texts), batch_size):
                 batch_texts = texts[i:i+batch_size]
                 
-                # Tokenize
                 encoded = tokenizer(
                     batch_texts,
                     padding=True,
@@ -59,7 +58,6 @@ class BERTPredictionService:
                 input_ids = encoded['input_ids']
                 attention_mask = encoded['attention_mask']
                 
-                # Get predictions based on model type
                 if model_type == 'dann':
                     logits, _, _ = model(input_ids, attention_mask, alpha=0)
                 elif model_type == 'lora':
@@ -76,7 +74,6 @@ class BERTPredictionService:
                 else:
                     raise ValueError(f"Unknown model type: {model_type}")
                 
-                # Get probabilities and predictions (multi-class)
                 probs = F.softmax(logits, dim=1)
                 preds = torch.argmax(probs, dim=1)
                 
@@ -86,7 +83,6 @@ class BERTPredictionService:
         predictions = np.array(all_predictions)
         probabilities = np.vstack(all_probabilities)
         
-        # Map predictions to label names
         label_names = np.array([label_map.get(int(p), f'class_{p}') for p in predictions])
         
         return predictions, probabilities, label_names

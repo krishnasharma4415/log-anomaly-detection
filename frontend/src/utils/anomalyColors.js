@@ -1,7 +1,4 @@
-/**
- * Utility functions for anomaly type styling and colors
- * Supports 7-class multi-class classification
- */
+
 
 export const ANOMALY_COLORS = {
   normal: {
@@ -69,16 +66,12 @@ export const ANOMALY_COLORS = {
   }
 };
 
-/**
- * Get color scheme for an anomaly type
- */
+
 export const getAnomalyColor = (anomalyType) => {
   return ANOMALY_COLORS[anomalyType] || ANOMALY_COLORS.normal;
 };
 
-/**
- * Get icon component for anomaly type
- */
+
 export const getAnomalyIcon = (anomalyType) => {
   const icons = {
     normal: 'CheckCircle',
@@ -92,9 +85,7 @@ export const getAnomalyIcon = (anomalyType) => {
   return icons[anomalyType] || 'AlertCircle';
 };
 
-/**
- * Format anomaly type for display
- */
+
 export const formatAnomalyType = (anomalyType) => {
   if (!anomalyType) return 'Unknown';
   return ANOMALY_COLORS[anomalyType]?.label || anomalyType
@@ -103,9 +94,7 @@ export const formatAnomalyType = (anomalyType) => {
     .join(' ');
 };
 
-/**
- * Get probability bar color
- */
+
 export const getProbabilityBarColor = (anomalyType, probability) => {
   const colors = {
     normal: 'bg-green-500',
@@ -117,7 +106,7 @@ export const getProbabilityBarColor = (anomalyType, probability) => {
     hardware_issue: 'bg-gray-500'
   };
   
-  // Adjust opacity based on probability
+  
   const opacity = probability > 0.5 ? '' : '/70';
   return (colors[anomalyType] || 'bg-gray-500') + opacity;
 };

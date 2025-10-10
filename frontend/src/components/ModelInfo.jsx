@@ -62,7 +62,7 @@ export default function ModelInfo({ modelInfo }) {
         {getModelDescription(modelType)}
       </p>
       
-      {/* Display label map if available */}
+      {}
       {Object.keys(labelMap).length > 0 && (
         <div className="mt-3 pt-3 border-t border-purple-500/20">
           <div className="flex items-center gap-2 mb-2">
@@ -79,7 +79,7 @@ export default function ModelInfo({ modelInfo }) {
         </div>
       )}
       
-      {/* Display metrics if available */}
+      {}
       {modelInfo.metrics && Object.keys(modelInfo.metrics).length > 0 && (
         <div className="mt-3 pt-3 border-t border-purple-500/20">
           <span className="text-purple-200 text-xs font-semibold">Performance Metrics:</span>

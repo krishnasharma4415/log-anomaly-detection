@@ -7,23 +7,19 @@ import torch
 class Config:
     """Base configuration"""
     
-    # Paths
-    ROOT = Path(__file__).parent.parent  # Points to LOG-ANOMALY-DETECTION/
+    ROOT = Path(__file__).parent.parent
     MODELS_PATH = ROOT / "models"
     BERT_MODELS_PATH = ROOT / "models" / "bert_models_multiclass" / "deployment"
     ML_MODELS_PATH = ROOT / "models" / "ml_models" / "deployment"
     FEATURES_PATH = ROOT / "features"
     
-    # Individual BERT Model Paths - Multi-class versions (in deployment folder)
     DANN_MODEL_PATH = BERT_MODELS_PATH / "dann_bert_model.pt"
     LORA_MODEL_PATH = BERT_MODELS_PATH / "lora_bert_model.pt"
     HYBRID_MODEL_PATH = BERT_MODELS_PATH / "hybrid_bert_model.pt"
     DEPLOYMENT_METADATA = BERT_MODELS_PATH / "model_registry.json"
     
-    # Multi-class ML Model (7 classes)
     ML_MODEL_PATH = ML_MODELS_PATH / "best_mod.pkl"
     
-    # Multi-class label mapping (shared by both ML and BERT models)
     LABEL_MAP = {
         0: 'normal',
         1: 'security_anomaly',
@@ -35,27 +31,22 @@ class Config:
     }
     NUM_CLASSES = 7
     
-    # Legacy support
     ML_LABEL_MAP = LABEL_MAP
     ML_NUM_CLASSES = NUM_CLASSES
-    BERT_NUM_CLASSES = NUM_CLASSES  # Now also multi-class
+    BERT_NUM_CLASSES = NUM_CLASSES
     
-    # BERT Model settings
     BERT_MODEL_NAME = 'bert-base-uncased'
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    MAX_LENGTH = 512  # Maximum sequence length for BERT
-    BATCH_SIZE = 16   # Batch size for BERT inference
+    MAX_LENGTH = 512
+    BATCH_SIZE = 16
     
-    # API settings
     HOST = '0.0.0.0'
     PORT = 5000
     DEBUG = True
     
-    # Processing settings
-    MAX_RESPONSE_LOGS = 100  # Maximum logs to return in detailed results
-    MAX_LOG_DISPLAY_LENGTH = 200  # Maximum characters per log in response
+    MAX_RESPONSE_LOGS = 100
+    MAX_LOG_DISPLAY_LENGTH = 200
     
-    # Supported log types
     SUPPORTED_LOG_TYPES = [
         'Windows', 'Linux', 'Mac', 'Hadoop', 'HDFS', 'Zookeeper',
         'Spark', 'Apache', 'Thunderbird', 'Proxifier', 'HealthApp',
@@ -100,15 +91,14 @@ class ProductionConfig(Config):
     """Production configuration"""
     DEBUG = False
     HOST = '0.0.0.0'
-    BATCH_SIZE = 32  # Larger batch size for production
-    MAX_RESPONSE_LOGS = 50  # Limit response size in production
+    BATCH_SIZE = 32
+    MAX_RESPONSE_LOGS = 50
 
 
 class DevelopmentConfig(Config):
     """Development configuration"""
     DEBUG = True
-    BATCH_SIZE = 8  # Smaller batch for development
+    BATCH_SIZE = 8
 
 
-# Default configuration
 config = DevelopmentConfig()

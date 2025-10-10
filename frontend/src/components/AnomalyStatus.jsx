@@ -3,11 +3,11 @@ import { AlertCircle, CheckCircle, Shield, XCircle, Zap, Wifi, Settings, Wrench 
 import { getAnomalyColor, formatAnomalyType } from '../utils/anomalyColors';
 
 export default function AnomalyStatus({ anomalyDetected, confidence, prediction, predictionClassId }) {
-  // Determine the anomaly type (default to 'normal' if not anomalous)
+  
   const anomalyType = prediction || (anomalyDetected ? 'security_anomaly' : 'normal');
   const colorScheme = getAnomalyColor(anomalyType);
   
-  // Select icon based on anomaly type
+  
   const IconComponent = {
     normal: CheckCircle,
     security_anomaly: Shield,

@@ -5,7 +5,7 @@ import { getAnomalyColor, formatAnomalyType } from '../utils/anomalyColors';
 export default function ClassDistribution({ classDistribution, totalLines }) {
   if (!classDistribution) return null;
 
-  // Sort classes by count (descending)
+  
   const sortedClasses = Object.entries(classDistribution)
     .sort((a, b) => b[1] - a[1]);
 

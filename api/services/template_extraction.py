@@ -51,7 +51,6 @@ class TemplateExtractionService:
         drain_config.drain_depth = config_params['depth']
         drain_config.drain_max_children = 100
         
-        # Masking instructions
         drain_config.masking_instructions = [
             MaskingInstruction(r'\d+', "<NUM>"),
             MaskingInstruction(r'[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}', "<UUID>"),
@@ -77,7 +76,6 @@ class TemplateExtractionService:
         if not DRAIN3_AVAILABLE:
             return self._simple_template_extraction(texts)
         
-        # Extract templates using Drain3
         for content in texts:
             if not content or not content.strip():
                 self.template_ids.append(-1)
@@ -95,7 +93,6 @@ class TemplateExtractionService:
             else:
                 self.templates[tid]['count'] += 1
         
-        # Calculate enhanced template features
         enhanced_features = self._calculate_enhanced_features()
         
         return {
@@ -122,15 +119,12 @@ class TemplateExtractionService:
                 enhanced_features.append([0, 0, 0, 0])
                 continue
             
-            # Frequency and rarity
             frequency = template_counts[tid] / total
             rarity = 1.0 / (frequency + 1e-6)
             
-            # Template characteristics
             template_text = self.templates[tid]['template']
             length = len(template_text.split())
             
-            # Count wildcards
             wildcards = ['<NUM>', '<IP>', '<PATH>', '<UUID>', '<HEX>']
             n_wildcards = sum([template_text.count(w) for w in wildcards])
             
@@ -152,7 +146,6 @@ class TemplateExtractionService:
                 self.template_ids.append(-1)
                 continue
             
-            # Simple masking
             template = re.sub(r'\d+', '<NUM>', content)
             template = re.sub(r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b', '<IP>', template)
             template = re.sub(r'/[^\s]*', '<PATH>', template)
@@ -197,7 +190,6 @@ class TemplateExtractionService:
         if not text or not text.strip():
             return ""
         
-        # Simple masking
         template = re.sub(r'\d+', '<NUM>', text)
         template = re.sub(r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b', '<IP>', template)
         template = re.sub(r'/[^\s]*', '<PATH>', template)
@@ -220,7 +212,6 @@ class TemplateExtractionService:
         if not template:
             return np.array([0.0, 0.0, 0.0, 0.0])
         
-        # Count different types of tokens
         tokens = template.split()
         num_count = template.count('<NUM>')
         special_count = sum([
@@ -231,10 +222,10 @@ class TemplateExtractionService:
         ])
         
         return np.array([
-            float(len(template)),  # template length
-            float(num_count),  # number of <NUM> tokens
-            float(special_count),  # number of special tokens
-            float(len(tokens))  # token count
+            float(len(template)),
+            float(num_count),
+            float(special_count),
+            float(len(tokens))
         ])
     
     def get_template_onehot(self):

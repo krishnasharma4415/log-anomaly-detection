@@ -6,7 +6,7 @@ export default function LogTypeDistribution({ logTypeDistribution }) {
     return null;
   }
   
-  // Don't show if only "Unknown" type
+  
   if (Object.keys(logTypeDistribution).length === 1 && logTypeDistribution['Unknown']) {
     return null;
   }
@@ -14,7 +14,7 @@ export default function LogTypeDistribution({ logTypeDistribution }) {
   const total = Object.values(logTypeDistribution).reduce((sum, count) => sum + count, 0);
   const sortedTypes = Object.entries(logTypeDistribution).sort((a, b) => b[1] - a[1]);
   
-  // Color palette for different log types
+  
   const getLogTypeColor = (type) => {
     const colors = {
       'OpenSSH': 'bg-blue-500/20 border-blue-500/30 text-blue-300',

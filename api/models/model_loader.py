@@ -48,7 +48,6 @@ class ModelLoader:
             self.classifier = model_data['mod']
             self.scaler = model_data['sc']
             
-            # Verify multi-class configuration
             saved_num_classes = model_data.get('num_classes', 7)
             saved_label_map = model_data.get('label_map', {})
             
@@ -112,7 +111,7 @@ class ModelLoader:
         
         print("="*80)
         
-        return bert_loaded or classifier_loaded  # Return True if at least one loaded
+        return bert_loaded or classifier_loaded
     
     def is_ready(self):
         """Check if classifier is loaded (minimum requirement for predictions)"""
@@ -131,17 +130,13 @@ class ModelLoader:
         if not self.is_ready():
             raise RuntimeError("Models not loaded")
         
-        # Scale features
         features_scaled = self.scaler.transform(features)
         
-        # Get predictions
         predictions = self.classifier.predict(features_scaled)
         
-        # Get probabilities if available
         try:
             probabilities = self.classifier.predict_proba(features_scaled)
         except AttributeError:
-            # Model doesn't support probabilities
             probabilities = np.eye(self.num_classes)[predictions]
         
         return predictions, probabilities

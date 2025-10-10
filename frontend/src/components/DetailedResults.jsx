@@ -17,7 +17,7 @@ export default function DetailedResults({ detailedResults }) {
     setExpandedLines(newExpanded);
   };
   
-  // Calculate log type distribution
+  
   const logTypeDistribution = detailedResults.reduce((acc, line) => {
     const type = line.log_type || 'Unknown';
     acc[type] = (acc[type] || 0) + 1;
@@ -79,7 +79,7 @@ export default function DetailedResults({ detailedResults }) {
                 </div>
               </div>
               
-              {/* Show parsed content if available, otherwise raw log */}
+              {}
               {line.parsed_content ? (
                 <>
                   <p className="text-gray-400 text-xs mb-1">Parsed Content:</p>
@@ -97,13 +97,13 @@ export default function DetailedResults({ detailedResults }) {
                 <p className="text-gray-300 font-mono mb-2 break-words">{line.log_text || line.content}</p>
               )}
               
-              {/* Probability breakdown */}
+              {}
               {isExpanded && line.probabilities && (
                 <div className="mt-2 pt-2 border-t border-gray-700">
                   <p className="text-gray-400 text-xs mb-2">Class Probabilities:</p>
                   <div className="space-y-1">
                     {Object.entries(line.probabilities)
-                      .sort((a, b) => b[1] - a[1]) // Sort by probability descending
+                      .sort((a, b) => b[1] - a[1]) 
                       .map(([className, prob]) => (
                         <div key={className} className="flex items-center gap-2">
                           <div className="w-32 text-xs text-gray-300 truncate">
@@ -124,7 +124,7 @@ export default function DetailedResults({ detailedResults }) {
                 </div>
               )}
               
-              {/* Show template if available */}
+              {}
               {line.template && (
                 <div className="mt-2 pt-2 border-t border-gray-700">
                   <p className="text-gray-400 text-xs">Template: {line.template}</p>

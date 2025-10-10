@@ -22,7 +22,7 @@ export const apiService = {
   },
 
   analyzeLog: async (logText, selectedModel = null, includeTemplates = true) => {
-    // Split log text into individual lines/logs
+    
     const logs = logText
       .split('\n')
       .map(line => line.trim())
@@ -38,7 +38,7 @@ export const apiService = {
       include_probabilities: true
     };
 
-    // Map frontend model IDs to API parameters
+    
     if (selectedModel) {
       if (selectedModel === 'ml') {
         requestBody.model_type = 'ml';
@@ -67,16 +67,16 @@ export const apiService = {
 
     const data = await response.json();
     
-    // Transform response to match frontend expectations
+    
     return transformPredictionResponse(data);
   }
 };
 
-// Helper function to transform new API response to frontend format
+
 function transformPredictionResponse(apiResponse) {
   const { logs, predictions, model_used, summary } = apiResponse;
   
-  // Build detailed results for each log line using the new 'logs' array
+  
   const detailed_results = logs.map((logData, index) => ({
     log_text: logData.raw,
     log_type: logData.log_type,
@@ -88,7 +88,7 @@ function transformPredictionResponse(apiResponse) {
     probabilities: logData.prediction.probabilities
   }));
 
-  // Calculate overall statistics
+  
   const anomalyCount = detailed_results.filter(r => r.prediction_class_id !== 0).length;
   const totalLogs = detailed_results.length;
 
@@ -104,7 +104,7 @@ function transformPredictionResponse(apiResponse) {
       log_type_distribution: summary?.log_type_distribution || {}
     },
     detailed_results: detailed_results,
-    // For backward compatibility
+    
     anomaly_detected: anomalyCount > 0,
     confidence: detailed_results.length > 0 ? detailed_results[0].confidence : 0,
     prediction: detailed_results.length > 0 ? detailed_results[0].prediction : 'normal'

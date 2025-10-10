@@ -32,14 +32,11 @@ def create_app(config_obj=None):
     Returns:
         Configured Flask app
     """
-    # Initialize Flask app
     app = Flask(__name__)
     CORS(app)
     
-    # Use provided config or default
     cfg = config_obj or config
     
-    # Load all available models (ML + BERT variants)
     model_manager = ModelManager(cfg)
     at_least_one_model = model_manager.load_all_models()
     
@@ -51,12 +48,10 @@ def create_app(config_obj=None):
         print("   • BERT Models: Run notebooks/bert-models.ipynb")
         print("="*80 + "\n")
     
-    # Initialize services
     log_parser = LogParser()
     unified_prediction_service = UnifiedPredictionService(model_manager, cfg)
     template_service = TemplateExtractionService()
     
-    # Initialize and register blueprints
     init_health_services(model_manager, cfg)
     app.register_blueprint(health_bp, url_prefix='/')
     

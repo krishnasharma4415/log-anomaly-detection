@@ -15,7 +15,7 @@ import LogSourcesFooter from './LogSourcesFooter';
 export default function LogAnomalyDetector() {
   const [logInput, setLogInput] = useState('');
   const [file, setFile] = useState(null);
-  const [selectedModel, setSelectedModel] = useState('ml'); // NEW: Default model
+  const [selectedModel, setSelectedModel] = useState('ml'); 
   const [analyzing, setAnalyzing] = useState(false);
   const [results, setResults] = useState(null);
   const [error, setError] = useState('');
@@ -54,14 +54,14 @@ export default function LogAnomalyDetector() {
     setResults(null);
 
     try {
-      const data = await apiService.analyzeLog(logInput, selectedModel); // Pass selected model
+      const data = await apiService.analyzeLog(logInput, selectedModel); 
       
-      // Extract primary prediction (most common or first anomaly)
+      
       let primaryPrediction = 'normal';
       let primaryPredictionClassId = 0;
       
       if (data.detailed_results && data.detailed_results.length > 0) {
-        // Find the first anomaly or use most common prediction
+        
         const anomaly = data.detailed_results.find(r => r.is_anomaly);
         if (anomaly) {
           primaryPrediction = anomaly.prediction;
@@ -128,14 +128,14 @@ export default function LogAnomalyDetector() {
         <Header apiStatus={apiStatus} />
 
         <div className="grid md:grid-cols-2 gap-6">
-          {/* Input Section */}
+          {}
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
             <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
               <FileText className="w-6 h-6" />
               Input Log Data
             </h2>
 
-            {/* NEW: Model Selector */}
+            {}
             <ModelSelector
               selectedModel={selectedModel}
               onModelChange={handleModelChange}
@@ -165,7 +165,7 @@ export default function LogAnomalyDetector() {
             <ErrorDisplay error={error} />
           </div>
 
-          {/* Results Section */}
+          {}
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
             <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
               <TrendingUp className="w-6 h-6" />

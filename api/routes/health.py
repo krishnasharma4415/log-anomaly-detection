@@ -6,7 +6,6 @@ from datetime import datetime
 
 health_bp = Blueprint('health', __name__)
 
-# These will be injected when blueprint is registered
 model_manager = None
 config = None
 
@@ -32,7 +31,6 @@ def health_check():
             'message': 'Model manager not initialized'
         }), 500
     
-    # Check availability of all models
     ml_available = model_manager.ml_available
     dann_available = model_manager.bert_available.get('dann', False)
     lora_available = model_manager.bert_available.get('lora', False)
@@ -40,7 +38,6 @@ def health_check():
     
     any_model_available = model_manager.is_any_model_available()
     
-    # Determine status
     model_status = 'fully_loaded' if ml_available and all(model_manager.bert_available.values()) else \
                    'partially_loaded' if any_model_available else 'not_loaded'
     
@@ -70,7 +67,6 @@ def health_check():
         }
     }
     
-    # Add status message
     if model_status == 'fully_loaded':
         response['message'] = 'API running in FULL MODE - All models loaded (ML + 3 BERT variants)'
     elif model_status == 'partially_loaded':
@@ -109,7 +105,6 @@ def get_model_info():
     
     models_info = []
     
-    # ML Model info
     if model_manager.ml_available:
         metadata = model_manager.ml_loader.model_metadata
         models_info.append({
@@ -126,7 +121,6 @@ def get_model_info():
             'timestamp': metadata.get('timestamp', 'Unknown')
         })
     
-    # BERT Models info
     for variant in ['dann', 'lora', 'hybrid']:
         if model_manager.bert_available.get(variant, False):
             loader = model_manager.bert_loaders[variant]
@@ -177,16 +171,13 @@ def list_available_models():
     """
     from pathlib import Path
     
-    # Check for BERT models in multiclass directory
     bert_models_dir = config.BERT_MODELS_PATH
     ml_models_dir = config.ML_MODELS_PATH
     
     available_files = []
     
-    # Scan for BERT models
     if bert_models_dir.exists():
         for model_file in bert_models_dir.glob("*.pt"):
-            # Determine model type from filename
             model_name = model_file.stem
             if 'dann' in model_name.lower():
                 model_type = 'DANN-BERT'
@@ -212,7 +203,6 @@ def list_available_models():
                 'loaded': is_loaded
             })
     
-    # Check for ML model
     if ml_models_dir.exists():
         ml_model_file = config.ML_MODEL_PATH
         if ml_model_file.exists():
@@ -226,7 +216,6 @@ def list_available_models():
                 'loaded': is_loaded
             })
     
-    # Get currently loaded models
     loaded_models = []
     if model_manager:
         if model_manager.ml_available:
