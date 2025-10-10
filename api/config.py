@@ -65,7 +65,7 @@ class Config:
         existing_models = [p for p in model_paths if p.exists()]
         
         if not existing_models:
-            print("\n⚠️  WARNING: No BERT models found!")
+            print("\nWARNING: No BERT models found!")
             print(f"   Expected location: {cls.BERT_MODELS_PATH}")
             print("   Available models:")
             for p in model_paths:
@@ -78,7 +78,7 @@ class Config:
     @classmethod
     def print_config(cls):
         """Print current configuration"""
-        print("\n📋 Configuration:")
+        print("\nConfiguration:")
         print(f"  Device:      {cls.DEVICE}")
         print(f"  BERT Model:  {cls.BERT_MODEL_NAME}")
         print(f"  Max Length:  {cls.MAX_LENGTH}")

@@ -10,28 +10,76 @@ class LogParser:
     @staticmethod
     def detect_log_type(log_text):
         """
-        Detect log type by matching against known patterns.
+        Intelligently detect log type by matching against known patterns with priority scoring.
         
         Args:
             log_text: Raw log text
             
         Returns:
-            Detected log type or 'Unknown'
+            Dict with detected log type, confidence, and match details
         """
         lines = [l.strip() for l in log_text.strip().split('\n') if l.strip()][:20]
         matches = {log_type: 0 for log_type in REGEX_PATTERNS.keys()}
+        total_lines = len(lines)
+        
+        # Priority weights for different log types (higher = more specific)
+        priority_weights = {
+            'OpenSSH': 10,          # Very specific pattern
+            'SystemdService': 10,   # Very specific pattern  
+            'LinuxKernel': 10,      # Very specific pattern
+            'Apache': 8,            # Specific bracket format
+            'ApacheCommon': 8,      # Specific bracket format
+            'Windows': 7,           # CSV-like with specific date format
+            'Hadoop': 7,            # CSV-like with quotes
+            'Android': 9,           # Very specific format
+            'BGL': 9,               # Very specific CSV format
+            'Thunderbird': 9,       # Very specific format
+            'HDFS': 6,              # Numeric CSV format
+            'Zookeeper': 7,         # CSV with quotes
+            'Spark': 6,             # Simple CSV format
+            'Proxifier': 6,         # Simple time,program format
+            'HPC': 6,               # Numeric CSV
+            'HealthApp': 6,         # Timestamp format
+            'OpenStack': 5,         # Complex CSV
+            'Mac': 5,               # Complex CSV
+            'Linux': 4,             # General Linux format (fallback)
+            'GenericTimestamp': 2,  # Generic timestamp format
+            'GenericLevel': 1,      # Very generic (last resort)
+        }
+        
+        # Score each pattern
+        pattern_scores = {}
         
         for line in lines:
             for log_type, pattern in REGEX_PATTERNS.items():
                 if pattern.search(line):
                     matches[log_type] += 1
+                    
+                    # Calculate weighted score
+                    weight = priority_weights.get(log_type, 3)
+                    if log_type not in pattern_scores:
+                        pattern_scores[log_type] = 0
+                    pattern_scores[log_type] += weight
         
-        if max(matches.values()) > 0:
-            detected = max(matches, key=matches.get)
+        if pattern_scores:
+            # Find the pattern with highest score
+            detected = max(pattern_scores, key=pattern_scores.get)
+            confidence = matches[detected] / total_lines
+            
+            # Boost confidence for high-priority patterns
+            if priority_weights.get(detected, 0) >= 8:
+                confidence = min(1.0, confidence * 1.2)
         else:
             detected = 'Unknown'
+            confidence = 0.0
         
-        return detected
+        return {
+            'log_type': detected,
+            'confidence': confidence,
+            'match_counts': matches,
+            'pattern_scores': pattern_scores,
+            'total_lines_analyzed': total_lines
+        }
     
     @staticmethod
     def parse_logs(log_text, log_type):

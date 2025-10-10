@@ -4,7 +4,10 @@ Model loading and management for Multi-Class ML Models
 import pickle
 import torch
 import numpy as np
-from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer, AutoModel, logging
+
+# Suppress transformer warnings about unused weights
+logging.set_verbosity_error()
 
 
 class ModelLoader:

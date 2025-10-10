@@ -8,13 +8,16 @@ REGEX_PATTERNS = {
         r"^(?P<Date>\d{2}-\d{2})\s+(?P<Time>\d{2}:\d{2}:\d{2}\.\d+)\s+(?P<Pid>\d+)\s+(?P<Tid>\d+)\s+(?P<Level>[VDIWEF])\s+(?P<Component>\S+)\s+(?P<Content>.+)$"
     ),
     "Apache": re.compile(
+        r"^\[(?P<Date>[A-Za-z]{3}\s+[A-Za-z]{3}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2}(?:\.\d+)?\s+\d{4})\]\s+\[(?P<Level>\w+)\](?:\s+\[client\s+[^\]]+\])?\s+(?P<Content>.+)$"
+    ),
+    "ApacheCommon": re.compile(
         r"^\[(?P<Date>[A-Za-z]{3}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2}(?:\.\d+)?\s+\d{4})\]\s+\[(?P<Level>\w+)\]\s+(?P<Content>.+)$"
     ),
     "BGL": re.compile(
         r"^(?P<Label>[^,]+),(?P<Timestamp>\d+),(?P<Date>[\d.]+),(?P<Node>[^,]+),(?P<Time>[^,]+),(?P<NodeRepeat>[^,]+),(?P<Type>[^,]+),(?P<Component>[^,]+),(?P<Level>[^,]+),(?P<Content>.+)$"
     ),
     "Hadoop": re.compile(
-        r"^(?P<Date>\d{4}-\d{2}-\d{2}),\"(?P<Time>[\d:,]+)\",(?P<Level>\w+),(?P<Process>[^,]+),(?P<Component>[^,]+),(?P<Content>.+)$"
+        r"^(?P<Date>\d{4}-\d{2}-\d{2}),\"?(?P<Time>[\d:,]+)\"?,(?P<Level>\w+),(?P<Process>[^,]+),(?P<Component>[^,]+),(?P<Content>.+)$"
     ),
     "HDFS": re.compile(
         r"^(?P<Date>\d+),(?P<Time>\d+),(?P<Pid>\d+),(?P<Level>\w+),(?P<Component>[^,]+),(?P<Content>.+)$"
@@ -26,13 +29,19 @@ REGEX_PATTERNS = {
         r"^(?P<LogId>\d+),(?P<Node>[^,]+),(?P<Component>[^,]+),(?P<State>[^,]+),(?P<Time>\d+),(?P<Flag>\d+),(?P<Content>.+)$"
     ),
     "Linux": re.compile(
-        r"^(?P<Month>[A-Za-z]+)\s+(?P<Date>\d+)\s+(?P<Time>\d{2}:\d{2}:\d{2})\s+(?P<Component>[^(]+)\((?P<PID>\d+)\):\s+(?P<Content>.+)$"
+        r"^(?P<Month>[A-Za-z]+)\s+(?P<Date>\d+)\s+(?P<Time>\d{2}:\d{2}:\d{2})\s+(?P<Hostname>\S+)\s+(?P<Component>[^:\[\(]+)(?:\[(?P<PID>\d+)\])?(?:\((?P<PID2>\d+)\))?:\s+(?P<Content>.+)$"
+    ),
+    "LinuxKernel": re.compile(
+        r"^(?P<Month>[A-Za-z]+)\s+(?P<Date>\d+)\s+(?P<Time>\d{2}:\d{2}:\d{2})\s+(?P<Hostname>\S+)\s+(?P<Component>kernel):\s+(?P<Content>.+)$"
     ),
     "Mac": re.compile(
         r"^(?P<Month>[A-Za-z]+)\s+(?P<Date>\d+)\s+(?P<Time>\d{2}:\d{2}:\d{2})\s+(?P<User>[^,]+),(?P<Component>[^,]+),(?P<PID>\d+),(?P<Address>[^,]*),(?P<Content>.+)$"
     ),
     "OpenSSH": re.compile(
-        r"^(?P<Month>[A-Za-z]+)\s+(?P<Day>\d+)\s+(?P<Time>\d{2}:\d{2}:\d{2})\s+(?P<Component>[^,]+)\[(?P<Pid>\d+)\]:\s+(?P<Content>.+)$"
+        r"^(?P<Month>[A-Za-z]+)\s+(?P<Day>\d+)\s+(?P<Time>\d{2}:\d{2}:\d{2})\s+(?P<Hostname>\S+)\s+(?P<Component>sshd)\[(?P<Pid>\d+)\]:\s+(?P<Content>.+)$"
+    ),
+    "SystemdService": re.compile(
+        r"^(?P<Month>[A-Za-z]+)\s+(?P<Day>\d+)\s+(?P<Time>\d{2}:\d{2}:\d{2})\s+(?P<Hostname>\S+)\s+(?P<Component>systemd)\[(?P<Pid>\d+)\]:\s+(?P<Content>.+)$"
     ),
     "OpenStack": re.compile(
         r"^(?P<Logrecord>[^,]+),(?P<Date>\d{4}-\d{2}-\d{2}),(?P<Time>[\d:.]+),(?P<Pid>\d+),(?P<Level>\w+),(?P<Component>[^,]+),(?P<ADDR>[^,]+),\"(?P<Content>.+)\"$"
@@ -51,5 +60,11 @@ REGEX_PATTERNS = {
     ),
     "Zookeeper": re.compile(
         r"^(?P<Date>\d{4}-\d{2}-\d{2}),\"(?P<Time>[\d:,]+)\",(?P<Level>\w+),(?P<Node>[^,]+),(?P<Component>[^,]+),(?P<Id>\d+),(?P<Content>.+)$"
+    ),
+    "GenericTimestamp": re.compile(
+        r"^(?P<Date>\d{4}-\d{2}-\d{2})\s+(?P<Time>\d{2}:\d{2}:\d{2}(?:\.\d+)?)\s+(?P<Level>\w+)\s+(?P<Content>.+)$"
+    ),
+    "GenericLevel": re.compile(
+        r"^(?P<Level>ERROR|WARN|WARNING|INFO|DEBUG|TRACE|FATAL|CRITICAL):\s+(?P<Content>.+)$"
     ),
 }

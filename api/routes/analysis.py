@@ -72,12 +72,23 @@ def predict_anomalies():
     include_templates = data.get('include_templates', False)
     
     try:
+        # Detect log type on the full text for better accuracy
+        if isinstance(logs, str):
+            log_text = logs
+        else:
+            log_text = '\n'.join(logs)
+        
+        detection_result = log_parser.detect_log_type(log_text)
+        detected_log_type = detection_result['log_type'] if isinstance(detection_result, dict) else detection_result
+        detection_confidence = detection_result.get('confidence', 0) if isinstance(detection_result, dict) else 0
+        
+        # Parse individual logs using the detected type
         log_details = []
         for log in logs:
-            log_type = log_parser.detect_log_type(log)
-            parsed = log_parser.parse_logs(log, log_type)
+            parsed = log_parser.parse_logs(log, detected_log_type)
             log_details.append({
-                'log_type': log_type,
+                'log_type': detected_log_type,
+                'detection_confidence': detection_confidence,
                 'parsed': parsed[0] if parsed else {'raw': log, 'content': log}
             })
         
@@ -104,6 +115,11 @@ def predict_anomalies():
             'timestamp': datetime.now().isoformat(),
             'total_logs': len(logs),
             'model_used': model_info,
+            'log_detection': {
+                'detected_type': detected_log_type,
+                'detection_confidence': detection_confidence,
+                'parsing_success_rate': 1.0  # Will be calculated properly in enhanced version
+            },
             'logs': [
                 {
                     'raw': log,
