@@ -1,6 +1,6 @@
 """
 Analysis routes for log anomaly detection with multi-model support
-Supports: ML model + DANN-BERT + LoRA-BERT + Hybrid-BERT (all multi-class)
+Updated imports for optimized structure
 """
 from flask import Blueprint, request, jsonify
 import numpy as np
@@ -8,18 +8,28 @@ from datetime import datetime
 
 analysis_bp = Blueprint('analysis', __name__)
 
+# Global service references (initialized by init_services)
 log_parser = None
-prediction_service = None
+prediction_orchestrator = None
 template_service = None
 model_manager = None
 config = None
 
 
-def init_services(lp, ps, ts, mm, cfg):
-    """Initialize services for this blueprint"""
-    global log_parser, prediction_service, template_service, model_manager, config
+def init_services(lp, po, ts, mm, cfg):
+    """
+    Initialize services for this blueprint
+    
+    Args:
+        lp: LogParser instance
+        po: PredictionOrchestrator instance
+        ts: TemplateExtractionService instance
+        mm: ModelManager instance
+        cfg: Config object
+    """
+    global log_parser, prediction_orchestrator, template_service, model_manager, config
     log_parser = lp
-    prediction_service = ps
+    prediction_orchestrator = po
     template_service = ts
     model_manager = mm
     config = cfg
@@ -72,7 +82,7 @@ def predict_anomalies():
     include_templates = data.get('include_templates', False)
     
     try:
-        # Detect log type on the full text for better accuracy
+        # Detect log type
         if isinstance(logs, str):
             log_text = logs
         else:
@@ -82,7 +92,7 @@ def predict_anomalies():
         detected_log_type = detection_result['log_type'] if isinstance(detection_result, dict) else detection_result
         detection_confidence = detection_result.get('confidence', 0) if isinstance(detection_result, dict) else 0
         
-        # Parse individual logs using the detected type
+        # Parse individual logs
         log_details = []
         for log in logs:
             parsed = log_parser.parse_logs(log, detected_log_type)
@@ -92,6 +102,7 @@ def predict_anomalies():
                 'parsed': parsed[0] if parsed else {'raw': log, 'content': log}
             })
         
+        # Extract templates if needed
         template_features = None
         templates = None
         
@@ -103,13 +114,15 @@ def predict_anomalies():
                     for tmpl in templates
                 ])
         
-        predictions, probabilities, label_names, model_info = prediction_service.predict(
+        # Perform predictions
+        predictions, probabilities, label_names, model_info = prediction_orchestrator.predict(
             logs,
             model_type=model_type,
             bert_variant=bert_variant,
             template_features=template_features
         )
         
+        # Build response
         response = {
             'status': 'success',
             'timestamp': datetime.now().isoformat(),
@@ -118,7 +131,7 @@ def predict_anomalies():
             'log_detection': {
                 'detected_type': detected_log_type,
                 'detection_confidence': detection_confidence,
-                'parsing_success_rate': 1.0  # Will be calculated properly in enhanced version
+                'parsing_success_rate': 1.0
             },
             'logs': [
                 {
@@ -145,6 +158,7 @@ def predict_anomalies():
             response['predictions']['probabilities'] = probabilities.tolist()
             response['predictions']['confidence'] = np.max(probabilities, axis=1).tolist()
         
+        # Add summary statistics
         log_type_counts = {}
         for details in log_details:
             log_type = details['log_type']
@@ -213,7 +227,7 @@ def predict_batch():
                 for tmpl in templates
             ])
         
-        predictions, probabilities, label_names, model_info = prediction_service.predict(
+        predictions, probabilities, label_names, model_info = prediction_orchestrator.predict(
             logs,
             model_type=model_type,
             bert_variant=bert_variant,
@@ -299,7 +313,7 @@ def analyze_logs():
                     for tmpl in templates
                 ])
             
-            predictions, probabilities, label_names, model_info = prediction_service.predict(
+            predictions, probabilities, label_names, model_info = prediction_orchestrator.predict(
                 logs,
                 template_features=template_features
             )
@@ -347,7 +361,7 @@ def analyze_logs():
                         for tmpl in templates
                     ])
                 
-                predictions, probabilities, label_names, model_info = prediction_service.predict(
+                predictions, probabilities, label_names, model_info = prediction_orchestrator.predict(
                     logs,
                     model_type=model_type,
                     bert_variant=variant,

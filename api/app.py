@@ -1,5 +1,6 @@
 """
-Main Flask application - Unified version supporting ML and BERT models
+Main Flask application - Optimized structure
+Updated imports for reorganized modules
 """
 from flask import Flask
 from flask_cors import CORS
@@ -9,15 +10,16 @@ from pathlib import Path
 
 warnings.filterwarnings('ignore')
 
+# Add parent directory to path
 current_dir = Path(__file__).parent
 if str(current_dir.parent) not in sys.path:
     sys.path.insert(0, str(current_dir.parent))
 
+# Updated imports for optimized structure
 from api.config import config
-from api.models.model_manager import ModelManager
-from api.services.log_parser import LogParser
-from api.services.template_extraction import TemplateExtractionService
-from api.services.unified_prediction import UnifiedPredictionService
+from api.models.manager import ModelManager
+from api.services.log_processing import LogParser, TemplateExtractionService
+from api.services.orchestrator import PredictionOrchestrator
 from api.routes.health import health_bp, init_services as init_health_services
 from api.routes.analysis import analysis_bp, init_services as init_analysis_services
 
@@ -37,6 +39,7 @@ def create_app(config_obj=None):
     
     cfg = config_obj or config
     
+    # Load all models
     model_manager = ModelManager(cfg)
     at_least_one_model = model_manager.load_all_models()
     
@@ -46,14 +49,16 @@ def create_app(config_obj=None):
         print("To load models, run: notebooks/ml-models.ipynb or notebooks/bert-models.ipynb")
         print("-" * 60)
     
+    # Initialize services
     log_parser = LogParser()
-    unified_prediction_service = UnifiedPredictionService(model_manager, cfg)
+    prediction_orchestrator = PredictionOrchestrator(model_manager, cfg)
     template_service = TemplateExtractionService()
     
+    # Register blueprints
     init_health_services(model_manager, cfg)
     app.register_blueprint(health_bp, url_prefix='/')
     
-    init_analysis_services(log_parser, unified_prediction_service, template_service, model_manager, cfg)
+    init_analysis_services(log_parser, prediction_orchestrator, template_service, model_manager, cfg)
     app.register_blueprint(analysis_bp, url_prefix='/api')
     
     return app

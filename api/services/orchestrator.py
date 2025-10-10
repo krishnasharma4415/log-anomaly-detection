@@ -1,37 +1,39 @@
 """
-Unified Prediction Service that works with both ML and BERT models
+Prediction Orchestrator - Routes requests to ML or BERT models
+Renamed from: unified_prediction.py
 """
 import numpy as np
-from api.services.embedding import EmbeddingService
-from api.services.prediction import PredictionService
-from api.services.bert_prediction import BERTPredictionService
+from api.services.inference import EmbeddingService, MLPredictionService, BERTPredictionService
+from api.services.log_processing import TemplateExtractionService
 
 
-class UnifiedPredictionService:
-    """Handles predictions for both ML and BERT models"""
+class PredictionOrchestrator:
+    """Orchestrates predictions across ML and BERT models"""
     
     def __init__(self, model_manager, config):
         self.model_manager = model_manager
         self.config = config
         
+        # Initialize services for available models
         self.ml_embedding_service = None
         self.ml_prediction_service = None
-        
         self.bert_prediction_services = {}
         
         self._initialize_services()
     
     def _initialize_services(self):
         """Initialize prediction services for available models"""
+        # ML Model services
         if self.model_manager.ml_available:
             self.ml_embedding_service = EmbeddingService(
                 self.model_manager.ml_loader, 
                 self.config
             )
-            self.ml_prediction_service = PredictionService(
+            self.ml_prediction_service = MLPredictionService(
                 self.model_manager.ml_loader
             )
         
+        # BERT Model services
         for variant, is_available in self.model_manager.bert_available.items():
             if is_available:
                 loader = self.model_manager.bert_loaders[variant]
@@ -53,28 +55,30 @@ class UnifiedPredictionService:
         Returns:
             Tuple of (predictions, probabilities, label_names, model_info)
         """
+        # Get the appropriate model
         try:
             loader, model_used = self.model_manager.get_model(model_type, bert_variant)
         except ValueError as e:
             raise RuntimeError(str(e))
         
+        # Route to appropriate prediction service
         if model_used == 'ml':
             return self._predict_ml(texts, loader)
         else:
-            variant = model_used.split('-')[1]
+            variant = model_used.split('-')[1]  # Extract variant from 'bert-dann'
             return self._predict_bert(texts, variant, loader, template_features)
     
     def _predict_ml(self, texts, loader):
-        """Predict using ML model with proper feature assembly"""
-        from api.services.feature_assembly import FeatureAssemblyService
-        from api.services.template_extraction import TemplateExtractionService
-        
+        """Predict using ML model with dynamic feature assembly"""
         feature_type = loader.model_metadata.get('feature_type', 'hybrid')
         
+        # Generate BERT embeddings (768-dim)
         embeddings = self.ml_embedding_service.generate_embeddings(texts)
         
+        # Determine expected feature dimensions
         expected_features = loader.scaler.n_features_in_ if hasattr(loader.scaler, 'n_features_in_') else 768
         
+        # Assemble features based on expected dimensions
         if expected_features > 768:
             template_service = TemplateExtractionService()
             
@@ -82,10 +86,12 @@ class UnifiedPredictionService:
             bert_statistical_list = []
             
             for text in texts:
+                # Extract template features
                 template = template_service.extract_template(text)
                 tmpl_feats = template_service.get_template_features(template)
                 template_features_list.append(tmpl_feats)
                 
+                # Extract statistical features
                 bert_stats = np.array([
                     len(text),
                     len(text.split()),
@@ -97,12 +103,15 @@ class UnifiedPredictionService:
             template_features = np.array(template_features_list)
             bert_statistical = np.array(bert_statistical_list)
             
-            
+            # Stack features based on expected dimensions
             if expected_features == 776:
+                # BERT + statistical + template
                 final_features = np.hstack([embeddings, bert_statistical, template_features])
             elif expected_features == 772:
+                # BERT + template
                 final_features = np.hstack([embeddings, template_features])
             elif expected_features == 790:
+                # BERT + statistical + template + additional
                 additional_features_list = []
                 for i, text in enumerate(texts):
                     additional_feats = np.array([
@@ -131,15 +140,20 @@ class UnifiedPredictionService:
                     additional_features
                 ])
             else:
+                # Default: BERT + statistical + template
                 final_features = np.hstack([embeddings, bert_statistical, template_features])
         else:
+            # BERT-only
             final_features = embeddings
         
+        # Predict using ML classifier
         predictions, probabilities = self.ml_prediction_service.predict(final_features)
         
+        # Map predictions to label names
         label_map = loader.model_metadata.get('label_map', loader.label_map)
         label_names = np.array([label_map.get(int(pred), 'unknown') for pred in predictions])
         
+        # Build model info
         model_info = {
             'model_type': 'ML',
             'model_name': loader.model_metadata.get('model_name', 'Unknown'),
@@ -157,13 +171,16 @@ class UnifiedPredictionService:
         """Predict using BERT model"""
         service = self.bert_prediction_services[variant]
         
+        # Perform prediction
         predictions, probabilities, label_names = service.predict(texts, template_features)
         
+        # Get label map
         label_map = loader.model_metadata.get('label_map', {
             0: 'normal', 1: 'security_anomaly', 2: 'system_failure',
             3: 'performance_issue', 4: 'network_anomaly', 5: 'config_error', 6: 'hardware_issue'
         })
         
+        # Build model info
         model_info = {
             'model_type': f'{variant.upper()}-BERT',
             'bert_base': 'bert-base-uncased',

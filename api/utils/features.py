@@ -1,10 +1,11 @@
 """
-Feature assembly service - combines all features into variants
+Feature Assembly Utilities
+Renamed from: feature_assembly.py
 """
 import numpy as np
 
 
-class FeatureAssemblyService:
+class FeatureAssembler:
     """Assembles different feature combinations for model input"""
     
     @staticmethod
@@ -25,24 +26,29 @@ class FeatureAssemblyService:
         """
         feature_variants = {}
         
+        # BERT-only (768 dimensions)
         feature_variants['bert_only'] = bert_embeddings
         
+        # BERT + Statistical (772 dimensions)
         feature_variants['bert_statistical'] = np.hstack([
             bert_embeddings, 
             bert_statistical
         ])
         
+        # BERT + Template (772 dimensions)
         feature_variants['bert_template_enhanced'] = np.hstack([
             bert_embeddings, 
             template_features
         ])
         
+        # BERT + Statistical + Template (776 dimensions)
         feature_variants['bert_statistical_template'] = np.hstack([
             bert_embeddings, 
             bert_statistical, 
             template_features
         ])
         
+        # BERT + Statistical + Template + Temporal
         if temporal_features is not None:
             feature_variants['bert_statistical_template_temporal'] = np.hstack([
                 bert_embeddings, 
@@ -51,6 +57,7 @@ class FeatureAssemblyService:
                 temporal_features
             ])
         
+        # All features combined
         all_feature_components = [bert_embeddings, bert_statistical, template_features]
         if temporal_features is not None:
             all_feature_components.append(temporal_features)
@@ -63,7 +70,7 @@ class FeatureAssemblyService:
     
     @staticmethod
     def extract_temporal_feature_array(df):
-        """Extract temporal features as numpy array"""
+        """Extract temporal features as numpy array from dataframe"""
         temporal_cols = [
             'hour', 'day_of_week', 'is_weekend', 'is_business_hours',
             'time_diff_seconds', 'logs_last_minute', 'is_night', 'day_of_month', 'month'
@@ -78,7 +85,7 @@ class FeatureAssemblyService:
     
     @staticmethod
     def extract_statistical_feature_array(df):
-        """Extract content statistical features as numpy array"""
+        """Extract content statistical features as numpy array from dataframe"""
         statistical_cols = [
             'content_length', 'word_count', 
             'content_length_mean_10', 'content_length_std_10',
