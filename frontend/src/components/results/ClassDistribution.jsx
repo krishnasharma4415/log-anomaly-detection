@@ -1,6 +1,6 @@
 import React from 'react';
 import { BarChart3 } from 'lucide-react';
-import { getAnomalyColor, formatAnomalyType } from '../utils/anomalyColors';
+import { getAnomalyColor, formatAnomalyType } from '../../utils/anomalyColors';
 
 export default function ClassDistribution({ classDistribution, totalLines }) {
   if (!classDistribution) return null;

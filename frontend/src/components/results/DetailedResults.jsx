@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Info, ChevronDown, ChevronUp, FileType } from 'lucide-react';
-import { getAnomalyColor, formatAnomalyType, getProbabilityBarColor } from '../utils/anomalyColors';
+import { getAnomalyColor, formatAnomalyType, getProbabilityBarColor } from '../../utils/anomalyColors';
 
 export default function DetailedResults({ detailedResults }) {
   const [expandedLines, setExpandedLines] = useState(new Set());

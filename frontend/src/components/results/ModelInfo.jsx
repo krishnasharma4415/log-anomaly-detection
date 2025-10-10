@@ -1,6 +1,6 @@
 import React from 'react';
 import { Brain, Layers } from 'lucide-react';
-import { formatAnomalyType } from '../utils/anomalyColors';
+import { formatAnomalyType } from '../../utils/anomalyColors';
 
 export default function ModelInfo({ modelInfo }) {
   if (!modelInfo) return null;

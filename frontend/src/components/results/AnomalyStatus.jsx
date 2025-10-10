@@ -1,6 +1,6 @@
 import React from 'react';
 import { AlertCircle, CheckCircle, Shield, XCircle, Zap, Wifi, Settings, Wrench } from 'lucide-react';
-import { getAnomalyColor, formatAnomalyType } from '../utils/anomalyColors';
+import { getAnomalyColor, formatAnomalyType } from '../../utils/anomalyColors';
 
 export default function AnomalyStatus({ anomalyDetected, confidence, prediction, predictionClassId }) {
   
