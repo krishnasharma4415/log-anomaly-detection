@@ -1,0 +1,34 @@
+{
+  "num_original_classes": 7,
+  "viable_classes": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "recommended_classes": [
+    0,
+    1,
+    2,
+    4,
+    6
+  ],
+  "num_recommended": 5,
+  "overall_class_distribution": {
+    "0": 11608,
+    "1": 2278,
+    "2": 1822,
+    "3": 82,
+    "4": 1714,
+    "5": 96,
+    "6": 400
+  },
+  "total_samples": 18000,
+  "requires_smote": true,
+  "requires_class_weights": true,
+  "recommended_min_samples": 100,
+  "timestamp": "2025-10-10 01:20:29.891674"
+}

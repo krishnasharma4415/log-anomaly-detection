@@ -5,11 +5,11 @@
         "interval": 394,
         "expired": 394,
         "linkerror": 394,
-        "event": 394,
+        "event": 570,
         "ambient": 292,
-        "normal": 206,
+        "normal": 207,
         "warning": 205,
-        "running": 162,
+        "running": 491,
         "out": 91,
         "configured": 91,
         "fan": 90,
@@ -18,47 +18,47 @@
         "command": 157,
         "wait": 66,
         "responding": 61,
-        "via": 91,
+        "via": 92,
         "niff": 91,
-        "network": 92,
-        "node": 108,
-        "available": 91,
-        "has": 101,
-        "detected": 91,
+        "network": 136,
+        "node": 205,
+        "available": 106,
+        "has": 144,
+        "detected": 567,
         "connection": 1348,
         "interface": 93,
         "clusterfilesystem": 32,
         "domain": 32,
         "serverfilesystem": 32,
         "there": 32,
-        "server": 45,
-        "storage": 32,
+        "server": 54,
+        "storage": 114,
         "link": 13,
-        "successfully": 10,
-        "completed": 10,
-        "active": 5,
+        "successfully": 59,
+        "completed": 13,
+        "active": 87,
         "domains": 9,
         "targeting": 9,
         "child": 5,
-        "nodes": 9,
+        "nodes": 91,
         "halt": 3,
         "clusteraddmember": 2,
         "bootgenvmunix": 2,
         "risboot": 1,
         "closing": 1,
-        "starting": 6,
+        "starting": 14,
         "edu": 1903,
-        "proxy": 1903,
+        "proxy": 1916,
         "cse": 1903,
         "cuhk": 1903,
         "https": 954,
         "open": 956,
         "through": 956,
         "sec": 947,
-        "sent": 947,
+        "sent": 1247,
         "lifetime": 947,
-        "bytes": 949,
-        "received": 1540,
+        "bytes": 1361,
+        "received": 1542,
         "close": 947,
         "socks": 2,
         "request": 300,
@@ -66,32 +66,32 @@
         "sendworker": 266,
         "worker": 262,
         "leaving": 262,
-        "thread": 263,
+        "thread": 264,
         "send": 262,
         "established": 50,
         "negotiated": 50,
         "session": 383,
-        "client": 91,
+        "client": 92,
         "timeout": 50,
         "accepted": 48,
-        "socket": 48,
+        "socket": 50,
         "processed": 48,
         "termination": 47,
         "sessionid": 47,
         "establish": 41,
-        "new": 44,
-        "attempting": 41,
+        "new": 546,
+        "attempting": 62,
         "goodbye": 19,
         "user": 488,
         "corporation": 11,
-        "host": 11,
+        "host": 15,
         "environment": 11,
-        "name": 11,
-        "mesos": 11,
+        "name": 26,
+        "mesos": 13,
         "vendor": 11,
         "master": 11,
         "oracle": 11,
-        "java": 11,
+        "java": 13,
         "dir": 11,
         "state": 7,
         "zxid": 9,
@@ -101,23 +101,23 @@
         "looking": 10,
         "peerepoch": 7,
         "sid": 8,
-        "version": 7,
-        "lib": 3,
+        "version": 37,
+        "lib": 382,
         "snapshotting": 2,
-        "snapshot": 5,
-        "var": 3,
+        "snapshot": 7,
+        "var": 381,
         "zookeeper": 4,
         "following": 5,
         "getting": 2,
         "election": 4,
-        "took": 2,
+        "took": 44,
         "unexpected": 1,
-        "exception": 2,
+        "exception": 23,
         "bind": 1,
-        "port": 1,
+        "port": 16,
         "proposed": 1,
         "ticktime": 1,
-        "set": 2,
+        "set": 3,
         "autopurge": 1,
         "snapretaincount": 1,
         "leading": 2,
@@ -126,11 +126,11 @@
         "identifier": 1,
         "have": 2,
         "info": 1,
-        "apache": 1,
+        "apache": 16,
         "quorumserver": 1,
         "quorumpeer": 1,
         "quorum": 3,
-        "org": 1,
+        "org": 17,
         "follower": 1,
         "peer": 1,
         "setting": 2,
@@ -138,8 +138,8 @@
         "last": 2,
         "processor": 1,
         "shutdown": 7,
-        "complete": 1,
-        "reading": 1,
+        "complete": 22,
+        "reading": 38,
         "first": 1,
         "diff": 1,
         "sending": 1,
@@ -155,15 +155,15 @@
         "uid": 122,
         "check": 119,
         "pass": 117,
-        "unknown": 117,
+        "unknown": 147,
         "restart": 7,
         "startup": 14,
         "cupsd": 12,
-        "succeeded": 44,
+        "succeeded": 47,
         "udev": 8,
         "device": 9,
-        "removing": 4,
-        "creating": 4,
+        "removing": 25,
+        "creating": 47,
         "transport": 4,
         "ftpd": 4,
         "connected": 4,
@@ -177,7 +177,7 @@
         "bugs": 1,
         "sat": 1,
         "edt": 1,
-        "com": 1,
+        "com": 64,
         "red": 1,
         "gcc": 1,
         "build": 1,
@@ -185,8 +185,8 @@
         "source": 1,
         "klogd": 2,
         "kmsg": 1,
-        "log": 1,
-        "started": 3,
+        "log": 47,
+        "started": 70,
         "proc": 1,
         "irqbalance": 1,
         "root": 116,
@@ -211,17 +211,17 @@
         "capability": 2,
         "module": 1,
         "secondary": 1,
-        "registering": 2,
+        "registering": 11,
         "lsm": 1,
         "idmapd": 1,
         "cache": 2,
-        "cpu": 3,
+        "cpu": 24,
         "architecture": 1,
         "intel": 3,
         "machine": 2,
         "supported": 1,
         "reporting": 1,
-        "enabled": 1,
+        "enabled": 3,
         "coppermine": 1,
         "stepping": 1,
         "iii": 1,
@@ -231,29 +231,29 @@
         "fast": 1,
         "enabling": 2,
         "restore": 1,
-        "done": 2,
+        "done": 3,
         "simd": 1,
         "support": 2,
         "unmasked": 1,
         "hlt": 1,
         "instruction": 1,
-        "checking": 1,
+        "checking": 83,
         "random": 1,
-        "number": 1,
+        "number": 3,
         "generator": 1,
         "posix": 1,
         "unifix": 1,
         "conformance": 1,
         "testing": 1,
-        "protocol": 1,
-        "registered": 3,
+        "protocol": 2,
+        "registered": 7,
         "family": 1,
         "revision": 2,
         "entry": 1,
         "bus": 2,
         "bios": 2,
         "pci": 7,
-        "using": 2,
+        "using": 15,
         "configuration": 1,
         "type": 1,
         "mtrr": 1,
@@ -264,7 +264,7 @@
         "play": 2,
         "belay": 1,
         "pcmcia": 1,
-        "driver": 4,
+        "driver": 306,
         "usbcore": 2,
         "usbfs": 1,
         "hub": 1,
@@ -285,30 +285,30 @@
         "hci": 1,
         "ver": 1,
         "hcid": 1,
-        "audit": 1,
+        "audit": 2,
         "parameters": 1,
         "sdpd": 2,
-        "memory": 1,
-        "total": 1,
-        "allocated": 1,
+        "memory": 228,
+        "total": 79,
+        "allocated": 26,
         "hugetlb": 1,
         "bringing": 1,
         "loopback": 1,
-        "disk": 1,
+        "disk": 64,
         "vfs": 1,
         "quotas": 1,
         "dquot": 1,
         "netfilter": 1,
         "hooks": 1,
         "cryptographic": 1,
-        "api": 1,
+        "api": 2,
         "core": 1,
         "hot": 1,
         "pnp": 1,
         "isapnp": 2,
         "cards": 1,
         "scanning": 1,
-        "found": 1,
+        "found": 354,
         "real": 1,
         "clock": 1,
         "time": 1,
@@ -316,23 +316,23 @@
         "dave": 1,
         "agpgart": 1,
         "addstoredblock": 314,
-        "block": 1900,
-        "updated": 314,
-        "added": 538,
+        "block": 2306,
+        "updated": 329,
+        "added": 541,
         "namesystem": 653,
-        "size": 608,
+        "size": 760,
         "blockmap": 314,
         "packetresponder": 311,
-        "terminating": 311,
+        "terminating": 333,
         "receiving": 292,
         "dest": 294,
         "src": 294,
-        "deleting": 263,
+        "deleting": 284,
         "mnt": 263,
         "current": 263,
-        "hadoop": 263,
-        "data": 263,
-        "file": 263,
+        "hadoop": 282,
+        "data": 264,
+        "file": 360,
         "dfs": 263,
         "invalidset": 224,
         "delete": 229,
@@ -341,10 +341,323 @@
         "part": 115,
         "served": 80,
         "verification": 20,
-        "ask": 6,
+        "ask": 18,
         "transfer": 1,
         "datanode": 1,
-        "replicate": 1
+        "replicate": 1,
+        "msra": 521,
+        "address": 476,
+        "old": 476,
+        "change": 476,
+        "taskattempt": 348,
+        "progress": 289,
+        "reduce": 131,
+        "start": 131,
+        "slow": 131,
+        "met": 130,
+        "threshold": 131,
+        "completedmapsforreduceslowstart": 130,
+        "resolved": 39,
+        "rack": 39,
+        "default": 43,
+        "microsoft": 63,
+        "fareast": 63,
+        "corp": 63,
+        "unassigned": 24,
+        "transitioned": 61,
+        "container": 27,
+        "eventtype": 23,
+        "processing": 14,
+        "opening": 13,
+        "minint": 24,
+        "scheduling": 19,
+        "assignedmaps": 17,
+        "completedreds": 17,
+        "completedmaps": 17,
+        "pendingreds": 17,
+        "assignedreds": 17,
+        "scheduledreds": 17,
+        "scheduledmaps": 17,
+        "contrel": 17,
+        "after": 12,
+        "contalloc": 17,
+        "racklocal": 17,
+        "hostlocal": 17,
+        "newcontainers": 12,
+        "finishedcontainers": 12,
+        "knownnms": 12,
+        "vcores": 15,
+        "release": 12,
+        "getresources": 12,
+        "resourcelimit": 12,
+        "scheduled": 22,
+        "task": 1027,
+        "containermanager": 10,
+        "shuffle": 11,
+        "returned": 10,
+        "containerid": 10,
+        "assigned": 336,
+        "launching": 12,
+        "got": 315,
+        "containers": 10,
+        "auth": 10,
+        "successful": 31,
+        "simple": 10,
+        "asked": 10,
+        "jvm": 20,
+        "given": 10,
+        "jobeventtype": 9,
+        "jobeventdispatcher": 9,
+        "app": 10,
+        "taskeventtype": 9,
+        "jobhistoryeventhandler": 9,
+        "jobhistory": 9,
+        "mrappmaster": 12,
+        "mapreduce": 16,
+        "job": 19,
+        "taskeventdispatcher": 9,
+        "class": 14,
+        "before": 5,
+        "system": 4,
+        "hdfs": 81,
+        "reader": 2,
+        "listener": 2,
+        "ipc": 4,
+        "responder": 2,
+        "concurrent": 2,
+        "util": 2,
+        "linkedblockingqueue": 2,
+        "callqueue": 2,
+        "adding": 5,
+        "spec": 2,
+        "path": 2,
+        "mapred": 1,
+        "newapicommitter": 1,
+        "period": 1,
+        "second": 1,
+        "created": 3,
+        "application": 1,
+        "ident": 1,
+        "service": 3,
+        "appattemptid": 1,
+        "kind": 1,
+        "keyid": 1,
+        "attemptid": 1,
+        "executing": 1,
+        "tokens": 2,
+        "setup": 3,
+        "max": 1,
+        "proxies": 1,
+        "cached": 1,
+        "yarn": 11,
+        "nodemanagers": 1,
+        "inited": 2,
+        "pool": 1,
+        "upper": 1,
+        "limit": 64,
+        "queue": 1,
+        "connecting": 2,
+        "resourcemanager": 1,
+        "maxcontainercapability": 1,
+        "nodeblacklistingenabled": 1,
+        "true": 1,
+        "blacklistdisablepercent": 1,
+        "maxtaskfailurespernode": 1,
+        "modules": 1,
+        "webapp": 2,
+        "guice": 1,
+        "web": 1,
+        "common": 1,
+        "localbox": 1,
+        "extract": 1,
+        "local": 84,
+        "jar": 2,
+        "webapps": 1,
+        "users": 1,
+        "share": 1,
+        "appdata": 1,
+        "temp": 1,
+        "msrabi": 4,
+        "selectchannelconnectorwithsafestartup": 1,
+        "mrclientprotocolpb": 1,
+        "mortbay": 1,
+        "impl": 1,
+        "logging": 1,
+        "jetty": 2,
+        "bound": 1,
+        "amfilter": 2,
+        "filter": 3,
+        "webproxy": 2,
+        "context": 2,
+        "static": 1,
+        "amipfilter": 2,
+        "quotinginputfilter": 1,
+        "http": 22,
+        "safety": 1,
+        "global": 1,
+        "instantiated": 1,
+        "mrclientservice": 1,
+        "metrics": 1,
+        "jobtokensecretmanager": 1,
+        "token": 2,
+        "maps": 2,
+        "too": 10,
+        "much": 1,
+        "many": 1,
+        "because": 1,
+        "uberizing": 1,
+        "input": 47,
+        "splits": 1,
+        "reduces": 3,
+        "non": 1,
+        "uberized": 1,
+        "multi": 1,
+        "loaded": 1,
+        "properties": 1,
+        "timeline": 1,
+        "emitting": 1,
+        "history": 1,
+        "outputcommitter": 2,
+        "null": 1,
+        "config": 1,
+        "output": 61,
+        "fileoutputcommitter": 1,
+        "putting": 1,
+        "servicedata": 1,
+        "staging": 3,
+        "jobid": 1,
+        "tmp": 3,
+        "writer": 1,
+        "jhist": 1,
+        "mapresourcerequest": 1,
+        "reduceresourcerequest": 1,
+        "remote": 2,
+        "conf": 1,
+        "xml": 1,
+        "keys": 1,
+        "secret": 1,
+        "use": 83,
+        "attempt": 2,
+        "acknowledgement": 1,
+        "milliseconds": 1,
+        "speculations": 1,
+        "launched": 1,
+        "sleeping": 1,
+        "redundant": 1,
+        "defaultspeculator": 1,
+        "addspeculativeattempt": 1,
+        "speculating": 1,
+        "remaining": 1,
+        "ramping": 1,
+        "all": 1,
+        "num": 1,
+        "tasks": 1,
+        "reached": 1,
+        "instances": 402,
+        "sharing": 82,
+        "other": 82,
+        "nova": 378,
+        "image": 185,
+        "instance": 596,
+        "files": 133,
+        "base": 172,
+        "lifecycle": 109,
+        "resumed": 44,
+        "during": 43,
+        "spawning": 43,
+        "pending": 43,
+        "skip": 43,
+        "removable": 30,
+        "paused": 22,
+        "spawned": 22,
+        "bddd": 22,
+        "vif": 22,
+        "plugged": 22,
+        "destroyed": 22,
+        "destroy": 21,
+        "hypervisor": 21,
+        "seconds": 42,
+        "deletion": 21,
+        "deallocate": 21,
+        "swap": 30,
+        "free": 170,
+        "used": 63,
+        "vcpus": 36,
+        "claim": 42,
+        "any": 21,
+        "thrown": 21,
+        "stopped": 21,
+        "defaulting": 42,
+        "specified": 42,
+        "vcpu": 42,
+        "unlimited": 42,
+        "final": 15,
+        "view": 17,
+        "resource": 15,
+        "tcloud": 48,
+        "cloudlab": 48,
+        "utah": 48,
+        "usable": 15,
+        "resources": 15,
+        "auditing": 15,
+        "locally": 272,
+        "compute": 15,
+        "record": 15,
+        "young": 9,
+        "remove": 9,
+        "synced": 2,
+        "usage": 1,
+        "stage": 605,
+        "tid": 605,
+        "finished": 300,
+        "result": 300,
+        "stored": 149,
+        "estimated": 149,
+        "computing": 75,
+        "partition": 75,
+        "pjhe": 75,
+        "logs": 45,
+        "split": 45,
+        "values": 37,
+        "variable": 37,
+        "broadcast": 37,
+        "saved": 30,
+        "test": 30,
+        "committed": 30,
+        "committer": 30,
+        "algorithm": 30,
+        "modify": 2,
+        "acls": 4,
+        "changing": 4,
+        "curi": 5,
+        "int": 1,
+        "term": 1,
+        "hup": 1,
+        "signal": 1,
+        "handlers": 1,
+        "directory": 1,
+        "nodemanager": 1,
+        "blockmgr": 1,
+        "appcache": 1,
+        "opt": 1,
+        "usercache": 1,
+        "blockmanager": 2,
+        "nettyblocktransferservice": 1,
+        "netty": 1,
+        "spark": 2,
+        "trying": 1,
+        "register": 1,
+        "executor": 1,
+        "slave": 2,
+        "memorystore": 1,
+        "capacity": 1,
+        "coarsegrainedscheduler": 1,
+        "sparkexecutoractorsystem": 2,
+        "listening": 1,
+        "remoting": 2,
+        "addresses": 1,
+        "tcp": 1,
+        "akka": 1
       },
       "templates": [
         "Linkerror event interval expired",
@@ -486,20 +799,177 @@
         "BLOCK* ask <*>:<*> to delete  blk_<*>",
         "Received block blk_<*> src: /<*>:<*> dest: /<*>:<*> of size <*>",
         "<*>:<*> Starting thread to transfer block blk_<*> to <*>:<*>",
-        "BLOCK* ask <*>:<*> to replicate blk_<*> to datanode(s) <*>:<*>"
+        "BLOCK* ask <*>:<*> to replicate blk_<*> to datanode(s) <*>:<*>",
+        "Address change detected. Old: <*>/<*>:<*> New: <*>:<*>",
+        "Progress of TaskAttempt attempt_<*> is : <*>.<*>",
+        "Reduce slow start threshold not met. completedMapsForReduceSlowstart <*>",
+        "Resolved <*> to /default-rack",
+        "attempt_<*> TaskAttempt Transitioned from NEW to UNASSIGNED",
+        "Processing the event EventType: CONTAINER_REMOTE_<*> for container container_<*> taskAttempt attempt_<*>",
+        "Opening proxy : <*>:<*>",
+        "After Scheduling: PendingReds:<*> ScheduledMaps:<*> ScheduledReds:<*> AssignedMaps:<*> AssignedReds:<*> CompletedMaps:<*> CompletedReds:0 ContAlloc:<*> ContRel:<*> HostLocal:<*> RackLocal:<*>",
+        "getResources() for application_<*>: ask=<*> release= <*> newContainers=<*> finishedContainers=<*> resourcelimit=<memory:<*>, vCores:<*>> knownNMs=<*>",
+        "task_<*> Task Transitioned from NEW to SCHEDULED",
+        "Shuffle port returned by ContainerManager for attempt_<*> : <*>",
+        "TaskAttempt: [attempt_<*>] using containerId: [container_<*>_<*>_<*>_<*> on NM: [<*>:<*>]",
+        "attempt_<*> TaskAttempt Transitioned from ASSIGNED to RUNNING",
+        "Launching attempt_<*>",
+        "ATTEMPT_START task_<*>",
+        "Assigned container container_<*> to attempt_<*>",
+        "Got allocated containers <*>",
+        "attempt_<*> TaskAttempt Transitioned from UNASSIGNED to ASSIGNED",
+        "Auth successful for job_<*> (auth:SIMPLE)",
+        "JVM with ID : jvm_<*> asked for a task",
+        "task_<*> Task Transitioned from SCHEDULED to RUNNING",
+        "JVM with ID: jvm_<*> given task: <*>_<*>",
+        "Registering class org.apache.hadoop.mapreduce.<*> for class org.apache.hadoop.mapreduce.<*>",
+        "Before Scheduling: PendingReds:<*> ScheduledMaps:<*> ScheduledReds:<*> AssignedMaps:<*> AssignedReds:<*> CompletedMaps:<*> CompletedReds:<*> ContAlloc:<*> ContRel:<*> HostLocal:<*> RackLocal:<*>",
+        "Default file system [hdfs://<*>:<*>]",
+        "Received completed container container_<*>",
+        "Starting Socket Reader #<*> for port <*>",
+        "IPC Server listener on <*>: starting",
+        "IPC Server Responder: starting",
+        "Using callQueue class java.util.concurrent.LinkedBlockingQueue",
+        "adding path spec: /<*>/*",
+        "Using mapred newApiCommitter.",
+        "Scheduled snapshot period at <*> second(s).",
+        "Created MRAppMaster for application appattempt_<*>",
+        "Kind: YARN_AM_RM_TOKEN, Service: , Ident: (appAttemptId { application_id { id: <*> cluster_timestamp: <*> } attemptId: <*> } keyId: <*>)",
+        "Executing with tokens:",
+        "Processing the event EventType: JOB_SETUP",
+        "job_<*>Job Transitioned from SETUP to RUNNING",
+        "yarn.client.max-cached-nodemanagers-proxies : <*>",
+        "job_<*>Job Transitioned from INITED to SETUP",
+        "Upper limit on the thread pool size is <*>",
+        "queue: default",
+        "Connecting to ResourceManager at <*>/<*>:<*>",
+        "maxContainerCapability: <memory:<*>, vCores:<*>>",
+        "nodeBlacklistingEnabled:true",
+        "JOB_CREATE job_<*>",
+        "blacklistDisablePercent is <*>",
+        "maxTaskFailuresPerNode is <*>",
+        "Registered webapp guice modules",
+        "Web app /mapreduce started at <*>",
+        "Extract jar:file:<*> to <*>",
+        "Started HttpServer2$SelectChannelConnectorWithSafeStartup@<*>:<*>",
+        "Adding protocol org.apache.hadoop.mapreduce.v2.api.MRClientProtocolPB to the server",
+        "Logging to <*>(org.mortbay.log) via <*>",
+        "jetty-6.1.26",
+        "Jetty bound to port <*>",
+        "Added filter AM_PROXY_FILTER (class=org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter) to context static",
+        "Added filter AM_PROXY_FILTER (class=org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter) to context mapreduce",
+        "Added global filter 'safety' (class=org.apache.hadoop.http.HttpServer2$QuotingInputFilter)",
+        "Instantiated MRClientService at MININT-<*>/<*>:<*>",
+        "MRAppMaster metrics system started",
+        "Adding job token for job_<*> to jobTokenSecretManager",
+        "Not uberizing job_<*> because: not enabled; too many maps; too much input;",
+        "Input size for job job_<*> = <*>. Number of splits = <*>",
+        "Number of reduces for job job_<*> = <*>",
+        "job_<*>Job Transitioned from NEW to INITED",
+        "MRAppMaster launching normal, non-uberized, multi-container job job_<*>.",
+        "loaded properties from hadoop-metrics2.properties",
+        "Emitting job history data to the timeline server is not enabled",
+        "OutputCommitter set in config null",
+        "OutputCommitter is org.apache.hadoop.mapreduce.lib.output.FileOutputCommitter",
+        "Size of containertokens_dob is <*>",
+        "Putting shuffle token in serviceData",
+        "Event Writer setup for JobId: job_<*>, File: hdfs://<*>",
+        "mapResourceRequest:<memory:<*>, vCores:<*>>",
+        "reduceResourceRequest:<memory:<*>, vCores:<*>>",
+        "The job-jar file on the remote FS is hdfs://<*>",
+        "The job-conf file on the remote FS is <*>",
+        "Adding #<*> tokens and #<*> secret keys for NM use for launching container",
+        "Task succeeded with attempt attempt_<*>",
+        "Done acknowledgement from attempt_<*>",
+        "We launched <*> speculations.  Sleeping <*> milliseconds.",
+        "Scheduling a redundant attempt for task task_<*>",
+        "DefaultSpeculator.addSpeculativeAttempt -- we are speculating task_<*>",
+        "All maps assigned. Ramping up all remaining reduces:<*>",
+        "Num completed Tasks: <*>",
+        "Reduce slow start threshold reached. Scheduling reduces.",
+        "attempt_<*> TaskAttempt Transitioned from SUCCESS_CONTAINER_CLEANUP to SUCCEEDED",
+        "attempt_<*> TaskAttempt Transitioned from RUNNING to SUCCESS_CONTAINER_CLEANUP",
+        "task_<*> Task Transitioned from RUNNING to SUCCEEDED",
+        "image <*> at (<*>): in use: on this node <*> local, <*> on other nodes sharing this instance storage",
+        "image <*> at (<*>): checking",
+        "Active base files: <*>",
+        "[instance: <*>] VM Resumed (Lifecycle Event)",
+        "[instance: <*>] During sync_power_state the instance has a pending task (spawning). Skip.",
+        "Removable base files: <*>",
+        "Unknown base file: <*>",
+        "[instance: <*>] VM Paused (Lifecycle Event)",
+        "[instance: <*>] VM Started (Lifecycle Event)",
+        "[instance: <*>] Instance spawned successfully.",
+        "Creating event network-vif-plugged:<*>-<*>-<*>-<*>-<*> for instance <*>",
+        "[instance: <*>] Instance destroyed successfully.",
+        "[instance: <*>] Terminating instance",
+        "[instance: <*>] Deleting instance files <*>",
+        "[instance: <*>] Took <*>.<*> seconds to destroy the instance on the hypervisor.",
+        "[instance: <*>] Deletion of <*> complete",
+        "[instance: <*>] Took <*>.<*> seconds to deallocate network for instance.",
+        "Removing base or swap file: <*>",
+        "[instance: <*>] memory limit: <*>.<*> MB, free: <*>.<*> MB",
+        "[instance: <*>] Total memory: <*> MB, used: <*>.<*> MB",
+        "[instance: <*>] Attempting claim: memory <*> MB, disk <*> GB, vcpus <*> CPU",
+        "HTTP exception thrown: No instances found for any event",
+        "[instance: <*>] Claim successful",
+        "[instance: <*>] Creating image",
+        "[instance: <*>] VM Stopped (Lifecycle Event)",
+        "[instance: <*>] vcpu limit not specified, defaulting to unlimited",
+        "[instance: <*>] Total disk: <*> GB, used: <*>.<*> GB",
+        "[instance: <*>] disk limit not specified, defaulting to unlimited",
+        "[instance: <*>] Total vcpu: <*> VCPU, used: <*>.<*> VCPU",
+        "Final resource view: name=<*> phys_ram=<*> used_ram=<*> phys_disk=<*> used_disk=<*> total_vcpus=<*> used_vcpus=<*> pci_stats=[]",
+        "Total usable vcpus: <*>, total allocated vcpus: <*>",
+        "Auditing locally available compute resources for node <*>",
+        "Compute_service record updated for <*>",
+        "Base or swap file too young to remove: <*>",
+        "Successfully synced instances from host '<*>'.",
+        "Running instance usage audit for host <*> from <*>-<*>-<*> <*>:<*>:<*> to <*>-<*>-<*> <*>:<*>:<*>. <*> instances.",
+        "Got assigned task <*>",
+        "Running task <*> in stage <*> (TID <*>)",
+        "Finished task <*> in stage <*> (TID <*>). <*> bytes result sent to driver",
+        "Found block rdd_<*> locally",
+        "Block <*> stored as bytes in memory (estimated size <*>, free <*>)",
+        "Partition rdd_<*> not found, computing it",
+        "Input split: hdfs://<*>",
+        "Block <*> stored as values in memory (estimated size <*>, free <*>)",
+        "Started reading broadcast variable <*>",
+        "Saved output of task 'attempt_<*>' to hdfs://<*>",
+        "attempt_<*>: Committed",
+        "File Output Committer Algorithm version is <*>",
+        "Changing modify acls to: <*>",
+        "Changing view acls to: <*>",
+        "Registered signal handlers for [TERM, HUP, INT]",
+        "Created local directory at <*>",
+        "Slf4jLogger started",
+        "Registered BlockManager",
+        "Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port <*>.",
+        "Server created on <*>",
+        "Trying to register BlockManager",
+        "Starting executor ID <*> on host <*>",
+        "MemoryStore started with capacity <*> GB",
+        "Connecting to driver: spark://<*>",
+        "Successfully registered with driver",
+        "Successfully started service 'sparkExecutorActorSystem' on port <*>.",
+        "Remoting started; listening on addresses :[akka.tcp://<*>]",
+        "Starting remoting"
       ],
       "sources": [
-        "Linux_2k",
         "HDFS_2k",
-        "Zookeeper_2k",
+        "HPC_2k",
+        "Hadoop_2k",
         "Proxifier_2k",
-        "HPC_2k"
+        "OpenStack_2k",
+        "Spark_2k",
+        "Linux_2k",
+        "Zookeeper_2k"
       ],
-      "total_logs": 8061
+      "total_logs": 11792
     },
     "1": {
       "keywords": {
-        "authentication": 521,
+        "authentication": 523,
         "user": 374,
         "rhost": 490,
         "tty": 490,
@@ -532,7 +1002,16 @@
         "netlink": 1,
         "initializing": 1,
         "socket": 1,
-        "disabled": 1
+        "disabled": 3,
+        "view": 2,
+        "modify": 2,
+        "permissions": 2,
+        "users": 2,
+        "acls": 2,
+        "yarn": 2,
+        "securitymanager": 2,
+        "curi": 2,
+        "set": 2
       },
       "templates": [
         "authentication failure; logname= uid=0 euid=0 tty=NODEVssh ruser= rhost=<*>  user=root",
@@ -546,18 +1025,20 @@
         "session opened for user <*> by LOGIN(uid=<*>)",
         "authentication failure; logname= uid=0 euid=0 tty=:0 ruser= rhost=",
         "Couldn't authenticate user",
-        "audit: initializing netlink socket (disabled)"
+        "audit: initializing netlink socket (disabled)",
+        "SecurityManager: authentication disabled; ui acls disabled; users with view permissions: Set(yarn, curi); users with modify permissions: Set(yarn, curi)"
       ],
       "sources": [
-        "Linux_2k"
+        "Linux_2k",
+        "Spark_2k"
       ],
-      "total_logs": 527
+      "total_logs": 529
     },
     "2": {
       "keywords": {
         "clusterfilesystem": 36,
         "longer": 36,
-        "node": 36,
+        "node": 38,
         "serverfilesystem": 37,
         "served": 36,
         "domain": 37,
@@ -569,22 +1050,22 @@
         "panic": 1,
         "occurred": 1,
         "subcommands": 1,
-        "failed": 1,
+        "failed": 7,
         "boot": 1,
         "continue": 1,
-        "error": 2,
+        "error": 4,
         "asserted": 1,
-        "cannot": 1,
+        "cannot": 2,
         "halt": 1,
         "due": 3,
         "session": 3,
         "zookeeperserver": 3,
-        "exception": 83,
+        "exception": 86,
         "causing": 3,
         "close": 3,
         "java": 3,
         "ioexception": 3,
-        "running": 3,
+        "running": 5,
         "nodeexists": 1,
         "zookeeper": 1,
         "user": 1,
@@ -598,7 +1079,7 @@
         "level": 1,
         "curi": 1,
         "home": 1,
-        "processing": 1,
+        "processing": 3,
         "cxid": 1,
         "path": 1,
         "got": 81,
@@ -617,8 +1098,95 @@
         "acpi": 1,
         "interpreter": 1,
         "disabled": 1,
-        "while": 80,
-        "serving": 80
+        "while": 81,
+        "serving": 80,
+        "headroom": 131,
+        "vcores": 132,
+        "schedule": 131,
+        "recalculating": 131,
+        "memory": 132,
+        "killing": 3,
+        "transitioned": 6,
+        "taskattempt": 6,
+        "eventtype": 2,
+        "event": 4,
+        "failures": 2,
+        "microsoft": 3,
+        "minint": 2,
+        "fareast": 3,
+        "com": 3,
+        "corp": 3,
+        "list": 2,
+        "added": 2,
+        "maps": 3,
+        "attempt": 2,
+        "cleanup": 2,
+        "task": 2,
+        "container": 3,
+        "unknown": 1,
+        "complete": 1,
+        "service": 1,
+        "than": 1,
+        "true": 1,
+        "map": 1,
+        "containertoken": 1,
+        "required": 1,
+        "priority": 1,
+        "resource": 1,
+        "msra": 1,
+        "nodeid": 1,
+        "kind": 1,
+        "tasks": 1,
+        "nodehttpaddress": 1,
+        "isempty": 1,
+        "pending": 1,
+        "containerid": 1,
+        "less": 1,
+        "token": 1,
+        "assign": 1,
+        "either": 1,
+        "applicationmaster": 1,
+        "diagnostics": 1,
+        "report": 1,
+        "killed": 1,
+        "datastreamer": 1,
+        "pipeline": 1,
+        "block": 2,
+        "bad": 1,
+        "recovery": 1,
+        "datanode": 1,
+        "dfsoutputstream": 1,
+        "responseprocessor": 1,
+        "eventhandlingthread": 1,
+        "threw": 1,
+        "main": 1,
+        "thread": 1,
+        "writing": 1,
+        "org": 1,
+        "apache": 1,
+        "jobhistory": 1,
+        "mapreduce": 1,
+        "taskattemptunsuccessfulcompletionevent": 1,
+        "hadoop": 1,
+        "history": 1,
+        "created": 5,
+        "instancelist": 5,
+        "tcloud": 5,
+        "sync": 5,
+        "its": 5,
+        "match": 5,
+        "cloudlab": 5,
+        "instance": 6,
+        "utah": 5,
+        "host": 5,
+        "did": 5,
+        "synchronizing": 1,
+        "power": 1,
+        "instances": 1,
+        "database": 1,
+        "found": 1,
+        "states": 1,
+        "hypervisor": 1
       },
       "templates": [
         "ClusterFileSystem: ServerFileSystem domain <*> is no longer served by node node-<*>",
@@ -633,15 +1201,36 @@
         "zapping low mappings.",
         "Failure registering capabilities with the kernel",
         "ACPI: Interpreter disabled.",
-        "<*>:<*>:Got exception while serving blk_<*> to /<*>:"
+        "<*>:<*>:Got exception while serving blk_<*> to /<*>:",
+        "Recalculating schedule, headroom=<memory:<*>, vCores:<*>>",
+        "KILLING attempt_<*>",
+        "attempt_<*> TaskAttempt Transitioned from RUNNING to FAIL_CONTAINER_CLEANUP",
+        "attempt_<*> TaskAttempt Transitioned from FAIL_CONTAINER_CLEANUP to FAIL_TASK_CLEANUP",
+        "Processing the event EventType: TASK_ABORT",
+        "<*> failures on node MININT-<*>",
+        "Added attempt_<*> to list of failed maps",
+        "Task cleanup failed for attempt attempt_<*>",
+        "attempt_<*> TaskAttempt Transitioned from FAIL_TASK_CLEANUP to FAILED",
+        "Container complete event for unknown container id container_<*>",
+        "Cannot assign container Container: [ContainerId: container_<*>, NodeId: <*>:<*>, NodeHttpAddress: <*>:<*>, Resource: <memory:<*>, vCores:<*>>, Priority: <*>, Token: Token { kind: ContainerToken, service: <*>:<*> }, ] for a map as either  container memory less than required <memory:<*>, vCores:<*>> or no pending map tasks - maps.isEmpty=true",
+        "Diagnostics report from attempt_<*>: Container killed by the ApplicationMaster.",
+        "DataStreamer Exception",
+        "Error Recovery for block BP-<*>:blk_<*> in pipeline <*>:<*>, <*>:<*>: bad datanode <*>:<*>",
+        "DFSOutputStream ResponseProcessor exception  for block BP-<*>:blk_<*>",
+        "Thread Thread[eventHandlingThread,<*>,main] threw an Exception.",
+        "Error writing History Event: org.apache.hadoop.mapreduce.jobhistory.TaskAttemptUnsuccessfulCompletionEvent@<*>",
+        "The instance sync for host '<*>' did not match. Re-created its InstanceList.",
+        "While synchronizing instance power states, found <*> instances in the database and <*> instances on the hypervisor."
       ],
       "sources": [
         "HDFS_2k",
         "HPC_2k",
+        "Hadoop_2k",
+        "OpenStack_2k",
         "Linux_2k",
         "Zookeeper_2k"
       ],
-      "total_logs": 190
+      "total_logs": 352
     },
     "3": {
       "keywords": {
@@ -651,14 +1240,14 @@
         "full": 12,
         "exceeds": 2,
         "warning": 2,
-        "threshold": 2,
+        "threshold": 3,
         "temperature": 2,
         "notification": 37,
         "out": 38,
         "time": 37,
         "user": 1,
         "jun": 1,
-        "seconds": 1,
+        "seconds": 45,
         "timed": 1,
         "sat": 1,
         "unknown": 1,
@@ -686,7 +1275,7 @@
         "code": 1,
         "kernel": 1,
         "reserved": 1,
-        "init": 1,
+        "init": 376,
         "delay": 1,
         "loop": 1,
         "bogomips": 1,
@@ -700,7 +1289,30 @@
         "cache": 4,
         "inode": 1,
         "mount": 1,
-        "cpu": 1
+        "cpu": 1,
+        "status": 1,
+        "ack": 1,
+        "readprocessor": 1,
+        "took": 82,
+        "read": 1,
+        "seqno": 1,
+        "success": 1,
+        "targets": 1,
+        "slow": 1,
+        "error": 1,
+        "fields": 1,
+        "downstreamacktimenanos": 1,
+        "instance": 44,
+        "spawn": 22,
+        "hypervisor": 22,
+        "build": 22,
+        "times": 375,
+        "total": 375,
+        "finish": 375,
+        "boot": 375,
+        "reading": 37,
+        "variable": 37,
+        "broadcast": 37
       },
       "templates": [
         "blocked",
@@ -721,14 +1333,22 @@
         "Dentry cache hash table entries: <*> (order: <*>, <*> bytes)",
         "Inode-cache hash table entries: <*> (order: <*>, <*> bytes)",
         "Mount-cache hash table entries: <*> (order: <*>, <*> bytes)",
-        "CPU: L1 I cache: <*>, L1 D cache: <*>"
+        "CPU: L1 I cache: <*>, L1 D cache: <*>",
+        "Slow ReadProcessor read fields took <*>ms (threshold=<*>ms); ack: seqno: <*> status: SUCCESS status: ERROR downstreamAckTimeNanos: <*>, targets: [<*>:<*>, <*>:<*>]",
+        "[instance: <*>] Took <*>.<*> seconds to spawn the instance on the hypervisor.",
+        "[instance: <*>] Took <*>.<*> seconds to build instance.",
+        "Times: total = <*>, boot = <*>, init = <*>, finish = <*>",
+        "Reading broadcast variable <*> took <*> ms"
       ],
       "sources": [
         "HPC_2k",
+        "Hadoop_2k",
+        "OpenStack_2k",
+        "Spark_2k",
         "Linux_2k",
         "Zookeeper_2k"
       ],
-      "total_logs": 81
+      "total_logs": 538
     },
     "4": {
       "keywords": {
@@ -736,13 +1356,13 @@
         "current": 56,
         "remain": 56,
         "link": 82,
-        "error": 406,
+        "error": 557,
         "reset": 11,
         "interconnect": 4,
         "tree": 4,
         "broadcast": 4,
         "via": 2,
-        "failed": 43,
+        "failed": 375,
         "niff": 2,
         "network": 2,
         "node": 2,
@@ -778,16 +1398,16 @@
         "sockets": 26,
         "google": 46,
         "channel": 112,
-        "connect": 66,
+        "connect": 212,
         "www": 20,
         "resolve": 20,
         "mtalk": 20,
         "establish": 17,
         "baidu": 17,
-        "status": 17,
+        "status": 1034,
         "cannot": 103,
         "formi": 17,
-        "server": 56,
+        "server": 266,
         "target": 17,
         "through": 20,
         "config": 3,
@@ -803,18 +1423,18 @@
         "open": 98,
         "election": 86,
         "which": 44,
-        "socket": 48,
+        "socket": 54,
         "had": 44,
         "sessionid": 44,
         "session": 47,
         "exceeded": 40,
         "expiring": 40,
-        "timeout": 40,
+        "timeout": 46,
         "old": 39,
-        "will": 39,
+        "will": 365,
         "mode": 39,
         "dropped": 39,
-        "exception": 49,
+        "exception": 55,
         "stream": 37,
         "caught": 37,
         "end": 37,
@@ -824,7 +1444,7 @@
         "causing": 12,
         "still": 12,
         "established": 4,
-        "renew": 3,
+        "renew": 329,
         "attempting": 3,
         "revalidating": 3,
         "notify": 16,
@@ -836,12 +1456,55 @@
         "software": 15,
         "caused": 15,
         "peer": 2,
-        "get": 2,
+        "get": 933,
         "can": 2,
         "warning": 2,
         "packet": 1,
         "snmp": 1,
-        "received": 1
+        "received": 1,
+        "seconds": 326,
+        "lease": 326,
+        "retry": 472,
+        "shortly": 326,
+        "contacting": 147,
+        "tried": 146,
+        "msra": 152,
+        "retryuptomaximumcountwithfixedsleep": 146,
+        "milliseconds": 146,
+        "retrying": 146,
+        "sleeptime": 146,
+        "maxretries": 146,
+        "already": 146,
+        "time": 1163,
+        "policy": 146,
+        "net": 6,
+        "noroutetohost": 6,
+        "apache": 6,
+        "information": 6,
+        "see": 6,
+        "org": 6,
+        "wiki": 6,
+        "details": 6,
+        "minint": 6,
+        "report": 4,
+        "noroutetohostexception": 6,
+        "hadoop": 6,
+        "host": 6,
+        "http": 1023,
+        "more": 6,
+        "java": 6,
+        "diagnostics": 4,
+        "further": 6,
+        "route": 6,
+        "task": 2,
+        "exited": 2,
+        "servers": 1017,
+        "detail": 931,
+        "len": 1017,
+        "post": 64,
+        "events": 64,
+        "external": 64,
+        "delete": 22
       },
       "templates": [
         "link errors remain current",
@@ -869,15 +1532,25 @@
         "notify question section contains no SOA",
         "Authentication failed from <*> (<*>): Software caused connection abort",
         "warning: can't get client address: Connection reset by peer",
-        "Received SNMP packet(s) from <*>"
+        "Received SNMP packet(s) from <*>",
+        "Failed to renew lease for [DFSClient_NONMAPREDUCE_<*>_<*>] for <*> seconds.  Will retry shortly ...",
+        "ERROR IN CONTACTING RM.",
+        "Retrying connect to server: <*>:<*>. Already tried <*> time(s); retry policy is RetryUpToMaximumCountWithFixedSleep(maxRetries=<*>, sleepTime=<*> MILLISECONDS)",
+        "Diagnostics report from attempt_<*>: Error: java.net.NoRouteToHostException: No Route to Host from  MININT-<*>/<*> to <*>:<*> failed on socket timeout exception: java.net.NoRouteToHostException: No route to host: no further information; For more details see:  http://wiki.apache.org/hadoop/NoRouteToHost",
+        "Task: attempt_<*> - exited : java.net.NoRouteToHostException: No Route to Host from  MININT-<*>/<*> to <*>:<*> failed on socket timeout exception: java.net.NoRouteToHostException: No route to host: no further information; For more details see:  http://wiki.apache.org/hadoop/NoRouteToHost",
+        "<*> \"GET <*>\" status: <*> len: <*> time: <*>.<*>",
+        "<*> \"POST <*>\" status: <*> len: <*> time: <*>.<*>",
+        "<*> \"DELETE <*>\" status: <*> len: <*> time: <*>.<*>"
       ],
       "sources": [
         "HPC_2k",
+        "Hadoop_2k",
         "Proxifier_2k",
+        "OpenStack_2k",
         "Linux_2k",
         "Zookeeper_2k"
       ],
-      "total_logs": 1089
+      "total_logs": 2731
     },
     "5": {
       "keywords": {
@@ -911,7 +1584,24 @@
         "failed": 1,
         "security": 1,
         "there": 1,
-        "already": 1
+        "already": 1,
+        "request": 1,
+        "defined": 1,
+        "requests": 1,
+        "http": 1,
+        "mapreduce": 6,
+        "log": 1,
+        "task": 4,
+        "mapred": 5,
+        "use": 5,
+        "instead": 5,
+        "deprecated": 5,
+        "tip": 1,
+        "map": 1,
+        "ismap": 1,
+        "attempt": 1,
+        "job": 1,
+        "partition": 1
       },
       "templates": [
         "inconsistent nodesets node-<*> <*> <ok> node-<*> <*> <ok> node-<*> <*> <ok> node-<*> <*> <ok><*>",
@@ -922,14 +1612,22 @@
         "You can enable it with acpi=force",
         "mapped 4G/4G trampoline to <*>.",
         "SELinux:  Starting in permissive mode",
-        "There is already a security framework initialized, register_security failed."
+        "There is already a security framework initialized, register_security failed.",
+        "Http request log for http.requests.mapreduce is not defined",
+        "mapred.tip.id is deprecated. Instead, use mapreduce.task.id",
+        "mapred.task.is.map is deprecated. Instead, use mapreduce.task.ismap",
+        "mapred.task.id is deprecated. Instead, use mapreduce.task.attempt.id",
+        "mapred.job.id is deprecated. Instead, use mapreduce.job.id",
+        "mapred.task.partition is deprecated. Instead, use mapreduce.task.partition"
       ],
       "sources": [
         "HPC_2k",
+        "Hadoop_2k",
+        "Spark_2k",
         "Linux_2k",
         "Zookeeper_2k"
       ],
-      "total_logs": 15
+      "total_logs": 21
     },
     "6": {
       "keywords": {
@@ -1005,9 +1703,9 @@
         "PCI: Invalid ACPI-PCI IRQ routing table"
       ],
       "sources": [
-        "HPC_2k",
         "Linux_2k",
-        "Zookeeper_2k"
+        "Zookeeper_2k",
+        "HPC_2k"
       ],
       "total_logs": 37
     },
@@ -1029,14 +1727,15 @@
       "0": 394.0
     },
     "event": {
-      "0": 394.0
+      "0": 570.0,
+      "2": 4.0
     },
     "ambient": {
       "0": 292.0,
       "6": 5.0
     },
     "normal": {
-      "0": 206.0,
+      "0": 207.0,
       "3": 1.0
     },
     "warning": {
@@ -1045,8 +1744,8 @@
       "4": 2.0
     },
     "running": {
-      "0": 162.0,
-      "2": 3.0
+      "0": 491.0,
+      "2": 5.0
     },
     "out": {
       "0": 91.0,
@@ -1064,7 +1763,8 @@
     },
     "boot": {
       "0": 67.0,
-      "2": 1.0
+      "2": 1.0,
+      "3": 375.0
     },
     "command": {
       "0": 157.0,
@@ -1092,7 +1792,7 @@
       "0": 13.0
     },
     "via": {
-      "0": 91.0,
+      "0": 92.0,
       "4": 2.0
     },
     "niff": {
@@ -1100,26 +1800,26 @@
       "4": 2.0
     },
     "network": {
-      "0": 92.0,
+      "0": 136.0,
       "4": 2.0
     },
     "node": {
-      "0": 108.0,
-      "2": 36.0,
+      "0": 205.0,
+      "2": 38.0,
       "5": 4.0,
       "4": 2.0,
       "3": 1.0
     },
     "available": {
-      "0": 91.0,
+      "0": 106.0,
       "3": 3.0
     },
     "has": {
-      "0": 101.0,
+      "0": 144.0,
       "2": 2.0
     },
     "detected": {
-      "0": 91.0,
+      "0": 567.0,
       "4": 2.0,
       "6": 2.0
     },
@@ -1157,11 +1857,11 @@
       "5": 1.0
     },
     "server": {
-      "0": 45.0,
-      "4": 56.0
+      "0": 54.0,
+      "4": 266.0
     },
     "storage": {
-      "0": 32.0
+      "0": 114.0
     },
     "critical": {
       "2": 20.0
@@ -1170,8 +1870,9 @@
       "3": 15.0
     },
     "error": {
-      "4": 406.0,
-      "2": 2.0
+      "4": 557.0,
+      "2": 4.0,
+      "3": 1.0
     },
     "full": {
       "3": 12.0
@@ -1184,7 +1885,8 @@
       "6": 12.0
     },
     "change": {
-      "6": 12.0
+      "6": 12.0,
+      "0": 476.0
     },
     "hwid": {
       "6": 12.0
@@ -1196,10 +1898,10 @@
       "6": 12.0
     },
     "successfully": {
-      "0": 10.0
+      "0": 59.0
     },
     "completed": {
-      "0": 10.0,
+      "0": 13.0,
       "4": 1.0
     },
     "reset": {
@@ -1214,7 +1916,7 @@
       "2": 1.0
     },
     "active": {
-      "0": 5.0
+      "0": 87.0
     },
     "domains": {
       "0": 9.0
@@ -1226,7 +1928,7 @@
       "0": 5.0
     },
     "nodes": {
-      "0": 9.0
+      "0": 91.0
     },
     "interconnect": {
       "4": 4.0
@@ -1235,7 +1937,9 @@
       "4": 4.0
     },
     "broadcast": {
-      "4": 4.0
+      "4": 4.0,
+      "3": 37.0,
+      "0": 37.0
     },
     "inconsistent": {
       "5": 4.0
@@ -1257,14 +1961,15 @@
       "3": 2.0
     },
     "threshold": {
-      "3": 2.0
+      "3": 3.0,
+      "0": 131.0
     },
     "temperature": {
       "3": 2.0
     },
     "failed": {
-      "4": 43.0,
-      "2": 1.0,
+      "4": 375.0,
+      "2": 7.0,
       "1": 31.0,
       "5": 1.0
     },
@@ -1273,7 +1978,8 @@
       "4": 1.0
     },
     "power": {
-      "6": 1.0
+      "6": 1.0,
+      "2": 1.0
     },
     "control": {
       "6": 1.0
@@ -1297,7 +2003,7 @@
       "0": 1.0
     },
     "starting": {
-      "0": 6.0,
+      "0": 14.0,
       "5": 1.0
     },
     "subcommands": {
@@ -1305,7 +2011,7 @@
     },
     "while": {
       "4": 327.0,
-      "2": 80.0
+      "2": 81.0
     },
     "prompt": {
       "4": 1.0
@@ -1335,7 +2041,7 @@
       "2": 1.0
     },
     "cannot": {
-      "2": 1.0,
+      "2": 2.0,
       "4": 103.0
     },
     "edu": {
@@ -1343,7 +2049,7 @@
       "4": 66.0
     },
     "proxy": {
-      "0": 1903.0,
+      "0": 1916.0,
       "4": 66.0
     },
     "cse": {
@@ -1369,17 +2075,17 @@
       "0": 947.0
     },
     "sent": {
-      "0": 947.0
+      "0": 1247.0
     },
     "lifetime": {
       "0": 947.0
     },
     "bytes": {
-      "0": 949.0,
+      "0": 1361.0,
       "3": 3.0
     },
     "received": {
-      "0": 1540.0,
+      "0": 1542.0,
       "4": 1.0
     },
     "close": {
@@ -1388,7 +2094,8 @@
     },
     "com": {
       "4": 97.0,
-      "0": 1.0
+      "0": 64.0,
+      "2": 3.0
     },
     "completion": {
       "4": 31.0
@@ -1400,11 +2107,13 @@
       "4": 31.0
     },
     "before": {
-      "4": 31.0
+      "4": 31.0,
+      "0": 5.0
     },
     "request": {
       "4": 70.0,
-      "0": 300.0
+      "0": 300.0,
+      "5": 1.0
     },
     "canceled": {
       "4": 31.0
@@ -1416,11 +2125,14 @@
       "4": 26.0
     },
     "attempt": {
-      "4": 26.0
+      "4": 26.0,
+      "2": 2.0,
+      "0": 2.0,
+      "5": 1.0
     },
     "client": {
       "4": 121.0,
-      "0": 91.0
+      "0": 92.0
     },
     "sockets": {
       "4": 26.0
@@ -1432,7 +2144,7 @@
       "4": 112.0
     },
     "connect": {
-      "4": 66.0
+      "4": 212.0
     },
     "www": {
       "4": 20.0
@@ -1451,7 +2163,8 @@
       "4": 17.0
     },
     "status": {
-      "4": 17.0
+      "4": 1034.0,
+      "3": 1.0
     },
     "formi": {
       "4": 17.0
@@ -1460,7 +2173,8 @@
       "4": 17.0
     },
     "config": {
-      "4": 3.0
+      "4": 3.0,
+      "0": 1.0
     },
     "closed": {
       "4": 51.0,
@@ -1482,7 +2196,8 @@
       "4": 314.0
     },
     "queue": {
-      "4": 314.0
+      "4": 314.0,
+      "0": 1.0
     },
     "interrupted": {
       "4": 314.0
@@ -1503,13 +2218,15 @@
       "0": 262.0
     },
     "thread": {
-      "0": 263.0
+      "0": 264.0,
+      "2": 1.0
     },
     "send": {
       "0": 262.0
     },
     "address": {
-      "4": 88.0
+      "4": 88.0,
+      "0": 476.0
     },
     "election": {
       "4": 86.0,
@@ -1530,14 +2247,14 @@
     },
     "timeout": {
       "0": 50.0,
-      "4": 40.0
+      "4": 46.0
     },
     "accepted": {
       "0": 48.0
     },
     "socket": {
-      "0": 48.0,
-      "4": 48.0,
+      "0": 50.0,
+      "4": 54.0,
       "1": 1.0
     },
     "processed": {
@@ -1558,10 +2275,10 @@
       "4": 44.0
     },
     "new": {
-      "0": 44.0
+      "0": 546.0
     },
     "attempting": {
-      "0": 41.0,
+      "0": 62.0,
       "4": 3.0
     },
     "exceeded": {
@@ -1572,10 +2289,11 @@
     },
     "old": {
       "4": 39.0,
-      "5": 1.0
+      "5": 1.0,
+      "0": 476.0
     },
     "will": {
-      "4": 39.0
+      "4": 365.0
     },
     "mode": {
       "4": 39.0,
@@ -1591,12 +2309,13 @@
     },
     "time": {
       "3": 37.0,
-      "0": 1.0
+      "0": 1.0,
+      "4": 1163.0
     },
     "exception": {
-      "4": 49.0,
-      "2": 83.0,
-      "0": 2.0
+      "4": 55.0,
+      "2": 86.0,
+      "0": 23.0
     },
     "stream": {
       "4": 37.0
@@ -1638,16 +2357,18 @@
       "0": 11.0
     },
     "host": {
-      "0": 11.0
+      "0": 15.0,
+      "4": 6.0,
+      "2": 5.0
     },
     "environment": {
       "0": 11.0
     },
     "name": {
-      "0": 11.0
+      "0": 26.0
     },
     "mesos": {
-      "0": 11.0
+      "0": 13.0
     },
     "vendor": {
       "0": 11.0
@@ -1659,8 +2380,9 @@
       "0": 11.0
     },
     "java": {
-      "0": 11.0,
-      "2": 3.0
+      "0": 13.0,
+      "2": 3.0,
+      "4": 6.0
     },
     "dir": {
       "0": 11.0
@@ -1691,7 +2413,7 @@
       "6": 5.0
     },
     "renew": {
-      "4": 3.0
+      "4": 329.0
     },
     "purgeinterval": {
       "5": 3.0
@@ -1702,7 +2424,8 @@
     },
     "set": {
       "5": 6.0,
-      "0": 2.0
+      "0": 3.0,
+      "1": 2.0
     },
     "revalidating": {
       "4": 3.0
@@ -1724,19 +2447,19 @@
       "5": 2.0
     },
     "version": {
-      "0": 7.0
+      "0": 37.0
     },
     "lib": {
-      "0": 3.0
+      "0": 382.0
     },
     "snapshotting": {
       "0": 2.0
     },
     "snapshot": {
-      "0": 5.0
+      "0": 7.0
     },
     "var": {
-      "0": 3.0
+      "0": 381.0
     },
     "zookeeper": {
       "0": 4.0,
@@ -1750,13 +2473,14 @@
       "0": 2.0
     },
     "took": {
-      "0": 2.0
+      "0": 44.0,
+      "3": 82.0
     },
     "bind": {
       "0": 1.0
     },
     "port": {
-      "0": 1.0
+      "0": 16.0
     },
     "proposed": {
       "0": 1.0
@@ -1784,7 +2508,9 @@
       "6": 1.0
     },
     "apache": {
-      "0": 1.0
+      "0": 16.0,
+      "4": 6.0,
+      "2": 1.0
     },
     "quorumserver": {
       "0": 1.0
@@ -1796,7 +2522,9 @@
       "0": 3.0
     },
     "org": {
-      "0": 1.0
+      "0": 17.0,
+      "4": 6.0,
+      "2": 1.0
     },
     "follower": {
       "0": 1.0
@@ -1827,22 +2555,27 @@
       "2": 1.0
     },
     "curi": {
-      "2": 1.0
+      "2": 1.0,
+      "0": 5.0,
+      "1": 2.0
     },
     "home": {
       "2": 1.0
     },
     "processing": {
-      "2": 1.0
+      "2": 3.0,
+      "0": 14.0
     },
     "cxid": {
       "2": 1.0
     },
     "path": {
-      "2": 1.0
+      "2": 1.0,
+      "0": 2.0
     },
     "got": {
-      "2": 81.0
+      "2": 81.0,
+      "0": 315.0
     },
     "txntype": {
       "2": 1.0
@@ -1868,10 +2601,12 @@
       "6": 1.0
     },
     "complete": {
-      "0": 1.0
+      "0": 22.0,
+      "2": 1.0
     },
     "reading": {
-      "0": 1.0
+      "0": 38.0,
+      "3": 37.0
     },
     "first": {
       "0": 1.0
@@ -1894,13 +2629,14 @@
     },
     "net": {
       "0": 910.0,
-      "1": 351.0
+      "1": 351.0,
+      "4": 6.0
     },
     "fri": {
       "0": 909.0
     },
     "authentication": {
-      "1": 521.0,
+      "1": 523.0,
       "4": 15.0
     },
     "rhost": {
@@ -1949,8 +2685,9 @@
       "0": 117.0
     },
     "unknown": {
-      "0": 117.0,
-      "3": 1.0
+      "0": 147.0,
+      "3": 1.0,
+      "2": 1.0
     },
     "alert": {
       "2": 43.0
@@ -1959,7 +2696,8 @@
       "2": 43.0
     },
     "exited": {
-      "2": 43.0
+      "2": 43.0,
+      "4": 2.0
     },
     "kerberos": {
       "1": 23.0
@@ -2012,7 +2750,7 @@
       "0": 12.0
     },
     "succeeded": {
-      "0": 44.0
+      "0": 47.0
     },
     "udev": {
       "0": 8.0
@@ -2021,13 +2759,14 @@
       "0": 9.0
     },
     "removing": {
-      "0": 4.0
+      "0": 25.0
     },
     "test": {
-      "1": 4.0
+      "1": 4.0,
+      "0": 30.0
     },
     "creating": {
-      "0": 4.0
+      "0": 47.0
     },
     "transport": {
       "0": 4.0
@@ -2063,14 +2802,15 @@
       "1": 4.0
     },
     "get": {
-      "4": 2.0
+      "4": 933.0
     },
     "can": {
       "4": 2.0,
       "5": 1.0
     },
     "usable": {
-      "6": 2.0
+      "6": 2.0,
+      "0": 15.0
     },
     "intellimouse": {
       "6": 1.0
@@ -2079,14 +2819,17 @@
       "6": 1.0
     },
     "seconds": {
-      "3": 1.0
+      "3": 45.0,
+      "4": 326.0,
+      "0": 42.0
     },
     "sat": {
       "3": 1.0,
       "0": 1.0
     },
     "after": {
-      "3": 1.0
+      "3": 1.0,
+      "0": 12.0
     },
     "packet": {
       "4": 1.0
@@ -2131,7 +2874,8 @@
       "0": 1.0
     },
     "build": {
-      "0": 1.0
+      "0": 1.0,
+      "3": 22.0
     },
     "may": {
       "0": 1.0
@@ -2146,10 +2890,11 @@
       "0": 1.0
     },
     "log": {
-      "0": 1.0
+      "0": 47.0,
+      "5": 1.0
     },
     "started": {
-      "0": 3.0
+      "0": 70.0
     },
     "proc": {
       "0": 1.0
@@ -2164,7 +2909,9 @@
       "6": 1.0
     },
     "map": {
-      "6": 1.0
+      "6": 1.0,
+      "2": 1.0,
+      "5": 1.0
     },
     "highmem": {
       "3": 3.0
@@ -2215,10 +2962,12 @@
       "6": 1.0
     },
     "because": {
-      "5": 1.0
+      "5": 1.0,
+      "0": 1.0
     },
     "too": {
-      "5": 1.0
+      "5": 1.0,
+      "0": 10.0
     },
     "your": {
       "5": 1.0
@@ -2226,7 +2975,7 @@
     "disabled": {
       "5": 1.0,
       "2": 1.0,
-      "1": 1.0
+      "1": 3.0
     },
     "you": {
       "5": 1.0
@@ -2274,7 +3023,7 @@
     "cpu": {
       "6": 2.0,
       "3": 1.0,
-      "0": 3.0
+      "0": 24.0
     },
     "irqstacks": {
       "6": 1.0
@@ -2313,7 +3062,7 @@
     },
     "using": {
       "3": 1.0,
-      "0": 2.0
+      "0": 15.0
     },
     "tsc": {
       "3": 1.0
@@ -2344,14 +3093,15 @@
     },
     "memory": {
       "3": 1.0,
-      "0": 1.0
+      "0": 228.0,
+      "2": 132.0
     },
     "data": {
       "3": 1.0,
-      "0": 263.0
+      "0": 264.0
     },
     "init": {
-      "3": 1.0
+      "3": 376.0
     },
     "delay": {
       "3": 1.0
@@ -2387,14 +3137,15 @@
       "5": 1.0
     },
     "already": {
-      "5": 1.0
+      "5": 1.0,
+      "4": 146.0
     },
     "capabilities": {
       "2": 1.0
     },
     "registering": {
       "2": 1.0,
-      "0": 2.0
+      "0": 11.0
     },
     "capability": {
       "0": 2.0
@@ -2436,7 +3187,7 @@
       "0": 1.0
     },
     "enabled": {
-      "0": 1.0
+      "0": 3.0
     },
     "coppermine": {
       "0": 1.0
@@ -2466,7 +3217,7 @@
       "0": 1.0
     },
     "done": {
-      "0": 2.0
+      "0": 3.0
     },
     "simd": {
       "0": 1.0
@@ -2484,13 +3235,13 @@
       "0": 1.0
     },
     "checking": {
-      "0": 1.0
+      "0": 83.0
     },
     "random": {
       "0": 1.0
     },
     "number": {
-      "0": 1.0
+      "0": 3.0
     },
     "generator": {
       "0": 1.0
@@ -2508,10 +3259,10 @@
       "0": 1.0
     },
     "protocol": {
-      "0": 1.0
+      "0": 2.0
     },
     "registered": {
-      "0": 3.0
+      "0": 7.0
     },
     "family": {
       "0": 1.0
@@ -2557,7 +3308,7 @@
       "0": 1.0
     },
     "driver": {
-      "0": 4.0
+      "0": 306.0
     },
     "usbcore": {
       "0": 2.0
@@ -2614,7 +3365,7 @@
     },
     "audit": {
       "1": 1.0,
-      "0": 1.0
+      "0": 2.0
     },
     "netlink": {
       "1": 1.0
@@ -2638,10 +3389,11 @@
       "0": 2.0
     },
     "total": {
-      "0": 1.0
+      "0": 79.0,
+      "3": 375.0
     },
     "allocated": {
-      "0": 1.0
+      "0": 26.0
     },
     "hugetlb": {
       "0": 1.0
@@ -2653,7 +3405,7 @@
       "0": 1.0
     },
     "disk": {
-      "0": 1.0
+      "0": 64.0
     },
     "vfs": {
       "0": 1.0
@@ -2674,7 +3426,7 @@
       "0": 1.0
     },
     "api": {
-      "0": 1.0
+      "0": 2.0
     },
     "core": {
       "0": 1.0
@@ -2695,7 +3447,8 @@
       "0": 1.0
     },
     "found": {
-      "0": 1.0
+      "0": 354.0,
+      "2": 1.0
     },
     "real": {
       "0": 1.0
@@ -2716,19 +3469,21 @@
       "0": 314.0
     },
     "block": {
-      "0": 1900.0
+      "0": 2306.0,
+      "2": 2.0
     },
     "updated": {
-      "0": 314.0
+      "0": 329.0
     },
     "added": {
-      "0": 538.0
+      "0": 541.0,
+      "2": 2.0
     },
     "namesystem": {
       "0": 653.0
     },
     "size": {
-      "0": 608.0
+      "0": 760.0
     },
     "blockmap": {
       "0": 314.0
@@ -2737,7 +3492,7 @@
       "0": 311.0
     },
     "terminating": {
-      "0": 311.0
+      "0": 333.0
     },
     "receiving": {
       "0": 292.0
@@ -2749,16 +3504,18 @@
       "0": 294.0
     },
     "deleting": {
-      "0": 263.0
+      "0": 284.0
     },
     "mnt": {
       "0": 263.0
     },
     "hadoop": {
-      "0": 263.0
+      "0": 282.0,
+      "4": 6.0,
+      "2": 1.0
     },
     "file": {
-      "0": 263.0
+      "0": 360.0
     },
     "dfs": {
       "0": 263.0
@@ -2767,7 +3524,8 @@
       "0": 224.0
     },
     "delete": {
-      "0": 229.0
+      "0": 229.0,
+      "4": 22.0
     },
     "allocateblock": {
       "0": 115.0
@@ -2785,16 +3543,1204 @@
       "0": 20.0
     },
     "ask": {
-      "0": 6.0
+      "0": 18.0
     },
     "transfer": {
       "0": 1.0
     },
     "datanode": {
-      "0": 1.0
+      "0": 1.0,
+      "2": 1.0
     },
     "replicate": {
       "0": 1.0
+    },
+    "msra": {
+      "0": 521.0,
+      "4": 152.0,
+      "2": 1.0
+    },
+    "lease": {
+      "4": 326.0
+    },
+    "retry": {
+      "4": 472.0
+    },
+    "shortly": {
+      "4": 326.0
+    },
+    "taskattempt": {
+      "0": 348.0,
+      "2": 6.0
+    },
+    "progress": {
+      "0": 289.0
+    },
+    "contacting": {
+      "4": 147.0
+    },
+    "tried": {
+      "4": 146.0
+    },
+    "retryuptomaximumcountwithfixedsleep": {
+      "4": 146.0
+    },
+    "milliseconds": {
+      "4": 146.0,
+      "0": 1.0
+    },
+    "retrying": {
+      "4": 146.0
+    },
+    "sleeptime": {
+      "4": 146.0
+    },
+    "maxretries": {
+      "4": 146.0
+    },
+    "policy": {
+      "4": 146.0
+    },
+    "headroom": {
+      "2": 131.0
+    },
+    "vcores": {
+      "2": 132.0,
+      "0": 15.0
+    },
+    "schedule": {
+      "2": 131.0
+    },
+    "recalculating": {
+      "2": 131.0
+    },
+    "reduce": {
+      "0": 131.0
+    },
+    "start": {
+      "0": 131.0
+    },
+    "slow": {
+      "0": 131.0,
+      "3": 1.0
+    },
+    "met": {
+      "0": 130.0
+    },
+    "completedmapsforreduceslowstart": {
+      "0": 130.0
+    },
+    "resolved": {
+      "0": 39.0
+    },
+    "rack": {
+      "0": 39.0
+    },
+    "default": {
+      "0": 43.0
+    },
+    "microsoft": {
+      "0": 63.0,
+      "2": 3.0
+    },
+    "fareast": {
+      "0": 63.0,
+      "2": 3.0
+    },
+    "corp": {
+      "0": 63.0,
+      "2": 3.0
+    },
+    "unassigned": {
+      "0": 24.0
+    },
+    "transitioned": {
+      "0": 61.0,
+      "2": 6.0
+    },
+    "container": {
+      "0": 27.0,
+      "2": 3.0
+    },
+    "eventtype": {
+      "0": 23.0,
+      "2": 2.0
+    },
+    "opening": {
+      "0": 13.0
+    },
+    "minint": {
+      "0": 24.0,
+      "4": 6.0,
+      "2": 2.0
+    },
+    "scheduling": {
+      "0": 19.0
+    },
+    "assignedmaps": {
+      "0": 17.0
+    },
+    "completedreds": {
+      "0": 17.0
+    },
+    "completedmaps": {
+      "0": 17.0
+    },
+    "pendingreds": {
+      "0": 17.0
+    },
+    "assignedreds": {
+      "0": 17.0
+    },
+    "scheduledreds": {
+      "0": 17.0
+    },
+    "scheduledmaps": {
+      "0": 17.0
+    },
+    "contrel": {
+      "0": 17.0
+    },
+    "contalloc": {
+      "0": 17.0
+    },
+    "racklocal": {
+      "0": 17.0
+    },
+    "hostlocal": {
+      "0": 17.0
+    },
+    "newcontainers": {
+      "0": 12.0
+    },
+    "finishedcontainers": {
+      "0": 12.0
+    },
+    "knownnms": {
+      "0": 12.0
+    },
+    "release": {
+      "0": 12.0
+    },
+    "getresources": {
+      "0": 12.0
+    },
+    "resourcelimit": {
+      "0": 12.0
+    },
+    "scheduled": {
+      "0": 22.0
+    },
+    "task": {
+      "0": 1027.0,
+      "4": 2.0,
+      "2": 2.0,
+      "5": 4.0
+    },
+    "containermanager": {
+      "0": 10.0
+    },
+    "shuffle": {
+      "0": 11.0
+    },
+    "returned": {
+      "0": 10.0
+    },
+    "containerid": {
+      "0": 10.0,
+      "2": 1.0
+    },
+    "assigned": {
+      "0": 336.0
+    },
+    "launching": {
+      "0": 12.0
+    },
+    "containers": {
+      "0": 10.0
+    },
+    "auth": {
+      "0": 10.0
+    },
+    "successful": {
+      "0": 31.0
+    },
+    "simple": {
+      "0": 10.0
+    },
+    "asked": {
+      "0": 10.0
+    },
+    "jvm": {
+      "0": 20.0
+    },
+    "given": {
+      "0": 10.0
+    },
+    "jobeventtype": {
+      "0": 9.0
+    },
+    "jobeventdispatcher": {
+      "0": 9.0
+    },
+    "app": {
+      "0": 10.0
+    },
+    "taskeventtype": {
+      "0": 9.0
+    },
+    "jobhistoryeventhandler": {
+      "0": 9.0
+    },
+    "jobhistory": {
+      "0": 9.0,
+      "2": 1.0
+    },
+    "mrappmaster": {
+      "0": 12.0
+    },
+    "mapreduce": {
+      "0": 16.0,
+      "5": 6.0,
+      "2": 1.0
+    },
+    "job": {
+      "0": 19.0,
+      "5": 1.0
+    },
+    "taskeventdispatcher": {
+      "0": 9.0
+    },
+    "class": {
+      "0": 14.0
+    },
+    "noroutetohost": {
+      "4": 6.0
+    },
+    "information": {
+      "4": 6.0
+    },
+    "see": {
+      "4": 6.0
+    },
+    "wiki": {
+      "4": 6.0
+    },
+    "details": {
+      "4": 6.0
+    },
+    "report": {
+      "4": 4.0,
+      "2": 1.0
+    },
+    "noroutetohostexception": {
+      "4": 6.0
+    },
+    "http": {
+      "4": 1023.0,
+      "0": 22.0,
+      "5": 1.0
+    },
+    "more": {
+      "4": 6.0
+    },
+    "diagnostics": {
+      "4": 4.0,
+      "2": 1.0
+    },
+    "further": {
+      "4": 6.0
+    },
+    "route": {
+      "4": 6.0
+    },
+    "system": {
+      "0": 4.0
+    },
+    "hdfs": {
+      "0": 81.0
+    },
+    "killing": {
+      "2": 3.0
+    },
+    "reader": {
+      "0": 2.0
+    },
+    "listener": {
+      "0": 2.0
+    },
+    "ipc": {
+      "0": 4.0
+    },
+    "responder": {
+      "0": 2.0
+    },
+    "concurrent": {
+      "0": 2.0
+    },
+    "util": {
+      "0": 2.0
+    },
+    "linkedblockingqueue": {
+      "0": 2.0
+    },
+    "callqueue": {
+      "0": 2.0
+    },
+    "adding": {
+      "0": 5.0
+    },
+    "spec": {
+      "0": 2.0
+    },
+    "failures": {
+      "2": 2.0
+    },
+    "list": {
+      "2": 2.0
+    },
+    "maps": {
+      "2": 3.0,
+      "0": 2.0
+    },
+    "cleanup": {
+      "2": 2.0
+    },
+    "mapred": {
+      "0": 1.0,
+      "5": 5.0
+    },
+    "newapicommitter": {
+      "0": 1.0
+    },
+    "period": {
+      "0": 1.0
+    },
+    "second": {
+      "0": 1.0
+    },
+    "created": {
+      "0": 3.0,
+      "2": 5.0
+    },
+    "application": {
+      "0": 1.0
+    },
+    "ident": {
+      "0": 1.0
+    },
+    "service": {
+      "0": 3.0,
+      "2": 1.0
+    },
+    "appattemptid": {
+      "0": 1.0
+    },
+    "kind": {
+      "0": 1.0,
+      "2": 1.0
+    },
+    "keyid": {
+      "0": 1.0
+    },
+    "attemptid": {
+      "0": 1.0
+    },
+    "executing": {
+      "0": 1.0
+    },
+    "tokens": {
+      "0": 2.0
+    },
+    "setup": {
+      "0": 3.0
+    },
+    "max": {
+      "0": 1.0
+    },
+    "proxies": {
+      "0": 1.0
+    },
+    "cached": {
+      "0": 1.0
+    },
+    "yarn": {
+      "0": 11.0,
+      "1": 2.0
+    },
+    "nodemanagers": {
+      "0": 1.0
+    },
+    "inited": {
+      "0": 2.0
+    },
+    "pool": {
+      "0": 1.0
+    },
+    "upper": {
+      "0": 1.0
+    },
+    "limit": {
+      "0": 64.0
+    },
+    "connecting": {
+      "0": 2.0
+    },
+    "resourcemanager": {
+      "0": 1.0
+    },
+    "maxcontainercapability": {
+      "0": 1.0
+    },
+    "nodeblacklistingenabled": {
+      "0": 1.0
+    },
+    "true": {
+      "0": 1.0,
+      "2": 1.0
+    },
+    "blacklistdisablepercent": {
+      "0": 1.0
+    },
+    "maxtaskfailurespernode": {
+      "0": 1.0
+    },
+    "modules": {
+      "0": 1.0
+    },
+    "webapp": {
+      "0": 2.0
+    },
+    "guice": {
+      "0": 1.0
+    },
+    "web": {
+      "0": 1.0
+    },
+    "common": {
+      "0": 1.0
+    },
+    "localbox": {
+      "0": 1.0
+    },
+    "extract": {
+      "0": 1.0
+    },
+    "local": {
+      "0": 84.0
+    },
+    "jar": {
+      "0": 2.0
+    },
+    "webapps": {
+      "0": 1.0
+    },
+    "users": {
+      "0": 1.0,
+      "1": 2.0
+    },
+    "share": {
+      "0": 1.0
+    },
+    "appdata": {
+      "0": 1.0
+    },
+    "temp": {
+      "0": 1.0
+    },
+    "msrabi": {
+      "0": 4.0
+    },
+    "selectchannelconnectorwithsafestartup": {
+      "0": 1.0
+    },
+    "mrclientprotocolpb": {
+      "0": 1.0
+    },
+    "mortbay": {
+      "0": 1.0
+    },
+    "impl": {
+      "0": 1.0
+    },
+    "logging": {
+      "0": 1.0
+    },
+    "jetty": {
+      "0": 2.0
+    },
+    "bound": {
+      "0": 1.0
+    },
+    "amfilter": {
+      "0": 2.0
+    },
+    "filter": {
+      "0": 3.0
+    },
+    "webproxy": {
+      "0": 2.0
+    },
+    "context": {
+      "0": 2.0
+    },
+    "static": {
+      "0": 1.0
+    },
+    "amipfilter": {
+      "0": 2.0
+    },
+    "quotinginputfilter": {
+      "0": 1.0
+    },
+    "safety": {
+      "0": 1.0
+    },
+    "global": {
+      "0": 1.0
+    },
+    "defined": {
+      "5": 1.0
+    },
+    "requests": {
+      "5": 1.0
+    },
+    "instantiated": {
+      "0": 1.0
+    },
+    "mrclientservice": {
+      "0": 1.0
+    },
+    "metrics": {
+      "0": 1.0
+    },
+    "jobtokensecretmanager": {
+      "0": 1.0
+    },
+    "token": {
+      "0": 2.0,
+      "2": 1.0
+    },
+    "much": {
+      "0": 1.0
+    },
+    "many": {
+      "0": 1.0
+    },
+    "uberizing": {
+      "0": 1.0
+    },
+    "input": {
+      "0": 47.0
+    },
+    "splits": {
+      "0": 1.0
+    },
+    "reduces": {
+      "0": 3.0
+    },
+    "non": {
+      "0": 1.0
+    },
+    "uberized": {
+      "0": 1.0
+    },
+    "multi": {
+      "0": 1.0
+    },
+    "loaded": {
+      "0": 1.0
+    },
+    "properties": {
+      "0": 1.0
+    },
+    "timeline": {
+      "0": 1.0
+    },
+    "emitting": {
+      "0": 1.0
+    },
+    "history": {
+      "0": 1.0,
+      "2": 1.0
+    },
+    "outputcommitter": {
+      "0": 2.0
+    },
+    "null": {
+      "0": 1.0
+    },
+    "output": {
+      "0": 61.0
+    },
+    "fileoutputcommitter": {
+      "0": 1.0
+    },
+    "than": {
+      "2": 1.0
+    },
+    "containertoken": {
+      "2": 1.0
+    },
+    "required": {
+      "2": 1.0
+    },
+    "priority": {
+      "2": 1.0
+    },
+    "resource": {
+      "2": 1.0,
+      "0": 15.0
+    },
+    "nodeid": {
+      "2": 1.0
+    },
+    "tasks": {
+      "2": 1.0,
+      "0": 1.0
+    },
+    "nodehttpaddress": {
+      "2": 1.0
+    },
+    "isempty": {
+      "2": 1.0
+    },
+    "pending": {
+      "2": 1.0,
+      "0": 43.0
+    },
+    "less": {
+      "2": 1.0
+    },
+    "assign": {
+      "2": 1.0
+    },
+    "either": {
+      "2": 1.0
+    },
+    "putting": {
+      "0": 1.0
+    },
+    "servicedata": {
+      "0": 1.0
+    },
+    "staging": {
+      "0": 3.0
+    },
+    "jobid": {
+      "0": 1.0
+    },
+    "tmp": {
+      "0": 3.0
+    },
+    "writer": {
+      "0": 1.0
+    },
+    "jhist": {
+      "0": 1.0
+    },
+    "mapresourcerequest": {
+      "0": 1.0
+    },
+    "reduceresourcerequest": {
+      "0": 1.0
+    },
+    "remote": {
+      "0": 2.0
+    },
+    "conf": {
+      "0": 1.0
+    },
+    "xml": {
+      "0": 1.0
+    },
+    "keys": {
+      "0": 1.0
+    },
+    "secret": {
+      "0": 1.0
+    },
+    "use": {
+      "0": 83.0,
+      "5": 5.0
+    },
+    "acknowledgement": {
+      "0": 1.0
+    },
+    "ack": {
+      "3": 1.0
+    },
+    "readprocessor": {
+      "3": 1.0
+    },
+    "read": {
+      "3": 1.0
+    },
+    "seqno": {
+      "3": 1.0
+    },
+    "success": {
+      "3": 1.0
+    },
+    "targets": {
+      "3": 1.0
+    },
+    "fields": {
+      "3": 1.0
+    },
+    "downstreamacktimenanos": {
+      "3": 1.0
+    },
+    "applicationmaster": {
+      "2": 1.0
+    },
+    "killed": {
+      "2": 1.0
+    },
+    "speculations": {
+      "0": 1.0
+    },
+    "launched": {
+      "0": 1.0
+    },
+    "sleeping": {
+      "0": 1.0
+    },
+    "redundant": {
+      "0": 1.0
+    },
+    "defaultspeculator": {
+      "0": 1.0
+    },
+    "addspeculativeattempt": {
+      "0": 1.0
+    },
+    "speculating": {
+      "0": 1.0
+    },
+    "remaining": {
+      "0": 1.0
+    },
+    "ramping": {
+      "0": 1.0
+    },
+    "all": {
+      "0": 1.0
+    },
+    "num": {
+      "0": 1.0
+    },
+    "reached": {
+      "0": 1.0
+    },
+    "datastreamer": {
+      "2": 1.0
+    },
+    "pipeline": {
+      "2": 1.0
+    },
+    "bad": {
+      "2": 1.0
+    },
+    "recovery": {
+      "2": 1.0
+    },
+    "dfsoutputstream": {
+      "2": 1.0
+    },
+    "responseprocessor": {
+      "2": 1.0
+    },
+    "eventhandlingthread": {
+      "2": 1.0
+    },
+    "threw": {
+      "2": 1.0
+    },
+    "main": {
+      "2": 1.0
+    },
+    "writing": {
+      "2": 1.0
+    },
+    "taskattemptunsuccessfulcompletionevent": {
+      "2": 1.0
+    },
+    "servers": {
+      "4": 1017.0
+    },
+    "detail": {
+      "4": 931.0
+    },
+    "len": {
+      "4": 1017.0
+    },
+    "instances": {
+      "0": 402.0,
+      "2": 1.0
+    },
+    "sharing": {
+      "0": 82.0
+    },
+    "other": {
+      "0": 82.0
+    },
+    "nova": {
+      "0": 378.0
+    },
+    "image": {
+      "0": 185.0
+    },
+    "instance": {
+      "0": 596.0,
+      "3": 44.0,
+      "2": 6.0
+    },
+    "files": {
+      "0": 133.0
+    },
+    "base": {
+      "0": 172.0
+    },
+    "post": {
+      "4": 64.0
+    },
+    "events": {
+      "4": 64.0
+    },
+    "external": {
+      "4": 64.0
+    },
+    "lifecycle": {
+      "0": 109.0
+    },
+    "resumed": {
+      "0": 44.0
+    },
+    "during": {
+      "0": 43.0
+    },
+    "spawning": {
+      "0": 43.0
+    },
+    "skip": {
+      "0": 43.0
+    },
+    "removable": {
+      "0": 30.0
+    },
+    "paused": {
+      "0": 22.0
+    },
+    "spawned": {
+      "0": 22.0
+    },
+    "bddd": {
+      "0": 22.0
+    },
+    "vif": {
+      "0": 22.0
+    },
+    "plugged": {
+      "0": 22.0
+    },
+    "spawn": {
+      "3": 22.0
+    },
+    "hypervisor": {
+      "3": 22.0,
+      "0": 21.0,
+      "2": 1.0
+    },
+    "destroyed": {
+      "0": 22.0
+    },
+    "destroy": {
+      "0": 21.0
+    },
+    "deletion": {
+      "0": 21.0
+    },
+    "deallocate": {
+      "0": 21.0
+    },
+    "swap": {
+      "0": 30.0
+    },
+    "free": {
+      "0": 170.0
+    },
+    "used": {
+      "0": 63.0
+    },
+    "vcpus": {
+      "0": 36.0
+    },
+    "claim": {
+      "0": 42.0
+    },
+    "any": {
+      "0": 21.0
+    },
+    "thrown": {
+      "0": 21.0
+    },
+    "stopped": {
+      "0": 21.0
+    },
+    "defaulting": {
+      "0": 42.0
+    },
+    "specified": {
+      "0": 42.0
+    },
+    "vcpu": {
+      "0": 42.0
+    },
+    "unlimited": {
+      "0": 42.0
+    },
+    "final": {
+      "0": 15.0
+    },
+    "view": {
+      "0": 17.0,
+      "1": 2.0
+    },
+    "tcloud": {
+      "0": 48.0,
+      "2": 5.0
+    },
+    "cloudlab": {
+      "0": 48.0,
+      "2": 5.0
+    },
+    "utah": {
+      "0": 48.0,
+      "2": 5.0
+    },
+    "resources": {
+      "0": 15.0
+    },
+    "auditing": {
+      "0": 15.0
+    },
+    "locally": {
+      "0": 272.0
+    },
+    "compute": {
+      "0": 15.0
+    },
+    "record": {
+      "0": 15.0
+    },
+    "young": {
+      "0": 9.0
+    },
+    "remove": {
+      "0": 9.0
+    },
+    "instancelist": {
+      "2": 5.0
+    },
+    "sync": {
+      "2": 5.0
+    },
+    "its": {
+      "2": 5.0
+    },
+    "match": {
+      "2": 5.0
+    },
+    "did": {
+      "2": 5.0
+    },
+    "synced": {
+      "0": 2.0
+    },
+    "usage": {
+      "0": 1.0
+    },
+    "synchronizing": {
+      "2": 1.0
+    },
+    "database": {
+      "2": 1.0
+    },
+    "states": {
+      "2": 1.0
+    },
+    "times": {
+      "3": 375.0
+    },
+    "finish": {
+      "3": 375.0
+    },
+    "stage": {
+      "0": 605.0
+    },
+    "tid": {
+      "0": 605.0
+    },
+    "finished": {
+      "0": 300.0
+    },
+    "result": {
+      "0": 300.0
+    },
+    "stored": {
+      "0": 149.0
+    },
+    "estimated": {
+      "0": 149.0
+    },
+    "computing": {
+      "0": 75.0
+    },
+    "partition": {
+      "0": 75.0,
+      "5": 1.0
+    },
+    "pjhe": {
+      "0": 75.0
+    },
+    "logs": {
+      "0": 45.0
+    },
+    "split": {
+      "0": 45.0
+    },
+    "variable": {
+      "3": 37.0,
+      "0": 37.0
+    },
+    "values": {
+      "0": 37.0
+    },
+    "saved": {
+      "0": 30.0
+    },
+    "committed": {
+      "0": 30.0
+    },
+    "committer": {
+      "0": 30.0
+    },
+    "algorithm": {
+      "0": 30.0
+    },
+    "modify": {
+      "0": 2.0,
+      "1": 2.0
+    },
+    "acls": {
+      "0": 4.0,
+      "1": 2.0
+    },
+    "changing": {
+      "0": 4.0
+    },
+    "permissions": {
+      "1": 2.0
+    },
+    "securitymanager": {
+      "1": 2.0
+    },
+    "int": {
+      "0": 1.0
+    },
+    "term": {
+      "0": 1.0
+    },
+    "hup": {
+      "0": 1.0
+    },
+    "signal": {
+      "0": 1.0
+    },
+    "handlers": {
+      "0": 1.0
+    },
+    "directory": {
+      "0": 1.0
+    },
+    "nodemanager": {
+      "0": 1.0
+    },
+    "blockmgr": {
+      "0": 1.0
+    },
+    "appcache": {
+      "0": 1.0
+    },
+    "opt": {
+      "0": 1.0
+    },
+    "usercache": {
+      "0": 1.0
+    },
+    "blockmanager": {
+      "0": 2.0
+    },
+    "nettyblocktransferservice": {
+      "0": 1.0
+    },
+    "netty": {
+      "0": 1.0
+    },
+    "spark": {
+      "0": 2.0
+    },
+    "trying": {
+      "0": 1.0
+    },
+    "register": {
+      "0": 1.0
+    },
+    "executor": {
+      "0": 1.0
+    },
+    "slave": {
+      "0": 2.0
+    },
+    "memorystore": {
+      "0": 1.0
+    },
+    "capacity": {
+      "0": 1.0
+    },
+    "coarsegrainedscheduler": {
+      "0": 1.0
+    },
+    "sparkexecutoractorsystem": {
+      "0": 2.0
+    },
+    "listening": {
+      "0": 1.0
+    },
+    "remoting": {
+      "0": 2.0
+    },
+    "addresses": {
+      "0": 1.0
+    },
+    "tcp": {
+      "0": 1.0
+    },
+    "akka": {
+      "0": 1.0
+    },
+    "instead": {
+      "5": 5.0
+    },
+    "deprecated": {
+      "5": 5.0
+    },
+    "tip": {
+      "5": 1.0
+    },
+    "ismap": {
+      "5": 1.0
     }
   }
 }

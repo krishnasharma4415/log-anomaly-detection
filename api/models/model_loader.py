@@ -1,13 +1,14 @@
 """
-Model loading and management
+Model loading and management for Multi-Class ML Models
 """
 import pickle
 import torch
+import numpy as np
 from transformers import AutoTokenizer, AutoModel
 
 
 class ModelLoader:
-    """Handles loading and management of ML models"""
+    """Handles loading and management of multi-class ML models"""
     
     def __init__(self, config):
         self.config = config
@@ -16,6 +17,8 @@ class ModelLoader:
         self.classifier = None
         self.scaler = None
         self.model_metadata = {}
+        self.num_classes = config.ML_NUM_CLASSES
+        self.label_map = config.ML_LABEL_MAP
     
     def load_bert_model(self):
         """Load BERT model and tokenizer"""
@@ -33,53 +36,116 @@ class ModelLoader:
             return False
     
     def load_classifier(self):
-        """Load trained classifier with metadata"""
+        """Load trained multi-class classifier with metadata"""
         try:
-            classifier_path = self.config.MODELS_PATH / "best_classifier.pkl"
+            classifier_path = self.config.ML_MODEL_PATH
             if not classifier_path.exists():
-                raise FileNotFoundError(f"Classifier not found at {classifier_path}")
+                raise FileNotFoundError(f"ML Classifier not found at {classifier_path}")
             
             with open(classifier_path, 'rb') as f:
                 model_data = pickle.load(f)
             
-            self.classifier = model_data['model']
-            self.scaler = model_data['scaler']
+            self.classifier = model_data['mod']
+            self.scaler = model_data['sc']
+            
+            # Verify multi-class configuration
+            saved_num_classes = model_data.get('num_classes', 7)
+            saved_label_map = model_data.get('label_map', {})
+            
+            if saved_num_classes != self.num_classes:
+                print(f"⚠️  Warning: Model has {saved_num_classes} classes, config expects {self.num_classes}")
+            
             self.model_metadata = {
-                'model_name': model_data['model_name'],
-                'feature_type': model_data['feature_type'],
-                'is_supervised': model_data['is_supervised'],
-                'metrics': model_data['metrics'],
-                'training_info': model_data['training_info']
+                'model_name': model_data.get('mod_name', 'Unknown'),
+                'feature_type': model_data.get('feat_type', 'hybrid'),
+                'num_classes': saved_num_classes,
+                'label_map': saved_label_map,
+                'best_params': model_data.get('b_par', {}),
+                'class_weights': model_data.get('class_weights', {}),
+                'metrics': model_data.get('met', {}),
+                'training_samples': model_data.get('training_samples', 0),
+                'timestamp': model_data.get('timestamp', 'Unknown')
             }
             
-            print(f"✓ Classifier loaded successfully")
+            print(f"✓ Multi-class classifier loaded successfully")
             print(f"  Model: {self.model_metadata['model_name']}")
             print(f"  Feature type: {self.model_metadata['feature_type']}")
-            print(f"  F1 Score: {self.model_metadata['metrics']['f1']:.3f}")
-            print(f"  Training samples: {self.model_metadata['training_info']['n_samples']:,}")
+            print(f"  Classes: {self.model_metadata['num_classes']}")
+            print(f"  F1 Macro: {self.model_metadata['metrics'].get('f1_macro', 0):.3f}")
+            print(f"  F1 Weighted: {self.model_metadata['metrics'].get('f1_weighted', 0):.3f}")
+            print(f"  Training samples: {self.model_metadata['training_samples']:,}")
             return True
             
         except Exception as e:
             print(f"✗ Error loading classifier: {e}")
             print(f"  Please ensure ml-models.ipynb has been run completely")
+            print(f"  Expected path: {self.config.ML_MODEL_PATH}")
             return False
     
     def load_all_models(self):
-        """Load all required models"""
+        """Load all required models with graceful degradation"""
         print("="*80)
-        print("INITIALIZING LOG ANOMALY DETECTION API")
+        print("INITIALIZING MULTI-CLASS LOG ANOMALY DETECTION API")
         print("="*80)
         
         bert_loaded = self.load_bert_model()
         classifier_loaded = self.load_classifier()
         
         print("="*80)
+        print("MODEL AVAILABILITY STATUS")
+        print("="*80)
         
-        return bert_loaded and classifier_loaded
+        if bert_loaded and classifier_loaded:
+            print("✅ All models loaded - API running in FULL MODE")
+            print("   Both BERT embeddings and ML classifier available")
+        elif classifier_loaded:
+            print("⚠️  BERT model not loaded - API running in PARTIAL MODE")
+            print("   ✓ ML classifier available")
+            print("   ✗ BERT embeddings not available (may affect accuracy)")
+        elif bert_loaded:
+            print("⚠️  ML classifier not loaded - API running in PARTIAL MODE")
+            print("   ✓ BERT model available for embeddings")
+            print("   ✗ ML classifier not available (cannot make predictions)")
+        else:
+            print("❌ No models loaded - API will not be functional")
+            print("   Please train models using ml-models.ipynb")
+        
+        print("="*80)
+        
+        return bert_loaded or classifier_loaded  # Return True if at least one loaded
     
     def is_ready(self):
-        """Check if all models are loaded"""
-        return (self.bert_model is not None and 
-                self.tokenizer is not None and 
-                self.classifier is not None and 
-                self.scaler is not None)
+        """Check if classifier is loaded (minimum requirement for predictions)"""
+        return self.classifier is not None and self.scaler is not None
+    
+    def predict(self, features):
+        """
+        Predict multi-class labels
+        
+        Args:
+            features: numpy array of features
+            
+        Returns:
+            Tuple of (predictions, probabilities)
+        """
+        if not self.is_ready():
+            raise RuntimeError("Models not loaded")
+        
+        # Scale features
+        features_scaled = self.scaler.transform(features)
+        
+        # Get predictions
+        predictions = self.classifier.predict(features_scaled)
+        
+        # Get probabilities if available
+        try:
+            probabilities = self.classifier.predict_proba(features_scaled)
+        except AttributeError:
+            # Model doesn't support probabilities
+            probabilities = np.eye(self.num_classes)[predictions]
+        
+        return predictions, probabilities
+    
+    def get_label_name(self, label_idx):
+        """Convert label index to human-readable name"""
+        return self.label_map.get(int(label_idx), 'unknown')

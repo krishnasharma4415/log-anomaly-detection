@@ -27,7 +27,9 @@ class PredictionService:
         embeddings_scaled = self.model_loader.scaler.transform(embeddings)
         
         # Predict
-        if self.model_loader.model_metadata['is_supervised']:
+        # For multi-class models, is_supervised defaults to True if not specified
+        is_supervised = self.model_loader.model_metadata.get('is_supervised', True)
+        if is_supervised:
             predictions = self.model_loader.classifier.predict(embeddings_scaled)
         else:
             # Unsupervised models (IsolationForest, etc.)

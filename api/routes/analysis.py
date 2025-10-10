@@ -1,198 +1,482 @@
 """
-Analysis API routes
+Analysis routes for log anomaly detection with multi-model support
+Supports: ML model + DANN-BERT + LoRA-BERT + Hybrid-BERT (all multi-class)
 """
 from flask import Blueprint, request, jsonify
 import numpy as np
-import time
+from datetime import datetime
 
 analysis_bp = Blueprint('analysis', __name__)
 
-# These will be injected when blueprint is registered
+# Services injected during initialization
 log_parser = None
-embedding_service = None
 prediction_service = None
-model_loader = None
+template_service = None
+model_manager = None
 config = None
 
 
-def init_services(lp, es, ps, ml, cfg):
+def init_services(lp, ps, ts, mm, cfg):
     """Initialize services for this blueprint"""
-    global log_parser, embedding_service, prediction_service, model_loader, config
+    global log_parser, prediction_service, template_service, model_manager, config
     log_parser = lp
-    embedding_service = es
     prediction_service = ps
-    model_loader = ml
+    template_service = ts
+    model_manager = mm
     config = cfg
 
 
-@analysis_bp.route('/analyze', methods=['POST'])
-def analyze_log():
+@analysis_bp.route('/predict', methods=['POST'])
+def predict_anomalies():
     """
-    Main log analysis endpoint.
+    Predict anomalies in log messages using specified model
     
-    Expected JSON body:
-        {
-            "log_text": "raw log content...",
-            "log_type": "optional, auto-detected if not provided"
-        }
+    Request JSON:
+    {
+        "logs": ["log message 1", "log message 2", ...],
+        "model_type": "ml" | "bert" (optional, uses default if not specified),
+        "bert_variant": "dann" | "lora" | "hybrid" (optional, for BERT models),
+        "include_probabilities": true | false (optional, default: true),
+        "include_templates": true | false (optional, default: false)
+    }
     
     Returns:
-        JSON with analysis results
+        JSON with predictions, probabilities, and model info
     """
-    start_time = time.time()
+    if not model_manager or not model_manager.is_any_model_available():
+        return jsonify({
+            'error': 'No models are currently loaded',
+            'suggestion': 'Train models using notebooks and restart API',
+            'status': 'no_models_available'
+        }), 503
+    
+    # Parse request
+    data = request.get_json()
+    if not data or 'logs' not in data:
+        return jsonify({
+            'error': 'Missing required field: logs',
+            'expected_format': {
+                'logs': ['log message 1', 'log message 2'],
+                'model_type': 'ml or bert (optional)',
+                'bert_variant': 'dann, lora, or hybrid (optional)'
+            }
+        }), 400
+    
+    logs = data['logs']
+    if not isinstance(logs, list) or len(logs) == 0:
+        return jsonify({
+            'error': 'logs must be a non-empty list of strings'
+        }), 400
+    
+    # Get model preferences
+    model_type = data.get('model_type')  # None = use default
+    bert_variant = data.get('bert_variant')  # None = use default
+    include_probs = data.get('include_probabilities', True)
+    include_templates = data.get('include_templates', False)
     
     try:
-        # Validate request
-        data = request.json
-        if not data:
-            return jsonify({'error': 'No JSON data provided'}), 400
-        
-        log_text = data.get('log_text', '')
-        specified_log_type = data.get('log_type', None)
-        
-        if not log_text or not log_text.strip():
-            return jsonify({'error': 'No log text provided'}), 400
-        
-        # Step 1: Detect or use specified log type
-        if specified_log_type:
-            from utils.patterns import REGEX_PATTERNS
-            if specified_log_type in REGEX_PATTERNS:
-                log_type = specified_log_type
-            else:
-                log_type = log_parser.detect_log_type(log_text)
-        else:
-            log_type = log_parser.detect_log_type(log_text)
-        
-        # Step 2: Parse logs
-        parsed_logs = log_parser.parse_logs(log_text, log_type)
-        
-        if not parsed_logs:
-            return jsonify({'error': 'Could not parse any log lines'}), 400
-        
-        # Step 3: Generate BERT embeddings
-        texts = [log['content'] for log in parsed_logs]
-        embeddings = embedding_service.generate_embeddings(texts)
-        
-        # Step 4: Predict anomalies
-        predictions, probabilities = prediction_service.predict(embeddings)
-        
-        # Step 5: Analyze results
-        anomaly_indices = np.where(predictions == 1)[0]
-        normal_indices = np.where(predictions == 0)[0]
-        
-        anomalies_detected = len(anomaly_indices)
-        
-        # Calculate overall confidence
-        if anomalies_detected > 0:
-            confidence = float(np.max(probabilities[anomaly_indices, 1]))
-        else:
-            confidence = float(np.max(probabilities[normal_indices, 0])) if len(normal_indices) > 0 else 0.5
-        
-        # Step 6: Extract template from first log
-        template = log_parser.extract_template(texts[0]) if texts else 'N/A'
-        if len(template) > 150:
-            template = template[:150] + '...'
-        
-        # Step 7: Prepare detailed results
-        detailed_results = []
-        for i, (log, pred, prob) in enumerate(zip(parsed_logs, predictions, probabilities)):
-            detailed_results.append({
-                'line_number': log['line_number'],
-                'content': log['content'][:config.MAX_LOG_DISPLAY_LENGTH],
-                'prediction': 'Anomaly' if pred == 1 else 'Normal',
-                'confidence': float(prob[1] if pred == 1 else prob[0]),
-                'is_anomaly': bool(pred == 1)
+        # Detect log types and parse logs
+        log_details = []
+        for log in logs:
+            log_type = log_parser.detect_log_type(log)
+            parsed = log_parser.parse_logs(log, log_type)
+            log_details.append({
+                'log_type': log_type,
+                'parsed': parsed[0] if parsed else {'raw': log, 'content': log}
             })
         
-        processing_time = time.time() - start_time
+        # Extract templates if needed (for Hybrid-BERT or analysis)
+        template_features = None
+        templates = None
         
-        # Step 8: Compile summary
-        summary = {
-            'anomaly_detected': bool(anomalies_detected > 0),
-            'confidence': confidence,
-            'predicted_source': log_type,
-            'template': template,
-            'embedding_dims': embeddings.shape[1],
-            'processing_time': f"{processing_time:.2f}",
-            'statistics': {
-                'total_lines': len(parsed_logs),
-                'anomalous_lines': int(anomalies_detected),
-                'normal_lines': int(len(normal_indices)),
-                'anomaly_rate': f"{(anomalies_detected/len(parsed_logs)*100):.1f}%"
+        if include_templates or (bert_variant == 'hybrid'):
+            templates = [template_service.extract_template(log) for log in logs]
+            if bert_variant == 'hybrid':
+                # Generate template features for Hybrid-BERT
+                template_features = np.array([
+                    template_service.get_template_features(tmpl) 
+                    for tmpl in templates
+                ])
+        
+        # Perform prediction
+        predictions, probabilities, label_names, model_info = prediction_service.predict(
+            logs,
+            model_type=model_type,
+            bert_variant=bert_variant,
+            template_features=template_features
+        )
+        
+        # Build response with log details
+        response = {
+            'status': 'success',
+            'timestamp': datetime.now().isoformat(),
+            'total_logs': len(logs),
+            'model_used': model_info,
+            'logs': [
+                {
+                    'raw': log,
+                    'log_type': details['log_type'],
+                    'parsed_content': details['parsed']['content'],
+                    'template': templates[i] if include_templates and templates else None,
+                    'prediction': {
+                        'class_index': int(predictions[i]),
+                        'class_name': label_names[i],
+                        'confidence': float(np.max(probabilities[i])) if include_probs else None,
+                        'probabilities': probabilities[i].tolist() if include_probs else None
+                    }
+                }
+                for i, (log, details) in enumerate(zip(logs, log_details))
+            ],
+            'predictions': {
+                'class_indices': predictions.tolist(),
+                'class_names': label_names.tolist()
+            }
+        }
+        
+        # Add probabilities if requested
+        if include_probs:
+            response['predictions']['probabilities'] = probabilities.tolist()
+            # Add confidence (max probability for each prediction)
+            response['predictions']['confidence'] = np.max(probabilities, axis=1).tolist()
+        
+        # Add log type distribution summary
+        log_type_counts = {}
+        for details in log_details:
+            log_type = details['log_type']
+            log_type_counts[log_type] = log_type_counts.get(log_type, 0) + 1
+        
+        # Add summary statistics
+        unique_classes, counts = np.unique(label_names, return_counts=True)
+        response['summary'] = {
+            'class_distribution': {
+                cls: int(count) for cls, count in zip(unique_classes, counts)
             },
-            'model_used': model_loader.model_metadata.get('model_name', 'Unknown'),
-            'detailed_results': detailed_results[:config.MAX_RESPONSE_LOGS]
+            'log_type_distribution': log_type_counts,
+            'anomaly_rate': float(np.sum(predictions != 0) / len(predictions))  # non-normal rate
         }
         
-        return jsonify(summary)
+        return jsonify(response)
         
-    except RuntimeError as e:
-        return jsonify({'error': str(e)}), 503
+    except ValueError as e:
+        return jsonify({
+            'error': str(e),
+            'status': 'model_not_available'
+        }), 404
     except Exception as e:
-        print(f"Error in analysis: {e}")
-        import traceback
-        traceback.print_exc()
-        return jsonify({'error': f'Internal server error: {str(e)}'}), 500
+        return jsonify({
+            'error': f'Prediction failed: {str(e)}',
+            'status': 'prediction_error'
+        }), 500
 
 
-@analysis_bp.route('/batch-analyze', methods=['POST'])
-def batch_analyze():
+@analysis_bp.route('/predict-batch', methods=['POST'])
+def predict_batch():
     """
-    Batch analysis endpoint for multiple log files.
+    Predict anomalies for a batch of logs with detailed results
     
-    Expected JSON body:
-        {
-            "logs": [
-                {"id": "1", "text": "log content..."},
-                {"id": "2", "text": "log content..."}
-            ]
-        }
+    Request JSON:
+    {
+        "logs": ["log1", "log2", ...],
+        "model_type": "ml" | "bert" (optional),
+        "bert_variant": "dann" | "lora" | "hybrid" (optional),
+        "return_top_k": 3 (optional, return top K class probabilities)
+    }
     
     Returns:
-        JSON with batch results
+        Detailed predictions for each log with top-K probabilities
     """
+    if not model_manager or not model_manager.is_any_model_available():
+        return jsonify({
+            'error': 'No models are currently loaded',
+            'status': 'no_models_available'
+        }), 503
+    
+    data = request.get_json()
+    if not data or 'logs' not in data:
+        return jsonify({'error': 'Missing required field: logs'}), 400
+    
+    logs = data['logs']
+    model_type = data.get('model_type')
+    bert_variant = data.get('bert_variant')
+    top_k = min(data.get('return_top_k', 3), config.NUM_CLASSES)
+    
     try:
-        data = request.json
-        logs = data.get('logs', [])
+        # Extract templates for Hybrid-BERT
+        template_features = None
+        if bert_variant == 'hybrid':
+            templates = [template_service.extract_template(log) for log in logs]
+            template_features = np.array([
+                template_service.get_template_features(tmpl) 
+                for tmpl in templates
+            ])
         
-        if not logs:
-            return jsonify({'error': 'No logs provided'}), 400
+        # Predict
+        predictions, probabilities, label_names, model_info = prediction_service.predict(
+            logs,
+            model_type=model_type,
+            bert_variant=bert_variant,
+            template_features=template_features
+        )
         
+        # Get label map
+        label_map = model_info.get('label_map', config.LABEL_MAP)
+        
+        # Build detailed results for each log
         results = []
-        for log_entry in logs:
-            log_id = log_entry.get('id', 'unknown')
-            log_text = log_entry.get('text', '')
+        for i, log in enumerate(logs):
+            # Get top K predictions
+            top_k_indices = np.argsort(probabilities[i])[-top_k:][::-1]
+            top_k_probs = probabilities[i][top_k_indices]
+            top_k_classes = [label_map.get(int(idx), f'class_{idx}') for idx in top_k_indices]
             
-            if not log_text.strip():
-                results.append({
-                    'id': log_id,
-                    'error': 'Empty log text'
-                })
-                continue
-            
-            try:
-                log_type = log_parser.detect_log_type(log_text)
-                parsed_logs = log_parser.parse_logs(log_text, log_type)
-                texts = [log['content'] for log in parsed_logs]
-                embeddings = embedding_service.generate_embeddings(texts)
-                predictions, _ = prediction_service.predict(embeddings)
-                
-                anomalies_detected = int(np.sum(predictions))
-                
-                results.append({
-                    'id': log_id,
-                    'anomaly_detected': anomalies_detected > 0,
-                    'anomaly_count': anomalies_detected,
-                    'total_lines': len(parsed_logs),
-                    'predicted_source': log_type
-                })
-            except Exception as e:
-                results.append({
-                    'id': log_id,
-                    'error': str(e)
-                })
+            results.append({
+                'log_index': i,
+                'log_text': log[:200] + '...' if len(log) > 200 else log,
+                'prediction': {
+                    'class_index': int(predictions[i]),
+                    'class_name': label_names[i],
+                    'confidence': float(probabilities[i][predictions[i]])
+                },
+                'top_k_predictions': [
+                    {
+                        'class_index': int(idx),
+                        'class_name': cls,
+                        'probability': float(prob)
+                    }
+                    for idx, cls, prob in zip(top_k_indices, top_k_classes, top_k_probs)
+                ],
+                'is_anomaly': int(predictions[i]) != 0
+            })
         
-        return jsonify({'results': results})
+        return jsonify({
+            'status': 'success',
+            'timestamp': datetime.now().isoformat(),
+            'total_logs': len(logs),
+            'model_used': model_info,
+            'results': results
+        })
         
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({
+            'error': f'Batch prediction failed: {str(e)}',
+            'status': 'prediction_error'
+        }), 500
+
+
+@analysis_bp.route('/analyze', methods=['POST'])
+def analyze_logs():
+    """
+    Comprehensive log analysis with multiple models (if available)
+    
+    Request JSON:
+    {
+        "logs": ["log1", "log2", ...],
+        "compare_models": true (optional, compare all available models)
+    }
+    
+    Returns:
+        Analysis results from default model or comparison across all models
+    """
+    if not model_manager or not model_manager.is_any_model_available():
+        return jsonify({
+            'error': 'No models are currently loaded',
+            'status': 'no_models_available'
+        }), 503
+    
+    data = request.get_json()
+    if not data or 'logs' not in data:
+        return jsonify({'error': 'Missing required field: logs'}), 400
+    
+    logs = data['logs']
+    compare_models = data.get('compare_models', False)
+    
+    try:
+        if not compare_models:
+            # Single model analysis (using default)
+            template_features = None
+            if model_manager.default_bert_type == 'hybrid':
+                templates = [template_service.extract_template(log) for log in logs]
+                template_features = np.array([
+                    template_service.get_template_features(tmpl) 
+                    for tmpl in templates
+                ])
+            
+            predictions, probabilities, label_names, model_info = prediction_service.predict(
+                logs,
+                template_features=template_features
+            )
+            
+            # Calculate statistics
+            unique_classes, counts = np.unique(label_names, return_counts=True)
+            
+            return jsonify({
+                'status': 'success',
+                'timestamp': datetime.now().isoformat(),
+                'total_logs': len(logs),
+                'model_used': model_info,
+                'analysis': {
+                    'class_distribution': {
+                        cls: int(count) for cls, count in zip(unique_classes, counts)
+                    },
+                    'anomaly_count': int(np.sum(predictions != 0)),
+                    'normal_count': int(np.sum(predictions == 0)),
+                    'anomaly_rate': float(np.sum(predictions != 0) / len(predictions)),
+                    'average_confidence': float(np.mean(np.max(probabilities, axis=1))),
+                    'min_confidence': float(np.min(np.max(probabilities, axis=1))),
+                    'max_confidence': float(np.max(np.max(probabilities, axis=1)))
+                }
+            })
+        
+        else:
+            # Compare all available models
+            available_models = model_manager.get_available_models()
+            if len(available_models) < 2:
+                return jsonify({
+                    'error': 'Model comparison requires at least 2 models',
+                    'available_models': len(available_models),
+                    'suggestion': 'Train more models or disable compare_models'
+                }), 400
+            
+            comparison_results = []
+            
+            for model_info_dict in available_models:
+                model_type = model_info_dict['type']
+                variant = model_info_dict['variant']
+                
+                # Prepare template features for hybrid
+                template_features = None
+                if variant == 'hybrid':
+                    templates = [template_service.extract_template(log) for log in logs]
+                    template_features = np.array([
+                        template_service.get_template_features(tmpl) 
+                        for tmpl in templates
+                    ])
+                
+                # Predict
+                predictions, probabilities, label_names, model_info = prediction_service.predict(
+                    logs,
+                    model_type=model_type,
+                    bert_variant=variant,
+                    template_features=template_features
+                )
+                
+                # Statistics
+                unique_classes, counts = np.unique(label_names, return_counts=True)
+                
+                comparison_results.append({
+                    'model': model_info,
+                    'anomaly_count': int(np.sum(predictions != 0)),
+                    'anomaly_rate': float(np.sum(predictions != 0) / len(predictions)),
+                    'class_distribution': {
+                        cls: int(count) for cls, count in zip(unique_classes, counts)
+                    },
+                    'average_confidence': float(np.mean(np.max(probabilities, axis=1)))
+                })
+            
+            return jsonify({
+                'status': 'success',
+                'timestamp': datetime.now().isoformat(),
+                'total_logs': len(logs),
+                'models_compared': len(comparison_results),
+                'comparison': comparison_results
+            })
+    
+    except Exception as e:
+        return jsonify({
+            'error': f'Analysis failed: {str(e)}',
+            'status': 'analysis_error'
+        }), 500
+
+
+@analysis_bp.route('/extract-templates', methods=['POST'])
+def extract_templates():
+    """
+    Extract log templates from raw log messages
+    
+    Request JSON:
+    {
+        "logs": ["log1", "log2", ...]
+    }
+    
+    Returns:
+        Extracted templates for each log
+    """
+    data = request.get_json()
+    if not data or 'logs' not in data:
+        return jsonify({'error': 'Missing required field: logs'}), 400
+    
+    logs = data['logs']
+    
+    try:
+        templates = [template_service.extract_template(log) for log in logs]
+        template_features = [template_service.get_template_features(tmpl) for tmpl in templates]
+        
+        return jsonify({
+            'status': 'success',
+            'total_logs': len(logs),
+            'templates': [
+                {
+                    'log_index': i,
+                    'original': log[:200] + '...' if len(log) > 200 else log,
+                    'template': tmpl,
+                    'features': {
+                        'length': feat[0],
+                        'num_count': feat[1],
+                        'special_count': feat[2],
+                        'token_count': feat[3]
+                    } if len(feat) >= 4 else None
+                }
+                for i, (log, tmpl, feat) in enumerate(zip(logs, templates, template_features))
+            ]
+        })
+    except Exception as e:
+        return jsonify({
+            'error': f'Template extraction failed: {str(e)}',
+            'status': 'extraction_error'
+        }), 500
+
+
+@analysis_bp.route('/models/switch', methods=['POST'])
+def switch_default_model():
+    """
+    Switch the default model for predictions
+    
+    Request JSON:
+    {
+        "model_type": "ml" | "bert",
+        "bert_variant": "dann" | "lora" | "hybrid" (required if model_type is bert)
+    }
+    
+    Returns:
+        Confirmation of model switch
+    """
+    data = request.get_json()
+    if not data or 'model_type' not in data:
+        return jsonify({'error': 'Missing required field: model_type'}), 400
+    
+    model_type = data['model_type']
+    bert_variant = data.get('bert_variant')
+    
+    try:
+        # Verify model is available
+        loader, model_used = model_manager.get_model(model_type, bert_variant)
+        
+        # Update defaults
+        model_manager.default_model_type = model_type
+        if model_type == 'bert' and bert_variant:
+            model_manager.default_bert_type = bert_variant
+        
+        return jsonify({
+            'status': 'success',
+            'message': f'Default model switched to {model_used}',
+            'default_model': {
+                'type': model_manager.default_model_type,
+                'bert_variant': model_manager.default_bert_type if model_type == 'bert' else None
+            }
+        })
+    
+    except ValueError as e:
+        return jsonify({
+            'error': str(e),
+            'status': 'model_not_available'
+        }), 404

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FileText, TrendingUp } from 'lucide-react';
 import { apiService } from '../services/APIService';
 import Header from './Header';
+import ModelSelector from './ModelSelector';
 import FileUpload from './FileUpload';
 import LogTextInput from './LogTextInput';
 import ActionButtons from './ActionButtons';
@@ -14,6 +15,7 @@ import LogSourcesFooter from './LogSourcesFooter';
 export default function LogAnomalyDetector() {
   const [logInput, setLogInput] = useState('');
   const [file, setFile] = useState(null);
+  const [selectedModel, setSelectedModel] = useState('ml'); // NEW: Default model
   const [analyzing, setAnalyzing] = useState(false);
   const [results, setResults] = useState(null);
   const [error, setError] = useState('');
@@ -36,6 +38,11 @@ export default function LogAnomalyDetector() {
     reader.readAsText(uploadedFile);
   };
 
+  const handleModelChange = (modelId) => {
+    setSelectedModel(modelId);
+    setError('');
+  };
+
   const analyzeLog = async () => {
     if (!logInput.trim()) {
       setError('Please enter log content or upload a log file.');
@@ -47,16 +54,42 @@ export default function LogAnomalyDetector() {
     setResults(null);
 
     try {
-      const data = await apiService.analyzeLog(logInput);
+      const data = await apiService.analyzeLog(logInput, selectedModel); // Pass selected model
+      
+      // Extract primary prediction (most common or first anomaly)
+      let primaryPrediction = 'normal';
+      let primaryPredictionClassId = 0;
+      
+      if (data.detailed_results && data.detailed_results.length > 0) {
+        // Find the first anomaly or use most common prediction
+        const anomaly = data.detailed_results.find(r => r.is_anomaly);
+        if (anomaly) {
+          primaryPrediction = anomaly.prediction;
+          primaryPredictionClassId = anomaly.prediction_class_id;
+        } else {
+          primaryPrediction = data.detailed_results[0].prediction;
+          primaryPredictionClassId = data.detailed_results[0].prediction_class_id || 0;
+        }
+      }
+      
       setResults({
         anomaly_detected: data.anomaly_detected,
         confidence: data.confidence,
+        primary_prediction: primaryPrediction,
+        primary_prediction_class_id: primaryPredictionClassId,
         predicted_source: data.predicted_source,
         template: data.template,
         embedding_dims: data.embedding_dims,
-        processing_time: data.processing_time,
-        statistics: data.statistics || {},
-        model_used: data.model_used || 'Unknown',
+        processing_time_seconds: data.processing_time_seconds,
+        statistics: {
+          total_lines: data.summary?.total_logs || 0,
+          anomalous_lines: data.summary?.anomaly_count || 0,
+          normal_lines: data.summary?.normal_count || 0,
+          anomaly_rate_percent: (data.summary?.anomaly_rate || 0) * 100,
+          class_distribution: data.summary?.class_distribution || {},
+          log_type_distribution: data.summary?.log_type_distribution || {}
+        },
+        model_info: data.model_info || {},
         detailed_results: data.detailed_results || []
       });
     } catch (err) {
@@ -102,6 +135,13 @@ export default function LogAnomalyDetector() {
               Input Log Data
             </h2>
 
+            {/* NEW: Model Selector */}
+            <ModelSelector
+              selectedModel={selectedModel}
+              onModelChange={handleModelChange}
+              disabled={analyzing}
+            />
+
             <FileUpload 
               onFileSelect={handleFileUpload}
               fileName={file?.name}
@@ -133,7 +173,7 @@ export default function LogAnomalyDetector() {
             </h2>
 
             {!results && !analyzing && <EmptyState />}
-            {analyzing && <LoadingState />}
+            {analyzing && <LoadingState selectedModel={selectedModel} />}
             {results && <ResultsDisplay results={results} />}
           </div>
         </div>

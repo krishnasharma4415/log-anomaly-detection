@@ -1,26 +1,41 @@
 import React from 'react';
-import { AlertCircle, CheckCircle } from 'lucide-react';
+import { AlertCircle, CheckCircle, Shield, XCircle, Zap, Wifi, Settings, Wrench } from 'lucide-react';
+import { getAnomalyColor, formatAnomalyType } from '../utils/anomalyColors';
 
-export default function AnomalyStatus({ anomalyDetected, confidence }) {
+export default function AnomalyStatus({ anomalyDetected, confidence, prediction, predictionClassId }) {
+  // Determine the anomaly type (default to 'normal' if not anomalous)
+  const anomalyType = prediction || (anomalyDetected ? 'security_anomaly' : 'normal');
+  const colorScheme = getAnomalyColor(anomalyType);
+  
+  // Select icon based on anomaly type
+  const IconComponent = {
+    normal: CheckCircle,
+    security_anomaly: Shield,
+    system_failure: XCircle,
+    performance_issue: Zap,
+    network_anomaly: Wifi,
+    config_error: Settings,
+    hardware_issue: Wrench
+  }[anomalyType] || AlertCircle;
+  
   return (
-    <div className={`p-4 rounded-lg border-2 ${
-      anomalyDetected 
-        ? 'bg-red-500/20 border-red-500' 
-        : 'bg-green-500/20 border-green-500'
-    }`}>
+    <div className={`p-4 rounded-lg border-2 ${colorScheme.bg} ${colorScheme.border}`}>
       <div className="flex items-center gap-3">
-        {anomalyDetected ? (
-          <AlertCircle className="w-8 h-8 text-red-400" />
-        ) : (
-          <CheckCircle className="w-8 h-8 text-green-400" />
-        )}
-        <div>
-          <h3 className="text-xl font-bold">
-            {anomalyDetected ? 'Anomaly Detected' : 'Normal Log'}
-          </h3>
-          <p className={anomalyDetected ? 'text-red-300' : 'text-green-300'}>
+        <IconComponent className={`w-8 h-8 ${colorScheme.icon}`} />
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <h3 className="text-xl font-bold">
+              {formatAnomalyType(anomalyType)}
+            </h3>
+            <span className="text-2xl">{colorScheme.emoji}</span>
+          </div>
+          <p className={colorScheme.text}>
             Confidence: {(confidence * 100).toFixed(1)}%
           </p>
+          <p className="text-gray-300 text-xs mt-1">{colorScheme.description}</p>
+          {predictionClassId !== undefined && (
+            <p className="text-gray-400 text-xs mt-1">Class ID: {predictionClassId}</p>
+          )}
         </div>
       </div>
     </div>

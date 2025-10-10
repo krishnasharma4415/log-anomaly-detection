@@ -7,7 +7,10 @@
     "Proxifier_2k",
     "Zookeeper_2k",
     "Linux_2k",
-    "HDFS_2k"
+    "HDFS_2k",
+    "Hadoop_2k",
+    "OpenStack_2k",
+    "Spark_2k"
   ],
-  "last_updated": "2025-09-29T03:50:05.761105"
+  "last_updated": "2025-10-10T04:17:46.873221"
 }

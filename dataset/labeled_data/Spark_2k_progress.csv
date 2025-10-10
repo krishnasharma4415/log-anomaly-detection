@@ -1,0 +1,37 @@
+template,count,percentage,samples,suggested,confidence,label,notes
+"Times: total = <*>, boot = <*>, init = <*>, finish = <*>",375,18.75,"[""Times: total = 1072, boot = 856, init = 210, finish = 6"", ""Times: total = 1114, boot = 885, init = 223, finish = 6"", ""Times: total = 1074, boot = 869, init = 199, finish = 6""]",0,medium,3,
+Got assigned task <*>,305,15.25,"[""Got assigned task 0"", ""Got assigned task 1"", ""Got assigned task 2""]",0,high,0,Auto-labeled (high confidence)
+Running task <*> in stage <*> (TID <*>),305,15.25,"[""Running task 0.0 in stage 0.0 (TID 0)"", ""Running task 2.0 in stage 0.0 (TID 2)"", ""Running task 1.0 in stage 0.0 (TID 1)""]",0,medium,0,
+Finished task <*> in stage <*> (TID <*>). <*> bytes result sent to driver,300,15.0,"[""Finished task 3.0 in stage 0.0 (TID 3). 2703 bytes result sent to driver"", ""Finished task 1.0 in stage 0.0 (TID 1). 2703 bytes result sent to driver"", ""Finished task 2.0 in stage 0.0 (TID 2). 2703 bytes result sent to driver""]",0,high,0,Auto-labeled (high confidence)
+Found block rdd_<*> locally,257,12.85,"[""Found block rdd_2_0 locally"", ""Found block rdd_2_3 locally"", ""Found block rdd_2_4 locally""]",0,high,0,Auto-labeled (high confidence)
+"Block <*> stored as bytes in memory (estimated size <*>, free <*>)",112,5.6000000000000005,"[""Block broadcast_9_piece0 stored as bytes in memory (estimated size 5.2 KB, free 5.2 KB)"", ""Block broadcast_8_piece0 stored as bytes in memory (estimated size 21.4 KB, free 35.4 KB)"", ""Block broadcast_0_piece0 stored as bytes in memory (estimated size 93.0 B, free 317.1 KB)""]",0,high,0,Auto-labeled (high confidence)
+"Partition rdd_<*> not found, computing it",75,3.75,"[""Partition rdd_2_1 not found, computing it"", ""Partition rdd_2_3 not found, computing it"", ""Partition rdd_2_0 not found, computing it""]",0,low,0,
+Input split: hdfs://<*>,45,2.25,"[""Input split: hdfs://10.10.34.11:9000/pjhe/logs/2kSOSP.log:21876+7292"", ""Input split: hdfs://10.10.34.11:9000/pjhe/logs/2kSOSP.log:14584+7292"", ""Input split: hdfs://10.10.34.11:9000/pjhe/logs/2kSOSP.log:0+7292""]",0,high,0,Auto-labeled (high confidence)
+Reading broadcast variable <*> took <*> ms,37,1.8499999999999999,"[""Reading broadcast variable 9 took 160 ms"", ""Reading broadcast variable 8 took 19 ms"", ""Reading broadcast variable 0 took 21 ms""]",0,medium,3,
+"Block <*> stored as values in memory (estimated size <*>, free <*>)",37,1.8499999999999999,"[""Block broadcast_9 stored as values in memory (estimated size 8.8 KB, free 14.0 KB)"", ""Block broadcast_8 stored as values in memory (estimated size 281.6 KB, free 317.0 KB)"", ""Block broadcast_0 stored as values in memory (estimated size 384.0 B, free 317.5 KB)""]",0,high,0,Auto-labeled (high confidence)
+Started reading broadcast variable <*>,37,1.8499999999999999,"[""Started reading broadcast variable 9"", ""Started reading broadcast variable 8"", ""Started reading broadcast variable 0""]",0,medium,0,
+Saved output of task 'attempt_<*>' to hdfs://<*>,30,1.5,"[""Saved output of task 'attempt_201706092018_0024_m_000003_1012' to hdfs://10.10.34.11:9000/pjhe/test/1/_temporary/0/task_201706092018_0024_m_000003"", ""Saved output of task 'attempt_201706092018_0024_m_000004_1026' to hdfs://10.10.34.11:9000/pjhe/test/1/_temporary/0/task_201706092018_0024_m_000004"", ""Saved output of task 'attempt_201706092018_0024_m_000002_998' to hdfs://10.10.34.11:9000/pjhe/test/1/_temporary/0/task_201706092018_0024_m_000002""]",0,high,0,Auto-labeled (high confidence)
+attempt_<*>: Committed,30,1.5,"[""attempt_201706092018_0024_m_000004_1026: Committed"", ""attempt_201706092018_0024_m_000002_998: Committed"", ""attempt_201706092018_0024_m_000003_1012: Committed""]",0,low,0,
+File Output Committer Algorithm version is <*>,30,1.5,"[""File Output Committer Algorithm version is 1"", ""File Output Committer Algorithm version is 1"", ""File Output Committer Algorithm version is 1""]",0,high,0,Auto-labeled (high confidence)
+Changing modify acls to: <*>,2,0.1,"[""Changing modify acls to: yarn,curi"", ""Changing modify acls to: yarn,curi""]",0,low,0,
+Changing view acls to: <*>,2,0.1,"[""Changing view acls to: yarn,curi"", ""Changing view acls to: yarn,curi""]",0,medium,0,
+"SecurityManager: authentication disabled; ui acls disabled; users with view permissions: Set(yarn, curi); users with modify permissions: Set(yarn, curi)",2,0.1,"[""SecurityManager: authentication disabled; ui acls disabled; users with view permissions: Set(yarn, curi); users with modify permissions: Set(yarn, curi)"", ""SecurityManager: authentication disabled; ui acls disabled; users with view permissions: Set(yarn, curi); users with modify permissions: Set(yarn, curi)""]",0,high,1,Auto-labeled (high confidence)
+"Registered signal handlers for [TERM, HUP, INT]",1,0.05,"[""Registered signal handlers for [TERM, HUP, INT]""]",0,low,0,
+Created local directory at <*>,1,0.05,"[""Created local directory at /opt/hdfs/nodemanager/usercache/curi/appcache/application_1485248649253_0147/blockmgr-70293f72-844a-4b39-9ad6-fb0ad7e364e4""]",0,high,0,Auto-labeled (high confidence)
+Slf4jLogger started,1,0.05,"[""Slf4jLogger started""]",0,low,0,
+Registered BlockManager,1,0.05,"[""Registered BlockManager""]",0,low,0,
+Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port <*>.,1,0.05,"[""Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 40984.""]",0,high,0,Auto-labeled (high confidence)
+Server created on <*>,1,0.05,"[""Server created on 40984""]",4,low,0,
+Trying to register BlockManager,1,0.05,"[""Trying to register BlockManager""]",0,low,0,
+Starting executor ID <*> on host <*>,1,0.05,"[""Starting executor ID 5 on host mesos-slave-07""]",0,high,0,Auto-labeled (high confidence)
+MemoryStore started with capacity <*> GB,1,0.05,"[""MemoryStore started with capacity 17.7 GB""]",0,low,0,
+Connecting to driver: spark://<*>,1,0.05,"[""Connecting to driver: spark://CoarseGrainedScheduler@10.10.34.11:48069""]",0,medium,0,
+Successfully registered with driver,1,0.05,"[""Successfully registered with driver""]",0,high,0,Auto-labeled (high confidence)
+Successfully started service 'sparkExecutorActorSystem' on port <*>.,1,0.05,"[""Successfully started service 'sparkExecutorActorSystem' on port 55904.""]",0,high,0,Auto-labeled (high confidence)
+Remoting started; listening on addresses :[akka.tcp://<*>],1,0.05,"[""Remoting started; listening on addresses :[akka.tcp://sparkExecutorActorSystem@mesos-slave-07:55904]""]",0,medium,0,
+Starting remoting,1,0.05,"[""Starting remoting""]",0,low,0,
+"mapred.tip.id is deprecated. Instead, use mapreduce.task.id",1,0.05,"[""mapred.tip.id is deprecated. Instead, use mapreduce.task.id""]",0,high,5,Auto-labeled (high confidence)
+"mapred.task.is.map is deprecated. Instead, use mapreduce.task.ismap",1,0.05,"[""mapred.task.is.map is deprecated. Instead, use mapreduce.task.ismap""]",0,high,5,Auto-labeled (high confidence)
+"mapred.task.id is deprecated. Instead, use mapreduce.task.attempt.id",1,0.05,"[""mapred.task.id is deprecated. Instead, use mapreduce.task.attempt.id""]",0,high,5,Auto-labeled (high confidence)
+"mapred.job.id is deprecated. Instead, use mapreduce.job.id",1,0.05,"[""mapred.job.id is deprecated. Instead, use mapreduce.job.id""]",0,high,5,Auto-labeled (high confidence)
+"mapred.task.partition is deprecated. Instead, use mapreduce.task.partition",1,0.05,"[""mapred.task.partition is deprecated. Instead, use mapreduce.task.partition""]",0,high,5,Auto-labeled (high confidence)
