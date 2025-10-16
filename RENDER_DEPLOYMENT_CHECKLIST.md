@@ -20,7 +20,7 @@ Your backend API is **READY FOR DEPLOYMENT** on Render! Here's your complete che
 - ✅ Error handling implemented
 - ✅ No syntax errors detected
 
-### 3. **Dependencies Verified** ✅
+### 3. **Dependencies Fixed & Verified** ✅
 ```
 flask==3.0.0
 flask-cors==4.0.0
@@ -30,8 +30,9 @@ scikit-learn==1.3.2
 torch==2.1.0
 transformers==4.35.0
 gunicorn==21.2.0
-huggingface_hub==0.19.4
+huggingface_hub==0.16.4  # ← Fixed compatibility issue
 drain3==0.9.11
+python-dotenv==1.0.0
 ```
 
 ### 4. **Configuration Ready** ✅
@@ -144,7 +145,14 @@ curl -X POST https://your-app-name.onrender.com/api/predict \
 
 ### Common Issues & Solutions
 
-1. **Build Timeout**
+1. **Dependency Conflicts**
+   ```
+   Issue: huggingface_hub version conflicts
+   Solution: Use compatible versions in requirements.txt
+   Action: Use requirements-flexible.txt if needed
+   ```
+
+2. **Build Timeout**
    ```
    Issue: Build takes too long
    Solution: This is normal - PyTorch installation takes time

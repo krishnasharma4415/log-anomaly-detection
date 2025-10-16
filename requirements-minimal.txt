@@ -1,0 +1,14 @@
+# Minimal requirements - install latest compatible versions
+# Use this if you encounter dependency conflicts
+
+flask
+flask-cors
+pandas
+numpy
+scikit-learn
+torch
+transformers
+huggingface_hub
+gunicorn
+drain3
+python-dotenv
