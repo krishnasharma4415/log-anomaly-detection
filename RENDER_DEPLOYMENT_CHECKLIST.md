@@ -66,7 +66,7 @@ Region: Choose closest to your users
 Branch: main
 Root Directory: . (leave empty)
 Build Command: pip install -r requirements.txt
-Start Command: gunicorn api.app:app --workers 2 --timeout 120 --bind 0.0.0.0:$PORT --log-level info
+Start Command: gunicorn app:app --workers 2 --timeout 120 --bind 0.0.0.0:$PORT --log-level info
 ```
 
 ### Step 4: Environment Variables
@@ -145,7 +145,14 @@ curl -X POST https://your-app-name.onrender.com/api/predict \
 
 ### Common Issues & Solutions
 
-1. **Dependency Conflicts**
+1. **Import Path Issues**
+   ```
+   Issue: ModuleNotFoundError: No module named 'api.models.manager'
+   Solution: Use root-level app.py entry point
+   Action: Ensure Procfile uses 'gunicorn app:app'
+   ```
+
+2. **Dependency Conflicts**
    ```
    Issue: huggingface_hub version conflicts
    Solution: Use compatible versions in requirements.txt
