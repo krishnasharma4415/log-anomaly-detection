@@ -1,3 +1,4 @@
 .venv
 features
 models
+huggingface_models

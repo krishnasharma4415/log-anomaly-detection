@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: log-anomaly-api
+    env: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn api.app:app --workers 2 --timeout 120 --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: FLASK_ENV
+        value: production
+      - key: FLASK_DEBUG
+        value: 0
+      - key: PORT
+        fromService:
+          type: web
+          name: log-anomaly-api
+          property: port
+    healthCheckPath: /health
