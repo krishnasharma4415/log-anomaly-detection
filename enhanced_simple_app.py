@@ -9,6 +9,8 @@ import sys
 from pathlib import Path
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+import re
+from datetime import datetime
 
 # Setup environment
 os.environ.setdefault('FLASK_ENV', 'production')
@@ -18,6 +20,133 @@ os.environ.setdefault('FLASK_DEBUG', '0')
 project_root = Path(__file__).parent.absolute()
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
+
+def detect_log_type(log_entry):
+    """Detect log type based on patterns"""
+    log_lower = log_entry.lower()
+    
+    # SSH logs
+    if 'sshd' in log_lower or 'failed password' in log_lower or 'authentication failure' in log_lower:
+        return 'OpenSSH'
+    
+    # Apache logs
+    if re.search(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}.*"(GET|POST|PUT|DELETE)', log_entry):
+        return 'Apache'
+    
+    # System logs (Linux/Windows)
+    if 'kernel' in log_lower or 'systemd' in log_lower or 'out of memory' in log_lower:
+        return 'Linux'
+    
+    # Hadoop/HDFS logs
+    if 'datanode' in log_lower or 'namenode' in log_lower or 'hdfs' in log_lower:
+        return 'Hadoop'
+    
+    # Error logs
+    if log_entry.startswith('[') and '] [error]' in log_lower:
+        return 'Apache'
+    
+    # Windows logs
+    if 'event id' in log_lower or 'windows' in log_lower:
+        return 'Windows'
+    
+    # Default
+    return 'Generic'
+
+def analyze_log_lightweight(log_entry):
+    """Lightweight rule-based log analysis"""
+    log_lower = log_entry.lower()
+    
+    # Detect log type
+    log_type = detect_log_type(log_entry)
+    
+    # Extract content (simple parsing)
+    parsed_content = log_entry.strip()
+    if ': ' in log_entry:
+        parsed_content = log_entry.split(': ', 1)[-1]
+    
+    # Rule-based classification
+    class_index = 0
+    class_name = 'normal'
+    confidence = 0.7
+    
+    # Security anomalies
+    if any(keyword in log_lower for keyword in [
+        'failed password', 'authentication failure', 'unauthorized', 'access denied',
+        'login failed', 'invalid user', 'brute force', 'security breach'
+    ]):
+        class_index = 1
+        class_name = 'security_anomaly'
+        confidence = 0.85
+    
+    # System failures
+    elif any(keyword in log_lower for keyword in [
+        'kernel panic', 'system crash', 'fatal error', 'segmentation fault',
+        'out of memory', 'critical error', 'system failure', 'core dump'
+    ]):
+        class_index = 2
+        class_name = 'system_failure'
+        confidence = 0.90
+    
+    # Performance issues
+    elif any(keyword in log_lower for keyword in [
+        'timeout', 'slow', 'high latency', 'performance', 'bottleneck',
+        'response time', 'delay', 'queue full'
+    ]):
+        class_index = 3
+        class_name = 'performance_issue'
+        confidence = 0.75
+    
+    # Network anomalies
+    elif any(keyword in log_lower for keyword in [
+        'connection refused', 'network error', 'connection timeout',
+        'host unreachable', 'packet loss', 'dns failure', 'connection reset'
+    ]):
+        class_index = 4
+        class_name = 'network_anomaly'
+        confidence = 0.80
+    
+    # Configuration errors
+    elif any(keyword in log_lower for keyword in [
+        'config error', 'configuration', 'invalid config', 'missing parameter',
+        'syntax error', 'parse error', 'invalid setting'
+    ]):
+        class_index = 5
+        class_name = 'config_error'
+        confidence = 0.75
+    
+    # Hardware issues
+    elif any(keyword in log_lower for keyword in [
+        'disk error', 'hardware failure', 'disk full', 'i/o error',
+        'memory error', 'cpu error', 'temperature', 'fan failure'
+    ]):
+        class_index = 6
+        class_name = 'hardware_issue'
+        confidence = 0.85
+    
+    # Generate probabilities (rule-based)
+    probabilities = [0.1] * 7  # Base probability for all classes
+    probabilities[class_index] = confidence
+    
+    # Normalize probabilities
+    total = sum(probabilities)
+    probabilities = [p / total for p in probabilities]
+    
+    # Generate template (simple)
+    template = re.sub(r'\d+', '<*>', log_entry)
+    template = re.sub(r'\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b', '<*>', template)
+    
+    return {
+        "raw": log_entry,
+        "log_type": log_type,
+        "parsed_content": parsed_content,
+        "template": template,
+        "prediction": {
+            "class_index": class_index,
+            "class_name": class_name,
+            "confidence": round(confidence, 2),
+            "probabilities": [round(p, 3) for p in probabilities]
+        }
+    }
 
 def create_enhanced_app():
     """Create enhanced Flask app with frontend-compatible endpoints"""
@@ -71,7 +200,7 @@ def create_enhanced_app():
     
     @app.route('/api/predict', methods=['POST'])
     def predict():
-        """Prediction endpoint with lazy model loading"""
+        """Lightweight log analysis with rule-based detection"""
         try:
             data = request.get_json()
             if not data:
@@ -85,70 +214,45 @@ def create_enhanced_app():
             if isinstance(logs, str):
                 logs = [logs]
             
-            # Try to import and use the actual prediction service
-            try:
-                # Lazy import to avoid memory issues at startup
-                sys.path.insert(0, str(project_root))
-                from api.services.unified_prediction import UnifiedPredictionService
+            # Lightweight log analysis without heavy models
+            analyzed_logs = []
+            class_counts = {}
+            log_type_counts = {}
+            
+            for log_entry in logs:
+                # Analyze each log entry
+                analysis = analyze_log_lightweight(log_entry)
+                analyzed_logs.append(analysis)
                 
-                # Initialize service (this will load models on-demand)
-                service = UnifiedPredictionService()
+                # Count classes and log types
+                class_name = analysis['prediction']['class_name']
+                log_type = analysis['log_type']
                 
-                # Get model preferences
-                model_type = data.get('model_type', 'ml')
-                bert_variant = data.get('bert_variant', 'hybrid')
-                include_probabilities = data.get('include_probabilities', True)
-                include_templates = data.get('include_templates', False)
-                
-                # Make prediction
-                result = service.predict_logs(
-                    logs=logs,
-                    model_type=model_type,
-                    bert_variant=bert_variant,
-                    include_probabilities=include_probabilities,
-                    include_templates=include_templates
-                )
-                
-                return jsonify(result)
-                
-            except Exception as model_error:
-                # Fallback response if models can't be loaded
-                print(f"Model loading failed: {model_error}")
-                
-                # Return a mock response that matches the expected format
-                mock_results = []
-                for i, log in enumerate(logs):
-                    mock_results.append({
-                        "raw": log,
-                        "log_type": "Unknown",
-                        "parsed_content": log,
-                        "template": log,
-                        "prediction": {
-                            "class_index": 0,
-                            "class_name": "normal",
-                            "confidence": 0.5,
-                            "probabilities": [0.5, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05]
-                        }
-                    })
-                
-                return jsonify({
-                    "status": "success",
-                    "timestamp": "2024-10-17T12:00:00.000000",
-                    "total_logs": len(logs),
-                    "model_used": {
-                        "model_type": "Fallback",
-                        "model_name": "MockModel",
-                        "num_classes": 7,
-                        "classification_type": "multi-class"
-                    },
-                    "logs": mock_results,
-                    "summary": {
-                        "class_distribution": {"normal": len(logs)},
-                        "log_type_distribution": {"Unknown": len(logs)},
-                        "anomaly_rate": 0.0
-                    },
-                    "note": "Using fallback mode - models are being loaded in background"
-                })
+                class_counts[class_name] = class_counts.get(class_name, 0) + 1
+                log_type_counts[log_type] = log_type_counts.get(log_type, 0) + 1
+            
+            # Calculate anomaly rate (non-normal logs)
+            total_logs = len(logs)
+            normal_count = class_counts.get('normal', 0)
+            anomaly_rate = (total_logs - normal_count) / total_logs if total_logs > 0 else 0
+            
+            return jsonify({
+                "status": "success",
+                "timestamp": "2024-10-17T12:00:00.000000",
+                "total_logs": total_logs,
+                "model_used": {
+                    "model_type": "Lightweight",
+                    "model_name": "RuleBasedAnalyzer",
+                    "num_classes": 7,
+                    "classification_type": "multi-class"
+                },
+                "logs": analyzed_logs,
+                "summary": {
+                    "class_distribution": class_counts,
+                    "log_type_distribution": log_type_counts,
+                    "anomaly_rate": round(anomaly_rate, 2)
+                }
+            })
             
         except Exception as e:
             return jsonify({
