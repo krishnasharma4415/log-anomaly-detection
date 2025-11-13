@@ -1,5 +1,16 @@
 .venv
 features
 huggingface_models
-bert_models_multiclass
-ml_models
+models
+.kiro
+__pycache__
+old
+# Model files and caches
+huggingface_models/
+model_cache/
+*.pt
+*.pth
+*.pkl
+*.h5
+*.onnx
+scripts

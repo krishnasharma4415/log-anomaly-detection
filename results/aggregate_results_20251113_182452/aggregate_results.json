@@ -1,0 +1,224 @@
+{
+  "experiment_info": {
+    "timestamp": "2025-11-13T18:24:56.708197",
+    "feature_type": "selected_imbalanced",
+    "num_classes": 2,
+    "label_map": {
+      "0": "normal",
+      "1": "anomaly"
+    },
+    "total_splits": 16,
+    "processed_splits": 13
+  },
+  "environment": {
+    "python": "3.11.0",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "sklearn": "1.7.2",
+    "xgboost": "3.1.1",
+    "lightgbm": "4.6.0",
+    "imblearn": "0.14.0",
+    "numpy": "2.3.4",
+    "pandas": "2.3.3"
+  },
+  "aggregate_metrics": {
+    "avg_f1_macro": 0.8337186925262585,
+    "std_f1_macro": 0.23673347322409427,
+    "avg_balanced_acc": 0.9016176681879821,
+    "avg_auroc": 0.9508481410696695,
+    "avg_auprc": 0.9031976368058161,
+    "avg_mcc": 0.7347780247033178
+  },
+  "best_model": "nb",
+  "model_frequency": {
+    "NB": 5,
+    "GB": 4,
+    "BALANCED_BAGGING": 1,
+    "XGB": 1,
+    "LR": 1,
+    "KNN": 1
+  },
+  "per_split_results": [
+    {
+      "test_source": "Android_2k",
+      "best_model": "gb",
+      "metrics": {
+        "f1_macro": 1.0,
+        "f1_weighted": 1.0,
+        "balanced_acc": 1.0,
+        "geometric_mean": 1.0,
+        "iba": 1.1,
+        "mcc": 1.0,
+        "auroc": 1.0,
+        "auprc": 0.9999999999999999
+      }
+    },
+    {
+      "test_source": "Apache_2k",
+      "best_model": "nb",
+      "metrics": {
+        "f1_macro": 0.6379449300776718,
+        "f1_weighted": 0.72220691163837,
+        "balanced_acc": 0.6271975675248389,
+        "geometric_mean": 0.5644569043835119,
+        "iba": 0.6626001672650329,
+        "mcc": 0.30446234132261374,
+        "auroc": 0.9002768521457574,
+        "auprc": 0.7340232366777837
+      }
+    },
+    {
+      "test_source": "BGL_2k",
+      "best_model": "gb",
+      "metrics": {
+        "f1_macro": 0.9900916522169928,
+        "f1_weighted": 0.9969751795888036,
+        "balanced_acc": 0.9821428571428572,
+        "geometric_mean": 0.9819805060619657,
+        "iba": 1.078587371131086,
+        "mcc": 0.9803763985285725,
+        "auroc": 1.0,
+        "auprc": 0.9999999999999999
+      }
+    },
+    {
+      "test_source": "Hadoop_2k",
+      "best_model": "xgb",
+      "metrics": {
+        "f1_macro": 0.8877117775460637,
+        "f1_weighted": 0.8948999081064524,
+        "balanced_acc": 0.9165670981303242,
+        "geometric_mean": 0.9132731945415495,
+        "iba": 1.00027471430244,
+        "mcc": 0.79632651414025,
+        "auroc": 0.8665493970571965,
+        "auprc": 0.9510781724555619
+      }
+    },
+    {
+      "test_source": "HealthApp_2k",
+      "best_model": "nb",
+      "metrics": {
+        "f1_macro": 0.5311675368878168,
+        "f1_weighted": 0.9482434746509621,
+        "balanced_acc": 0.9550025138260432,
+        "geometric_mean": 0.9539418366190291,
+        "iba": 1.0461041990275437,
+        "mcc": 0.22953104713940176,
+        "auroc": 0.9964806435394671,
+        "auprc": 0.44
+      }
+    },
+    {
+      "test_source": "HPC_2k",
+      "best_model": "lr",
+      "metrics": {
+        "f1_macro": 0.7481448579193559,
+        "f1_weighted": 0.7517879425495525,
+        "balanced_acc": 0.7470746026925802,
+        "geometric_mean": 0.7454447146865519,
+        "iba": 0.8027648840979541,
+        "mcc": 0.49700211311738646,
+        "auroc": 0.8963953841481932,
+        "auprc": 0.8682577936338142
+      }
+    },
+    {
+      "test_source": "Linux_2k",
+      "best_model": "knn",
+      "metrics": {
+        "f1_macro": 0.2333743842364532,
+        "f1_weighted": 0.34450443349753695,
+        "balanced_acc": 0.6030229287133576,
+        "geometric_mean": 0.46301080409723466,
+        "iba": 0.6309435418246218,
+        "mcc": 0.10763103097540819,
+        "auroc": 0.7376119086423611,
+        "auprc": 0.9761444353255668
+      }
+    },
+    {
+      "test_source": "Mac_2k",
+      "best_model": "nb",
+      "metrics": {
+        "f1_macro": 0.877590949757105,
+        "f1_weighted": 0.912467430329685,
+        "balanced_acc": 0.9190455276333029,
+        "geometric_mean": 0.918857315351147,
+        "iba": 1.0034926982539645,
+        "mcc": 0.7679307374795505,
+        "auroc": 0.9737631372225358,
+        "auprc": 0.8312740125205371
+      }
+    },
+    {
+      "test_source": "Proxifier_2k",
+      "best_model": "nb",
+      "metrics": {
+        "f1_macro": 0.9791448339146711,
+        "f1_weighted": 0.9960749951772429,
+        "balanced_acc": 0.9978980557015239,
+        "geometric_mean": 0.9978958419609973,
+        "iba": 1.0974778877500755,
+        "mcc": 0.9591276930037133,
+        "auroc": 1.0,
+        "auprc": 1.0
+      }
+    },
+    {
+      "test_source": "Spark_2k",
+      "best_model": "gb",
+      "metrics": {
+        "f1_macro": 1.0,
+        "f1_weighted": 1.0,
+        "balanced_acc": 1.0,
+        "geometric_mean": 1.0,
+        "iba": 1.1,
+        "mcc": 1.0,
+        "auroc": 1.0,
+        "auprc": 1.0
+      }
+    },
+    {
+      "test_source": "Thunderbird_2k",
+      "best_model": "gb",
+      "metrics": {
+        "f1_macro": 1.0,
+        "f1_weighted": 1.0,
+        "balanced_acc": 1.0,
+        "geometric_mean": 1.0,
+        "iba": 1.1,
+        "mcc": 1.0,
+        "auroc": 1.0,
+        "auprc": 1.0
+      }
+    },
+    {
+      "test_source": "Windows_2k",
+      "best_model": "balanced_bagging",
+      "metrics": {
+        "f1_macro": 0.99529752924349,
+        "f1_weighted": 0.995501463644023,
+        "balanced_acc": 0.9956222766670954,
+        "geometric_mean": 0.9956221047694017,
+        "iba": 1.094748631332155,
+        "mcc": 0.9905999484482738,
+        "auroc": 0.998295547824523,
+        "auprc": 0.9942533620429362
+      }
+    },
+    {
+      "test_source": "Zookeeper_2k",
+      "best_model": "nb",
+      "metrics": {
+        "f1_macro": 0.9578745510417404,
+        "f1_weighted": 0.9671385691493961,
+        "balanced_acc": 0.9774562584118438,
+        "geometric_mean": 0.977196252972599,
+        "iba": 1.0729729177283107,
+        "mcc": 0.9191264969879621,
+        "auroc": 0.9916529633256699,
+        "auprc": 0.9465382658194079
+      }
+    }
+  ]
+}
