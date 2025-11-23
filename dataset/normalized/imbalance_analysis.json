@@ -1,0 +1,268 @@
+{
+  "num_classes": 2,
+  "label_map": {
+    "0": "normal",
+    "1": "anomaly"
+  },
+  "original_label_map": {
+    "0": "normal",
+    "1": "security_anomaly",
+    "2": "system_failure",
+    "3": "performance_issue",
+    "4": "network_anomaly",
+    "5": "config_error",
+    "6": "hardware_issue"
+  },
+  "source_analysis": {
+    "Android_2k_labeled": {
+      "present_classes": [
+        0,
+        1
+      ],
+      "missing_classes": [],
+      "class_counts": {
+        "0": 1974,
+        "1": 26
+      },
+      "total_samples": 2000,
+      "imbalance_ratio": 75.92307692307692
+    },
+    "Apache_2k_labeled": {
+      "present_classes": [
+        0,
+        1
+      ],
+      "missing_classes": [],
+      "class_counts": {
+        "0": 1429,
+        "1": 571
+      },
+      "total_samples": 2000,
+      "imbalance_ratio": 2.502626970227671
+    },
+    "BGL_2k_labeled": {
+      "present_classes": [
+        0,
+        1
+      ],
+      "missing_classes": [],
+      "class_counts": {
+        "0": 1832,
+        "1": 168
+      },
+      "total_samples": 2000,
+      "imbalance_ratio": 10.904761904761905
+    },
+    "Hadoop_2k_labeled": {
+      "present_classes": [
+        0,
+        1
+      ],
+      "missing_classes": [],
+      "class_counts": {
+        "0": 690,
+        "1": 1310
+      },
+      "total_samples": 2000,
+      "imbalance_ratio": 1.8985507246376812
+    },
+    "HDFS_2k_labeled": {
+      "present_classes": [
+        0
+      ],
+      "missing_classes": [
+        1
+      ],
+      "class_counts": {
+        "0": 2000
+      },
+      "total_samples": 2000,
+      "imbalance_ratio": 0
+    },
+    "HealthApp_2k_labeled": {
+      "present_classes": [
+        0,
+        1
+      ],
+      "missing_classes": [],
+      "class_counts": {
+        "0": 1989,
+        "1": 11
+      },
+      "total_samples": 2000,
+      "imbalance_ratio": 180.8181818181818
+    },
+    "HPC_2k_labeled": {
+      "present_classes": [
+        0,
+        1
+      ],
+      "missing_classes": [],
+      "class_counts": {
+        "0": 1110,
+        "1": 890
+      },
+      "total_samples": 2000,
+      "imbalance_ratio": 1.247191011235955
+    },
+    "Linux_2k_labeled": {
+      "present_classes": [
+        0,
+        1
+      ],
+      "missing_classes": [],
+      "class_counts": {
+        "0": 94,
+        "1": 1906
+      },
+      "total_samples": 2000,
+      "imbalance_ratio": 20.27659574468085
+    },
+    "Mac_2k_labeled": {
+      "present_classes": [
+        0,
+        1
+      ],
+      "missing_classes": [],
+      "class_counts": {
+        "0": 1564,
+        "1": 436
+      },
+      "total_samples": 2000,
+      "imbalance_ratio": 3.5871559633027523
+    },
+    "OpenSSH_2k_labeled": {
+      "present_classes": [
+        1
+      ],
+      "missing_classes": [
+        0
+      ],
+      "class_counts": {
+        "1": 2000
+      },
+      "total_samples": 2000,
+      "imbalance_ratio": 0
+    },
+    "OpenStack_2k_labeled": {
+      "present_classes": [
+        0
+      ],
+      "missing_classes": [
+        1
+      ],
+      "class_counts": {
+        "0": 2000
+      },
+      "total_samples": 2000,
+      "imbalance_ratio": 0
+    },
+    "Proxifier_2k_labeled": {
+      "present_classes": [
+        0,
+        1
+      ],
+      "missing_classes": [],
+      "class_counts": {
+        "0": 1903,
+        "1": 97
+      },
+      "total_samples": 2000,
+      "imbalance_ratio": 19.61855670103093
+    },
+    "Spark_2k_labeled": {
+      "present_classes": [
+        0,
+        1
+      ],
+      "missing_classes": [],
+      "class_counts": {
+        "0": 1992,
+        "1": 8
+      },
+      "total_samples": 2000,
+      "imbalance_ratio": 249.0
+    },
+    "Thunderbird_2k_labeled": {
+      "present_classes": [
+        0,
+        1
+      ],
+      "missing_classes": [],
+      "class_counts": {
+        "0": 1805,
+        "1": 195
+      },
+      "total_samples": 2000,
+      "imbalance_ratio": 9.256410256410257
+    },
+    "Windows_2k_labeled": {
+      "present_classes": [
+        0,
+        1
+      ],
+      "missing_classes": [],
+      "class_counts": {
+        "0": 1209,
+        "1": 791
+      },
+      "total_samples": 2000,
+      "imbalance_ratio": 1.5284450063211126
+    },
+    "Zookeeper_2k_labeled": {
+      "present_classes": [
+        0,
+        1
+      ],
+      "missing_classes": [],
+      "class_counts": {
+        "0": 1486,
+        "1": 514
+      },
+      "total_samples": 2000,
+      "imbalance_ratio": 2.8910505836575875
+    }
+  },
+  "class_availability": {
+    "0": [
+      "Android_2k_labeled",
+      "Apache_2k_labeled",
+      "BGL_2k_labeled",
+      "Hadoop_2k_labeled",
+      "HDFS_2k_labeled",
+      "HealthApp_2k_labeled",
+      "HPC_2k_labeled",
+      "Linux_2k_labeled",
+      "Mac_2k_labeled",
+      "OpenStack_2k_labeled",
+      "Proxifier_2k_labeled",
+      "Spark_2k_labeled",
+      "Thunderbird_2k_labeled",
+      "Windows_2k_labeled",
+      "Zookeeper_2k_labeled"
+    ],
+    "1": [
+      "Android_2k_labeled",
+      "Apache_2k_labeled",
+      "BGL_2k_labeled",
+      "Hadoop_2k_labeled",
+      "HealthApp_2k_labeled",
+      "HPC_2k_labeled",
+      "Linux_2k_labeled",
+      "Mac_2k_labeled",
+      "OpenSSH_2k_labeled",
+      "Proxifier_2k_labeled",
+      "Spark_2k_labeled",
+      "Thunderbird_2k_labeled",
+      "Windows_2k_labeled",
+      "Zookeeper_2k_labeled"
+    ]
+  },
+  "recommendations": [
+    "CRITICAL: 2 sources have extreme imbalance (>100:1)",
+    "   \u2192 Use SMOTE with careful k-neighbors selection",
+    "   \u2192 Apply class weights in model training",
+    "   \u2192 Consider focal loss for deep learning"
+  ],
+  "timestamp": "2025-11-05T15:03:22.406978"
+}

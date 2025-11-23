@@ -1,5 +1,8 @@
+# Python
+__pycache__
 .venv
+.vscode
+models
 features
-huggingface_models
-bert_models_multiclass
-ml_models
+node_modules
+results

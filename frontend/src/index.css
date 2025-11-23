@@ -1,4 +1,181 @@
-@import "tailwindcss";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+/* Base styles - Force white text on dark background */
+:root {
+  color-scheme: dark;
+}
+
+* {
+  color: inherit;
+}
+
+html {
+  background-color: #0F111A;
+  color: #FFFFFF;
+}
+
+body {
+  background-color: #0F111A;
+  color: #FFFFFF;
+  font-family: 'Manrope', 'Inter', system-ui, sans-serif;
+}
+
+/* Ensure all text elements are white by default */
+h1, h2, h3, h4, h5, h6 {
+  color: #FFFFFF !important;
+}
+
+p {
+  color: #FFFFFF;
+}
+
+span {
+  color: inherit;
+}
+
+div {
+  color: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+label {
+  color: #C5C7D3;
+}
+
+/* Override any black text */
+.text-black {
+  color: #FFFFFF !important;
+}
+
+/* Recharts text color fix */
+.recharts-text {
+  fill: #C5C7D3 !important;
+}
+
+.recharts-label {
+  fill: #FFFFFF !important;
+}
+
+.recharts-legend-item-text {
+  color: #C5C7D3 !important;
+}
+
+.recharts-cartesian-axis-tick-value {
+  fill: #C5C7D3 !important;
+}
+
+.recharts-tooltip-wrapper {
+  color: #FFFFFF !important;
+}
+
+/* Table text */
+table {
+  color: #FFFFFF;
+}
+
+th {
+  color: #C5C7D3 !important;
+}
+
+td {
+  color: #FFFFFF;
+}
+
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0F111A;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3B3F52;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4B5DFF;
+}
+
+/* Smooth transitions */
+* {
+  transition-property: color, background-color, border-color, box-shadow;
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Neon glow animation */
+@keyframes neon-pulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(75, 93, 255, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(75, 93, 255, 0.8);
+  }
+}
+
+.neon-border {
+  border: 1px solid rgba(75, 93, 255, 0.5);
+  box-shadow: 0 0 14px rgba(75, 93, 255, 0.6);
+}
+
+.neon-border:hover {
+  border-color: rgba(0, 198, 255, 0.7);
+  box-shadow: 0 0 20px rgba(0, 198, 255, 0.5);
+}
+
+/* Shimmer effect for loading */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(75, 93, 255, 0.1) 0%,
+    rgba(0, 198, 255, 0.3) 50%,
+    rgba(75, 93, 255, 0.1) 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #4B5DFF 0%, #A259FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Code block styling */
+pre, code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid #4B5DFF;
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background-color: rgba(75, 93, 255, 0.3);
+  color: #FFFFFF;
+}

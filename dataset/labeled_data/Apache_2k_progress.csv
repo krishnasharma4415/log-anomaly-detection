@@ -1,7 +1,0 @@
-template,count,percentage,samples,suggested,confidence,label,notes
-jk2_init() Found child <*> in scoreboard slot <*>,836,41.8,"[""jk2_init() Found child 6725 in scoreboard slot 10"", ""jk2_init() Found child 6726 in scoreboard slot 8"", ""jk2_init() Found child 6728 in scoreboard slot 6""]",0,low,0,
-workerEnv.init() ok <*>,569,28.449999999999996,"[""workerEnv.init() ok /etc/httpd/conf/workers2.properties"", ""workerEnv.init() ok /etc/httpd/conf/workers2.properties"", ""workerEnv.init() ok /etc/httpd/conf/workers2.properties""]",0,low,0,
-mod_jk child workerEnv in error state <*>,539,26.950000000000003,"[""mod_jk child workerEnv in error state 6"", ""mod_jk child workerEnv in error state 6"", ""mod_jk child workerEnv in error state 6""]",1,low,2,
-[client <*>] Directory index forbidden by rule: <*>,32,1.6,"[""[client 222.166.160.184] Directory index forbidden by rule: /var/www/html/"", ""[client 63.13.186.196] Directory index forbidden by rule: /var/www/html/"", ""[client 147.31.138.75] Directory index forbidden by rule: /var/www/html/""]",0,low,1,
-jk2_init() Can't find child <*> in scoreboard,12,0.6,"[""jk2_init() Can't find child 1566 in scoreboard"", ""jk2_init() Can't find child 1567 in scoreboard"", ""jk2_init() Can't find child 2082 in scoreboard""]",0,low,2,
-mod_jk child init <*> <*>,12,0.6,"[""mod_jk child init 1 -2"", ""mod_jk child init 1 -2"", ""mod_jk child init 1 -2""]",0,low,2,

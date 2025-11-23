@@ -1,131 +1,199 @@
-import { API_BASE_URL, API_ENDPOINTS } from '../utils/constants';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-// Helper function to build full URL
-const buildUrl = (endpoint) => `${API_BASE_URL}${endpoint}`;
-
-// Helper function to map model selection to API parameters
-const getModelParams = (selectedModel) => {
-  const modelMap = {
-    'ml': { model_type: 'ml' },
-    'dann_bert': { model_type: 'bert', bert_variant: 'dann' },
-    'lora_bert': { model_type: 'bert', bert_variant: 'lora' },
-    'hybrid_bert': { model_type: 'bert', bert_variant: 'hybrid' }
-  };
-  return modelMap[selectedModel] || {};
-};
-
-// Transform backend response to frontend format
-function transformPredictionResponse(apiResponse) {
-  const { logs, model_used, summary } = apiResponse;
-
-  // Map detailed results
-  const detailed_results = logs.map((logData) => ({
-    log_text: logData.raw,
-    log_type: logData.log_type,
-    parsed_content: logData.parsed_content,
-    template: logData.template,
-    prediction: logData.prediction.class_name,
-    prediction_class_id: logData.prediction.class_index,
-    is_anomaly: logData.prediction.class_index !== 0,
-    confidence: logData.prediction.confidence,
-    probabilities: logData.prediction.probabilities
-  }));
-
-  // Calculate summary statistics
-  const anomalyCount = detailed_results.filter(r => r.prediction_class_id !== 0).length;
-  const totalLogs = detailed_results.length;
-
-  return {
-    status: 'success',
-    model_info: model_used,
-    summary: {
-      total_logs: totalLogs,
-      anomaly_count: anomalyCount,
-      normal_count: totalLogs - anomalyCount,
-      anomaly_rate: summary?.anomaly_rate || (anomalyCount / totalLogs),
-      class_distribution: summary?.class_distribution || {},
-      log_type_distribution: summary?.log_type_distribution || {}
-    },
-    detailed_results: detailed_results,
-    
-    // Backward compatibility
-    anomaly_detected: anomalyCount > 0,
-    confidence: detailed_results.length > 0 ? detailed_results[0].confidence : 0,
-    prediction: detailed_results.length > 0 ? detailed_results[0].prediction : 'normal'
-  };
-}
-
-// API Service
-export const apiService = {
-  /**
-   * Check API health status
-   * @returns {Promise<string>} 'healthy', 'unhealthy', or 'offline'
-   */
-  checkHealth: async () => {
-    try {
-      const response = await fetch(buildUrl(API_ENDPOINTS.HEALTH));
-      return response.ok ? 'healthy' : 'unhealthy';
-    } catch (err) {
-      return 'offline';
-    }
-  },
-
-  /**
-   * Get model information
-   * @returns {Promise<object|null>} Model metadata or null on error
-   */
-  getModelInfo: async () => {
-    try {
-      const response = await fetch(buildUrl(API_ENDPOINTS.MODEL_INFO));
-      if (!response.ok) {
-        throw new Error('Failed to fetch model info');
-      }
-      return response.json();
-    } catch (err) {
-      console.error('Error fetching model info:', err);
-      return null;
-    }
-  },
-
-  /**
-   * Analyze log data
-   * @param {string} logText - Raw log text
-   * @param {string} selectedModel - Model ID ('ml', 'dann_bert', 'lora_bert', 'hybrid_bert')
-   * @param {boolean} includeTemplates - Include template extraction
-   * @returns {Promise<object>} Analysis results
-   */
-  analyzeLog: async (logText, selectedModel = null, includeTemplates = true) => {
-    // Split and clean logs
-    const logs = logText
-      .split('\n')
-      .map(line => line.trim())
-      .filter(line => line.length > 0);
-
-    if (logs.length === 0) {
-      throw new Error('No valid log lines to analyze');
-    }
-
-    // Build request body
-    const requestBody = {
-      logs: logs,
-      include_templates: includeTemplates,
-      include_probabilities: true,
-      ...getModelParams(selectedModel)
+class ApiService {
+  async request(endpoint, options = {}) {
+    const url = `${API_BASE_URL}${endpoint}`;
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+      ...options,
     };
 
-    // Make API request
-    const response = await fetch(buildUrl(API_ENDPOINTS.PREDICT), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(requestBody)
-    });
+    try {
+      const response = await fetch(url, config);
+      const data = await response.json();
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Analysis failed');
+      if (!response.ok) {
+        throw new Error(data.message || data.detail || 'API request failed');
+      }
+
+      return data;
+    } catch (error) {
+      console.error('API Error:', error);
+      throw error;
     }
-
-    const data = await response.json();
-    return transformPredictionResponse(data);
   }
-};
+
+  // Health check
+  async checkHealth() {
+    return this.request('/health');
+  }
+
+  // Get model info
+  async getModelInfo() {
+    return this.request('/model-info');
+  }
+
+  // Predict single or multiple logs
+  async predict(logs, modelType = 'ml', saveToDb = false, bertModelKey = 'best') {
+    return this.request('/api/predict', {
+      method: 'POST',
+      body: JSON.stringify({
+        logs: Array.isArray(logs) ? logs : [logs],
+        model_type: modelType,
+        bert_model_key: bertModelKey,
+        save_to_db: saveToDb,
+      }),
+    });
+  }
+
+  // Analyze logs with metadata
+  async analyze(logs, modelType = 'ml', saveToDb = false, bertModelKey = 'best') {
+    return this.request('/api/analyze', {
+      method: 'POST',
+      body: JSON.stringify({
+        logs: Array.isArray(logs) ? logs : [logs],
+        model_type: modelType,
+        bert_model_key: bertModelKey,
+        save_to_db: saveToDb,
+      }),
+    });
+  }
+
+  // Get log entries with pagination and filters
+  async getLogs(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request(`/api/logs/${queryString ? '?' + queryString : ''}`);
+  }
+
+  // Get specific log entry
+  async getLog(id) {
+    return this.request(`/api/logs/${id}/`);
+  }
+
+  // Get predictions with pagination and filters
+  async getPredictions(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request(`/api/predictions/${queryString ? '?' + queryString : ''}`);
+  }
+
+  // Get specific prediction
+  async getPrediction(id) {
+    return this.request(`/api/predictions/${id}/`);
+  }
+
+  // Get log sources
+  async getLogSources() {
+    return this.request('/api/sources/');
+  }
+
+  // Get model metrics
+  async getModelMetrics(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request(`/api/metrics/${queryString ? '?' + queryString : ''}`);
+  }
+
+  // Get best performing models
+  async getBestModels() {
+    return this.request('/api/metrics/best_models/');
+  }
+
+  // Get batch analysis jobs
+  async getBatchAnalyses(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request(`/api/batch/${queryString ? '?' + queryString : ''}`);
+  }
+
+  // Get specific batch analysis
+  async getBatchAnalysis(id) {
+    return this.request(`/api/batch/${id}/`);
+  }
+
+  // Create batch analysis
+  async createBatchAnalysis(data) {
+    return this.request('/api/batch/', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // Get statistics for dashboard
+  async getStatistics() {
+    try {
+      const [modelInfo, health] = await Promise.all([
+        this.getModelInfo(),
+        this.checkHealth(),
+      ]);
+
+      return {
+        totalLogs: modelInfo.statistics?.total_logs || 0,
+        totalPredictions: modelInfo.statistics?.total_predictions || 0,
+        anomalyRate: modelInfo.statistics?.anomaly_rate || 0,
+        predictionsByModel: modelInfo.statistics?.predictions_by_model || {},
+        systemHealth: health.system || {},
+        modelsLoaded: health.models || {},
+      };
+    } catch (error) {
+      console.error('Error fetching statistics:', error);
+      return {
+        totalLogs: 0,
+        totalPredictions: 0,
+        anomalyRate: 0,
+        predictionsByModel: {},
+        systemHealth: {},
+        modelsLoaded: {},
+      };
+    }
+  }
+
+  // Get recent logs for dashboard
+  async getRecentLogs(limit = 10) {
+    try {
+      const response = await this.getLogs({ page_size: limit, ordering: '-created_at' });
+      return response.results || [];
+    } catch (error) {
+      console.error('Error fetching recent logs:', error);
+      return [];
+    }
+  }
+
+  // Get anomaly distribution
+  async getAnomalyDistribution() {
+    try {
+      const predictions = await this.getPredictions({ page_size: 1000 });
+      const distribution = {};
+      
+      (predictions.results || []).forEach(pred => {
+        const className = pred.predicted_class_name;
+        distribution[className] = (distribution[className] || 0) + 1;
+      });
+
+      return distribution;
+    } catch (error) {
+      console.error('Error fetching anomaly distribution:', error);
+      return {};
+    }
+  }
+
+  // Get source distribution
+  async getSourceDistribution() {
+    try {
+      const logs = await this.getLogs({ page_size: 1000 });
+      const distribution = {};
+      
+      (logs.results || []).forEach(log => {
+        const source = log.source_name || 'Unknown';
+        distribution[source] = (distribution[source] || 0) + 1;
+      });
+
+      return distribution;
+    } catch (error) {
+      console.error('Error fetching source distribution:', error);
+      return {};
+    }
+  }
+}
+
+export default new ApiService();

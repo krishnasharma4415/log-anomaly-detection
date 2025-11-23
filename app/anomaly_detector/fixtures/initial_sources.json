@@ -1,0 +1,162 @@
+[
+  {
+    "model": "anomaly_detector.logsource",
+    "pk": 1,
+    "fields": {
+      "name": "apache",
+      "description": "Apache HTTP Server logs",
+      "is_active": true,
+      "created_at": "2025-01-16T00:00:00Z"
+    }
+  },
+  {
+    "model": "anomaly_detector.logsource",
+    "pk": 2,
+    "fields": {
+      "name": "linux",
+      "description": "Linux system logs",
+      "is_active": true,
+      "created_at": "2025-01-16T00:00:00Z"
+    }
+  },
+  {
+    "model": "anomaly_detector.logsource",
+    "pk": 3,
+    "fields": {
+      "name": "hdfs",
+      "description": "Hadoop HDFS logs",
+      "is_active": true,
+      "created_at": "2025-01-16T00:00:00Z"
+    }
+  },
+  {
+    "model": "anomaly_detector.logsource",
+    "pk": 4,
+    "fields": {
+      "name": "openssh",
+      "description": "OpenSSH server logs",
+      "is_active": true,
+      "created_at": "2025-01-16T00:00:00Z"
+    }
+  },
+  {
+    "model": "anomaly_detector.logsource",
+    "pk": 5,
+    "fields": {
+      "name": "hadoop",
+      "description": "Hadoop application logs",
+      "is_active": true,
+      "created_at": "2025-01-16T00:00:00Z"
+    }
+  },
+  {
+    "model": "anomaly_detector.logsource",
+    "pk": 6,
+    "fields": {
+      "name": "android",
+      "description": "Android system logs",
+      "is_active": true,
+      "created_at": "2025-01-16T00:00:00Z"
+    }
+  },
+  {
+    "model": "anomaly_detector.logsource",
+    "pk": 7,
+    "fields": {
+      "name": "bgl",
+      "description": "BlueGene/L supercomputer logs",
+      "is_active": true,
+      "created_at": "2025-01-16T00:00:00Z"
+    }
+  },
+  {
+    "model": "anomaly_detector.logsource",
+    "pk": 8,
+    "fields": {
+      "name": "healthapp",
+      "description": "HealthApp application logs",
+      "is_active": true,
+      "created_at": "2025-01-16T00:00:00Z"
+    }
+  },
+  {
+    "model": "anomaly_detector.logsource",
+    "pk": 9,
+    "fields": {
+      "name": "hpc",
+      "description": "High Performance Computing logs",
+      "is_active": true,
+      "created_at": "2025-01-16T00:00:00Z"
+    }
+  },
+  {
+    "model": "anomaly_detector.logsource",
+    "pk": 10,
+    "fields": {
+      "name": "mac",
+      "description": "macOS system logs",
+      "is_active": true,
+      "created_at": "2025-01-16T00:00:00Z"
+    }
+  },
+  {
+    "model": "anomaly_detector.logsource",
+    "pk": 11,
+    "fields": {
+      "name": "openstack",
+      "description": "OpenStack cloud logs",
+      "is_active": true,
+      "created_at": "2025-01-16T00:00:00Z"
+    }
+  },
+  {
+    "model": "anomaly_detector.logsource",
+    "pk": 12,
+    "fields": {
+      "name": "proxifier",
+      "description": "Proxifier network logs",
+      "is_active": true,
+      "created_at": "2025-01-16T00:00:00Z"
+    }
+  },
+  {
+    "model": "anomaly_detector.logsource",
+    "pk": 13,
+    "fields": {
+      "name": "spark",
+      "description": "Apache Spark logs",
+      "is_active": true,
+      "created_at": "2025-01-16T00:00:00Z"
+    }
+  },
+  {
+    "model": "anomaly_detector.logsource",
+    "pk": 14,
+    "fields": {
+      "name": "thunderbird",
+      "description": "Thunderbird supercomputer logs",
+      "is_active": true,
+      "created_at": "2025-01-16T00:00:00Z"
+    }
+  },
+  {
+    "model": "anomaly_detector.logsource",
+    "pk": 15,
+    "fields": {
+      "name": "windows",
+      "description": "Windows system logs",
+      "is_active": true,
+      "created_at": "2025-01-16T00:00:00Z"
+    }
+  },
+  {
+    "model": "anomaly_detector.logsource",
+    "pk": 16,
+    "fields": {
+      "name": "zookeeper",
+      "description": "Apache ZooKeeper logs",
+      "is_active": true,
+      "created_at": "2025-01-16T00:00:00Z"
+    }
+  }
+]

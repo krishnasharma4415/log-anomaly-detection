@@ -1,47 +1,47 @@
 template,count,percentage,samples,suggested,confidence,label,notes
-Linkerror event interval expired,394,19.7,"[""Linkerror event interval expired"", ""Linkerror event interval expired"", ""Linkerror event interval expired""]",0,low,0,0
-ambient=<*>,292,14.6,"[""ambient=30"", ""ambient=30"", ""ambient=31""]",0,low,0,
-normal,206,10.299999999999999,"[""normal"", ""normal"", ""normal""]",0,low,0,
-warning,205,10.25,"[""warning"", ""warning"", ""warning""]",0,low,0,
-running,162,8.1,"[""running"", ""running"", ""running""]",0,low,0,
-configured out,91,4.55,"[""configured out"", ""configured out"", ""configured out""]",0,low,0,
-Fan speeds ( <*> <*> <*> **** <*> <*> ),79,3.95,"[""Fan speeds ( 3552 3534 3375 **** 3515 3479 )"", ""Fan speeds ( 3552 3534 3375 **** 3515 3479 )"", ""Fan speeds ( 3552 3534 3375 **** 3515 3479 )""]",0,low,0,
-boot  (command <*>),67,3.35,"[""boot  (command 1911)"", ""boot  (command 1910)"", ""boot  (command 1978)""]",0,low,0,
-wait  (command <*>),66,3.3000000000000003,"[""wait  (command 1975)"", ""wait  (command 1973)"", ""wait  (command 2057)""]",0,low,0,
-not responding,60,3.0,"[""not responding"", ""not responding"", ""not responding""]",0,low,0,
-link errors remain current,56,2.8000000000000003,"[""link errors remain current"", ""link errors remain current"", ""link errors remain current""]",0,low,4,
-NIFF: node node-<*> has detected an available network connection on network <*> via interface ee0,45,2.25,"[""NIFF: node node-129 has detected an available network connection on network 10.128.0.0 via interface ee0"", ""NIFF: node node-24 has detected an available network connection on network 10.128.0.0 via interface ee0"", ""NIFF: node node-232 has detected an available network connection on network 10.128.0.0 via interface ee0""]",0,low,0,
-NIFF: node node-<*> has detected an available network connection on network <*> via interface alt0,44,2.1999999999999997,"[""NIFF: node node-148 has detected an available network connection on network 5.5.226.0 via interface alt0"", ""NIFF: node node-26 has detected an available network connection on network 5.5.226.0 via interface alt0"", ""NIFF: node node-120 has detected an available network connection on network 5.5.226.0 via interface alt0""]",0,low,0,
-ClusterFileSystem: ServerFileSystem domain <*> is no longer served by node node-<*>,36,1.7999999999999998,"[""ClusterFileSystem: ServerFileSystem domain cluster_root_backup is no longer served by node node-96"", ""ClusterFileSystem: ServerFileSystem domain root_domain is no longer served by node node-160"", ""ClusterFileSystem: ServerFileSystem domain root3_domain is no longer served by node node-128""]",0,low,2,
-ClusterFileSystem: There is no server for ServerFileSystem domain storage<*>,32,1.6,"[""ClusterFileSystem: There is no server for ServerFileSystem domain storage234"", ""ClusterFileSystem: There is no server for ServerFileSystem domain storage1412"", ""ClusterFileSystem: There is no server for ServerFileSystem domain storage1024""]",0,low,0,
-critical,20,1.0,"[""critical"", ""critical"", ""critical""]",0,low,2,
-blocked,15,0.75,"[""blocked"", ""blocked"", ""blocked""]",0,low,3,
-Link ok,13,0.65,"[""Link ok"", ""Link ok"", ""Link ok""]",0,low,0,
-Link error,13,0.65,"[""Link error"", ""Link error"", ""Link error""]",0,low,4,
-ServerFileSystem: ServerFileSystem domain <*> is full,12,0.6,"[""ServerFileSystem: ServerFileSystem domain root14_local is full"", ""ServerFileSystem: ServerFileSystem domain root10_local is full"", ""ServerFileSystem: ServerFileSystem domain root22_local is full""]",0,low,3,
-Component State Change: Component <*> is in the unavailable state (HWID=<*>),12,0.6,"[""Component State Change: Component \\042SCSI-WWID:01000010:6005-08b4-0001-00c6-0006-3000-003d-0000\\042 is in the unavailable state (HWID=1973)"", ""Component State Change: Component \\042alt0\\042 is in the unavailable state (HWID=3180)"", ""Component State Change: Component \\042alt0\\042 is in the unavailable state (HWID=5089)""]",0,low,6,
-Fan speeds ( <*> <*> <*> <*> <*> <*> ),11,0.5499999999999999,"[""Fan speeds ( 3552 3534 3375 4245 3515 3479 )"", ""Fan speeds ( 3552 3534 3375 11637 3515 3479 )"", ""Fan speeds ( 3552 3534 3375 4245 3515 3479 )""]",0,low,0,
-Command has completed successfully,10,0.5,"[""Command has completed successfully"", ""Command has completed successfully"", ""Command has completed successfully""]",0,low,0,
-Link in reset,9,0.44999999999999996,"[""Link in reset"", ""Link in reset"", ""Link in reset""]",0,low,4,
-psu failure\ ambient=<*>,5,0.25,"[""psu failure\\ ambient=28"", ""psu failure\\ ambient=28"", ""psu failure\\ ambient=28""]",0,low,6,
-active,5,0.25,"[""active"", ""active"", ""active""]",0,low,0,
-Targeting domains:node-D<*> and nodes:node-[<*>-<*>] child of command <*>,5,0.25,"[""Targeting domains:node-D3 and nodes:node-[104-127] child of command 1963"", ""Targeting domains:node-D4 and nodes:node-[136-159] child of command 1964"", ""Targeting domains:node-D4 and nodes:node-[128-135] child of command 2401""]",0,low,0,
-Link error on broadcast tree Interconnect-<*>:<*>:<*>:<*>,4,0.2,"[""Link error on broadcast tree Interconnect-0T00:00:2:1"", ""Link error on broadcast tree Interconnect-1T00:00:3:6"", ""Link error on broadcast tree Interconnect-1T00:00:2:0""]",0,low,4,
-Targeting domains:node-D<*>and nodes:node-<*>,4,0.2,"[""Targeting domains:node-D7 and nodes:node-[224\\ 228\\ 232]"", ""Targeting domains:node-D0 and nodes:node-0"", ""Targeting domains:node-D[0\\ 5] and nodes:node-[27\\ 191]""]",0,low,0,
-inconsistent nodesets node-<*> <*> <ok> node-<*> <*> <ok> node-<*> <*> <ok> node-<*> <*> <ok><*>,4,0.2,"[""inconsistent nodesets node-160 0x0001edfe <ok> node-161 0x1001fdfe <ok> node-162 0x1001fdfe <ok> node-163 0x1001fdfe <ok>"", ""inconsistent nodesets node-32 0x00000002 <ok> node-34 0x000001fe <ok> node-33 0x000001fe <ok> node-35 0x000001fe <ok>"", ""inconsistent nodesets node-1 0x000001fc <ok> node-2 0x000001fc <ok> node-7 0x000001fc <ok> node-4 0x000001fc <ok> node-6 0x000001fc <ok> node-5 0x000001fc <ok> node-3 0x000001fc <ok> node-14 0x0003fdfc <ok> node-13 0x0003fdfc <ok> node-12 0x0003fdfc <ok> node-10 0x0003fdfc <ok> node-16 0x0003fdfc <ok> node-15 0x0003fdfc <ok>""]",0,low,5,
-halt  (command <*>),3,0.15,"[""halt  (command 1982)"", ""halt  (command 2221)"", ""halt  (command 2992)""]",0,low,0,
-clusterAddMember  (command <*>),2,0.1,"[""clusterAddMember  (command 1902)"", ""clusterAddMember  (command 1900)""]",0,low,0,
-bootGenvmunix  (command <*>),2,0.1,"[""bootGenvmunix  (command 1903)"", ""bootGenvmunix  (command 4185)""]",0,low,0,
-Temperature (<*>C) exceeds warning threshold,2,0.1,"[""Temperature (41C) exceeds warning threshold"", ""Temperature (41C) exceeds warning threshold""]",0,low,3,
-NIFF: node node-<*> has detected an available network connection on network <*> via interface scip0,2,0.1,"[""NIFF: node node-130 has detected an available network connection on network 10.96.0.0 via interface scip0"", ""NIFF: node node-144 has detected an available network connection on network 10.96.0.0 via interface scip0""]",0,low,0,
-NIFF: node node-<*> detected a failed network connection on network <*> via interface alt0,2,0.1,"[""NIFF: node node-69 detected a failed network connection on network 5.5.224.0 via interface alt0"", ""NIFF: node node-162 detected a failed network connection on network 5.5.224.0 via interface alt0""]",0,low,4,
-risBoot  (command <*>),1,0.05,"[""risBoot  (command 1903)""]",0,low,0,
-power/control problem,1,0.05,"[""power/control problem""]",0,low,6,
-Command has been aborted,1,0.05,"[""Command has been aborted""]",0,low,2,
-ServerFileSystem: An ServerFileSystem domain panic has occurred on <*>,1,0.05,"[""ServerFileSystem: An ServerFileSystem domain panic has occurred on storage442""]",0,low,2,
-closing,1,0.05,"[""closing""]",0,low,0,
-not-responding,1,0.05,"[""not-responding""]",0,low,0,
-starting,1,0.05,"[""starting""]",0,low,0,
-Failed subcommands <*>,1,0.05,"[""Failed subcommands 3406""]",0,low,2,
-risBoot (command <*>) Error: Timed out while waiting for SRM prompt: <ABORT code completed>,1,0.05,"[""risBoot (command 1903) Error: Timed out while waiting for SRM prompt: <ABORT code completed>""]",0,low,4,
-boot (command <*>) Error: HALT asserted\  cannot continue,1,0.05,"[""boot (command 2092) Error: HALT asserted\\  cannot continue""]",0,low,2,
+Linkerror event interval expired,394,19.7,"[""Linkerror event interval expired"", ""Linkerror event interval expired"", ""Linkerror event interval expired""]",1,high,1,Auto-labeled (high confidence)
+ambient=<*>,292,14.6,"[""ambient=30"", ""ambient=30"", ""ambient=31""]",0,high,0,Auto-labeled (high confidence)
+normal,206,10.299999999999999,"[""normal"", ""normal"", ""normal""]",1,high,1,Auto-labeled (high confidence)
+warning,205,10.25,"[""warning"", ""warning"", ""warning""]",1,high,1,Auto-labeled (high confidence)
+running,162,8.1,"[""running"", ""running"", ""running""]",0,high,0,Auto-labeled (high confidence)
+configured out,91,4.55,"[""configured out"", ""configured out"", ""configured out""]",0,high,0,Auto-labeled (high confidence)
+Fan speeds ( <*> <*> <*> **** <*> <*> ),79,3.95,"[""Fan speeds ( 3552 3534 3375 **** 3515 3479 )"", ""Fan speeds ( 3552 3534 3375 **** 3515 3479 )"", ""Fan speeds ( 3552 3534 3375 **** 3515 3479 )""]",0,high,0,Auto-labeled (high confidence)
+boot  (command <*>),67,3.35,"[""boot  (command 1911)"", ""boot  (command 1910)"", ""boot  (command 1978)""]",0,high,0,Auto-labeled (high confidence)
+wait  (command <*>),66,3.3000000000000003,"[""wait  (command 1975)"", ""wait  (command 1973)"", ""wait  (command 2057)""]",0,high,0,Auto-labeled (high confidence)
+not responding,60,3.0,"[""not responding"", ""not responding"", ""not responding""]",6,high,6,Auto-labeled (high confidence)
+link errors remain current,56,2.8000000000000003,"[""link errors remain current"", ""link errors remain current"", ""link errors remain current""]",0,high,0,Auto-labeled (high confidence)
+NIFF: node node-<*> has detected an available network connection on network <*> via interface ee0,45,2.25,"[""NIFF: node node-129 has detected an available network connection on network 10.128.0.0 via interface ee0"", ""NIFF: node node-24 has detected an available network connection on network 10.128.0.0 via interface ee0"", ""NIFF: node node-232 has detected an available network connection on network 10.128.0.0 via interface ee0""]",0,high,0,Auto-labeled (high confidence)
+NIFF: node node-<*> has detected an available network connection on network <*> via interface alt0,44,2.1999999999999997,"[""NIFF: node node-148 has detected an available network connection on network 5.5.226.0 via interface alt0"", ""NIFF: node node-26 has detected an available network connection on network 5.5.226.0 via interface alt0"", ""NIFF: node node-120 has detected an available network connection on network 5.5.226.0 via interface alt0""]",0,high,0,Auto-labeled (high confidence)
+ClusterFileSystem: ServerFileSystem domain <*> is no longer served by node node-<*>,36,1.7999999999999998,"[""ClusterFileSystem: ServerFileSystem domain cluster_root_backup is no longer served by node node-96"", ""ClusterFileSystem: ServerFileSystem domain root_domain is no longer served by node node-160"", ""ClusterFileSystem: ServerFileSystem domain root3_domain is no longer served by node node-128""]",0,high,0,Auto-labeled (high confidence)
+ClusterFileSystem: There is no server for ServerFileSystem domain storage<*>,32,1.6,"[""ClusterFileSystem: There is no server for ServerFileSystem domain storage234"", ""ClusterFileSystem: There is no server for ServerFileSystem domain storage1412"", ""ClusterFileSystem: There is no server for ServerFileSystem domain storage1024""]",0,high,0,Auto-labeled (high confidence)
+critical,20,1.0,"[""critical"", ""critical"", ""critical""]",0,high,0,Auto-labeled (high confidence)
+blocked,15,0.75,"[""blocked"", ""blocked"", ""blocked""]",0,low,1,
+Link ok,13,0.65,"[""Link ok"", ""Link ok"", ""Link ok""]",0,high,0,Auto-labeled (high confidence)
+Link error,13,0.65,"[""Link error"", ""Link error"", ""Link error""]",0,high,0,Auto-labeled (high confidence)
+ServerFileSystem: ServerFileSystem domain <*> is full,12,0.6,"[""ServerFileSystem: ServerFileSystem domain root14_local is full"", ""ServerFileSystem: ServerFileSystem domain root10_local is full"", ""ServerFileSystem: ServerFileSystem domain root22_local is full""]",0,high,0,Auto-labeled (high confidence)
+Component State Change: Component <*> is in the unavailable state (HWID=<*>),12,0.6,"[""Component State Change: Component \\042SCSI-WWID:01000010:6005-08b4-0001-00c6-0006-3000-003d-0000\\042 is in the unavailable state (HWID=1973)"", ""Component State Change: Component \\042alt0\\042 is in the unavailable state (HWID=3180)"", ""Component State Change: Component \\042alt0\\042 is in the unavailable state (HWID=5089)""]",0,high,0,Auto-labeled (high confidence)
+Fan speeds ( <*> <*> <*> <*> <*> <*> ),11,0.5499999999999999,"[""Fan speeds ( 3552 3534 3375 4245 3515 3479 )"", ""Fan speeds ( 3552 3534 3375 11637 3515 3479 )"", ""Fan speeds ( 3552 3534 3375 4245 3515 3479 )""]",0,high,0,Auto-labeled (high confidence)
+Command has completed successfully,10,0.5,"[""Command has completed successfully"", ""Command has completed successfully"", ""Command has completed successfully""]",0,high,0,Auto-labeled (high confidence)
+Link in reset,9,0.44999999999999996,"[""Link in reset"", ""Link in reset"", ""Link in reset""]",0,high,0,Auto-labeled (high confidence)
+psu failure\ ambient=<*>,5,0.25,"[""psu failure\\ ambient=28"", ""psu failure\\ ambient=28"", ""psu failure\\ ambient=28""]",1,high,1,Auto-labeled (high confidence)
+active,5,0.25,"[""active"", ""active"", ""active""]",0,high,0,Auto-labeled (high confidence)
+Targeting domains:node-D<*> and nodes:node-[<*>-<*>] child of command <*>,5,0.25,"[""Targeting domains:node-D3 and nodes:node-[104-127] child of command 1963"", ""Targeting domains:node-D4 and nodes:node-[136-159] child of command 1964"", ""Targeting domains:node-D4 and nodes:node-[128-135] child of command 2401""]",0,high,0,Auto-labeled (high confidence)
+Link error on broadcast tree Interconnect-<*>:<*>:<*>:<*>,4,0.2,"[""Link error on broadcast tree Interconnect-0T00:00:2:1"", ""Link error on broadcast tree Interconnect-1T00:00:3:6"", ""Link error on broadcast tree Interconnect-1T00:00:2:0""]",0,high,0,Auto-labeled (high confidence)
+Targeting domains:node-D<*>and nodes:node-<*>,4,0.2,"[""Targeting domains:node-D7 and nodes:node-[224\\ 228\\ 232]"", ""Targeting domains:node-D0 and nodes:node-0"", ""Targeting domains:node-D[0\\ 5] and nodes:node-[27\\ 191]""]",0,high,0,Auto-labeled (high confidence)
+inconsistent nodesets node-<*> <*> <ok> node-<*> <*> <ok> node-<*> <*> <ok> node-<*> <*> <ok><*>,4,0.2,"[""inconsistent nodesets node-160 0x0001edfe <ok> node-161 0x1001fdfe <ok> node-162 0x1001fdfe <ok> node-163 0x1001fdfe <ok>"", ""inconsistent nodesets node-32 0x00000002 <ok> node-34 0x000001fe <ok> node-33 0x000001fe <ok> node-35 0x000001fe <ok>"", ""inconsistent nodesets node-1 0x000001fc <ok> node-2 0x000001fc <ok> node-7 0x000001fc <ok> node-4 0x000001fc <ok> node-6 0x000001fc <ok> node-5 0x000001fc <ok> node-3 0x000001fc <ok> node-14 0x0003fdfc <ok> node-13 0x0003fdfc <ok> node-12 0x0003fdfc <ok> node-10 0x0003fdfc <ok> node-16 0x0003fdfc <ok> node-15 0x0003fdfc <ok>""]",0,high,0,Auto-labeled (high confidence)
+halt  (command <*>),3,0.15,"[""halt  (command 1982)"", ""halt  (command 2221)"", ""halt  (command 2992)""]",0,high,0,Auto-labeled (high confidence)
+clusterAddMember  (command <*>),2,0.1,"[""clusterAddMember  (command 1902)"", ""clusterAddMember  (command 1900)""]",0,high,0,Auto-labeled (high confidence)
+bootGenvmunix  (command <*>),2,0.1,"[""bootGenvmunix  (command 1903)"", ""bootGenvmunix  (command 4185)""]",0,high,0,Auto-labeled (high confidence)
+Temperature (<*>C) exceeds warning threshold,2,0.1,"[""Temperature (41C) exceeds warning threshold"", ""Temperature (41C) exceeds warning threshold""]",0,high,0,Auto-labeled (high confidence)
+NIFF: node node-<*> has detected an available network connection on network <*> via interface scip0,2,0.1,"[""NIFF: node node-130 has detected an available network connection on network 10.96.0.0 via interface scip0"", ""NIFF: node node-144 has detected an available network connection on network 10.96.0.0 via interface scip0""]",0,high,0,Auto-labeled (high confidence)
+NIFF: node node-<*> detected a failed network connection on network <*> via interface alt0,2,0.1,"[""NIFF: node node-69 detected a failed network connection on network 5.5.224.0 via interface alt0"", ""NIFF: node node-162 detected a failed network connection on network 5.5.224.0 via interface alt0""]",0,high,0,Auto-labeled (high confidence)
+risBoot  (command <*>),1,0.05,"[""risBoot  (command 1903)""]",0,high,0,Auto-labeled (high confidence)
+power/control problem,1,0.05,"[""power/control problem""]",1,high,1,Auto-labeled (high confidence)
+Command has been aborted,1,0.05,"[""Command has been aborted""]",0,high,0,Auto-labeled (high confidence)
+ServerFileSystem: An ServerFileSystem domain panic has occurred on <*>,1,0.05,"[""ServerFileSystem: An ServerFileSystem domain panic has occurred on storage442""]",0,high,0,Auto-labeled (high confidence)
+closing,1,0.05,"[""closing""]",0,medium,0,
+not-responding,1,0.05,"[""not-responding""]",6,high,2,Auto-labeled (high confidence)
+starting,1,0.05,"[""starting""]",1,high,0,Auto-labeled (high confidence)
+Failed subcommands <*>,1,0.05,"[""Failed subcommands 3406""]",1,high,2,Auto-labeled (high confidence)
+risBoot (command <*>) Error: Timed out while waiting for SRM prompt: <ABORT code completed>,1,0.05,"[""risBoot (command 1903) Error: Timed out while waiting for SRM prompt: <ABORT code completed>""]",0,high,6,Auto-labeled (high confidence)
+boot (command <*>) Error: HALT asserted\  cannot continue,1,0.05,"[""boot (command 2092) Error: HALT asserted\\  cannot continue""]",0,high,6,Auto-labeled (high confidence)
