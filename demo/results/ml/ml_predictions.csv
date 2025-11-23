@@ -1,0 +1,6 @@
+Timestamp,Content,Prediction,Prediction_Label,Anomaly_Probability,Confidence
+2024-01-01 00:00:00,System startup complete,0,normal,0.17400963785619314,0.8259903621438054
+2024-01-01 01:00:00,ERROR: Failed to connect to database,1,anomaly,0.9890681443071087,0.9890681443071087
+2024-01-01 02:00:00,WARNING: High CPU usage detected,0,normal,0.032877443834347264,0.9671225561656298
+2024-01-01 03:00:00,INFO: Backup completed successfully,0,normal,0.00015038971704681384,0.9998496102829662
+2024-01-01 04:00:00,CRITICAL: Out of memory error,0,normal,0.006410384239517168,0.9935896157605026

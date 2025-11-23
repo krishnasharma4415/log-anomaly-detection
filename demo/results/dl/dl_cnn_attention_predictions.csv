@@ -1,0 +1,11 @@
+Content,Prediction,Prediction_Label,Anomaly_Probability,Confidence
+INFO: Application started successfully,0,normal,5.5080767e-07,0.9999994
+ERROR: Connection timeout after 30 seconds,0,normal,2.2252733e-10,1.0
+WARNING: Memory usage at 85%,0,normal,2.789324e-14,1.0
+CRITICAL: Database connection failed,1,anomaly,1.0,1.0
+INFO: User login successful,0,normal,6.222817e-18,1.0
+ERROR: Null pointer exception in module X,0,normal,1.6803773e-07,0.9999999
+INFO: Processing completed,0,normal,0.0002118815,0.9997881
+ALERT: Disk space critically low,0,normal,1.7705168e-12,1.0
+INFO: Request processed in 120ms,0,normal,1.3732115e-11,1.0
+ERROR: Authentication failed for user admin,0,normal,1.2298841e-09,1.0

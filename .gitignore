@@ -5,4 +5,4 @@ __pycache__
 models
 features
 node_modules
-results
+dl_cache

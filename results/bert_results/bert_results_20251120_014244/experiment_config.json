@@ -1,0 +1,55 @@
+{
+  "bert_config": {
+    "max_length": 16,
+    "batch_size": 64,
+    "learning_rate": 2e-05,
+    "weight_decay": 0.01,
+    "num_epochs": 1,
+    "warmup_ratio": 0.1,
+    "gradient_clip": 1.0,
+    "dropout": 0.1,
+    "focal_alpha": 0.25,
+    "focal_gamma": 2.0,
+    "label_smoothing": 0.1,
+    "early_stopping_patience": 3,
+    "accumulation_steps": 2,
+    "use_amp": true,
+    "num_workers": 0,
+    "pin_memory": false,
+    "compile_model": false
+  },
+  "model_configs": {
+    "logbert": {
+      "model_name": "bert-base-uncased",
+      "hidden_size": 768,
+      "num_attention_heads": 12,
+      "num_hidden_layers": 12,
+      "use_mlm_pretraining": true,
+      "mlm_probability": 0.15
+    },
+    "dapt_bert": {
+      "model_name": "bert-base-uncased",
+      "hidden_size": 768,
+      "domain_adapt_epochs": 3,
+      "use_domain_adaptation": true
+    },
+    "deberta_v3": {
+      "model_name": "microsoft/deberta-v3-base",
+      "hidden_size": 768,
+      "use_disentangled_attention": true
+    },
+    "mpnet": {
+      "model_name": "microsoft/mpnet-base",
+      "hidden_size": 768,
+      "use_mean_pooling": true
+    }
+  },
+  "num_classes": 2,
+  "label_map": {
+    "0": "normal",
+    "1": "anomaly"
+  },
+  "device": "cuda",
+  "timestamp": "20251120_014244",
+  "num_splits_processed": 13
+}

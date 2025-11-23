@@ -1,0 +1,16 @@
+Content,Prediction,Prediction_Label,Anomaly_Probability,Confidence
+INFO: Application started successfully at port 8080,0,normal,0.41276523,0.58723474
+ERROR: Connection timeout after 30 seconds to database server,0,normal,0.4144547,0.5855453
+WARNING: Memory usage at 85% threshold exceeded,0,normal,0.4112654,0.5887346
+CRITICAL: Database connection failed - max retries reached,0,normal,0.410806,0.589194
+INFO: User authentication successful for user john.doe,0,normal,0.41130683,0.58869314
+ERROR: Null pointer exception in module UserService.processRequest,0,normal,0.40651974,0.5934803
+INFO: Data processing completed in 2.5 seconds,0,normal,0.41072366,0.5892763
+ALERT: Disk space critically low - only 5% remaining,0,normal,0.4090745,0.5909255
+INFO: HTTP request processed successfully in 120ms,0,normal,0.4092074,0.59079266
+ERROR: Authentication failed for user admin - invalid credentials,0,normal,0.4116007,0.5883993
+WARNING: High CPU usage detected - 95% utilization,0,normal,0.4099827,0.5900173
+INFO: Scheduled backup completed successfully,0,normal,0.40971148,0.5902885
+CRITICAL: Out of memory error in worker thread,0,normal,0.41185227,0.58814776
+ERROR: Failed to parse configuration file - invalid JSON,0,normal,0.40840364,0.59159636
+INFO: Service health check passed,0,normal,0.40837348,0.5916266
