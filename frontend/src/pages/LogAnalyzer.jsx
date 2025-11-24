@@ -12,9 +12,13 @@ import { useToast } from '../components/ui/Toast';
 import api from '../services/api';
 
 const modelOptions = [
-  { value: 'ml', label: 'ML Models (XGBoost) ✓ Active' },
-  { value: 'dl', label: 'Deep Learning (CNN + Attention) ✓ Active' },
-  { value: 'bert', label: 'BERT Models (DeBERTa-v3) ✓ Active' },
+  { value: 'ml', label: 'ML Models (XGBoost + SMOTE)' },
+  { value: 'dl', label: 'Deep Learning (CNN + Attention)' },
+  { value: 'bert', label: 'BERT Models (DeBERTa-v3)' },
+  { value: 'fedlogcl', label: 'FedLogCL (Federated Contrastive Learning)' },
+  { value: 'hlogformer', label: 'HLogFormer (Hierarchical Transformer)' },
+  { value: 'meta', label: 'Meta-Learning (Few-Shot)' },
+  { value: 'ensemble', label: 'Ensemble (Multiple Models)' },
 ];
 
 const bertModelOptions = [
@@ -25,10 +29,16 @@ const bertModelOptions = [
   { value: 'mpnet', label: 'MPNet - F1: 0.45' },
 ];
 
+const ensembleMethodOptions = [
+  { value: 'averaging', label: 'Averaging (Average probabilities)' },
+  { value: 'voting', label: 'Voting (Majority vote)' },
+];
+
 export default function LogAnalyzer() {
   const [logInput, setLogInput] = useState('');
   const [selectedModel, setSelectedModel] = useState('ml');
   const [selectedBertModel, setSelectedBertModel] = useState('best');
+  const [selectedEnsembleMethod, setSelectedEnsembleMethod] = useState('averaging');
   const [showMetadata, setShowMetadata] = useState(true);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
@@ -43,7 +53,27 @@ export default function LogAnalyzer() {
     setLoading(true);
     
     try {
-      const response = await api.predict([logInput], selectedModel, false, selectedBertModel);
+      // Prepare request parameters
+      const requestParams = {
+        logs: [logInput],
+        model_type: selectedModel,
+        save_to_db: false,
+      };
+      
+      // Add BERT model key if BERT is selected
+      if (selectedModel === 'bert') {
+        requestParams.bert_model_key = selectedBertModel;
+      }
+      
+      // Add ensemble method if ensemble is selected
+      if (selectedModel === 'ensemble') {
+        requestParams.ensemble_method = selectedEnsembleMethod;
+      }
+      
+      const response = await api.request('/api/predict', {
+        method: 'POST',
+        body: JSON.stringify(requestParams),
+      });
       
       if (response.status === 'success' && response.logs && response.logs.length > 0) {
         const logResult = response.logs[0];
@@ -131,6 +161,20 @@ export default function LogAnalyzer() {
                 />
                 <p className="text-xs text-neutral-tertiary mt-1">
                   Select which BERT model to use for prediction
+                </p>
+              </div>
+            )}
+
+            {selectedModel === 'ensemble' && (
+              <div className="mt-4">
+                <Select
+                  label="Ensemble Method"
+                  options={ensembleMethodOptions}
+                  value={selectedEnsembleMethod}
+                  onChange={(e) => setSelectedEnsembleMethod(e.target.value)}
+                />
+                <p className="text-xs text-neutral-tertiary mt-1">
+                  Choose how to combine predictions from multiple models
                 </p>
               </div>
             )}

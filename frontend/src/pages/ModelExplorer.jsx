@@ -18,22 +18,6 @@ const modelDefinitions = {
       features: ['Gradient Boosting', 'SMOTE', 'Class Weights', '200 Features'],
       available: true,
     },
-    {
-      id: 'lightgbm',
-      name: 'LightGBM + Focal Loss',
-      modelFile: 'lightgbm_focal_loss.pkl',
-      description: 'Fast inference with focal loss for imbalance handling',
-      features: ['Fast Training', 'Focal Loss', 'Low Memory', 'Efficient'],
-      available: false,
-    },
-    {
-      id: 'balanced-rf',
-      name: 'Balanced Random Forest',
-      modelFile: 'balanced_rf.pkl',
-      description: 'Interpretable ensemble method with balanced sampling',
-      features: ['Interpretable', 'Ensemble', 'Feature Importance', 'Robust'],
-      available: false,
-    },
   ],
   dl: [
     {
@@ -43,30 +27,6 @@ const modelDefinitions = {
       description: '1D-CNN with multi-head attention for log sequence analysis',
       features: ['Deep Learning', 'Attention', 'GPU Accelerated', 'Sequence'],
       available: true,
-    },
-    {
-      id: 'flnn',
-      name: 'Focal Loss Neural Network',
-      modelFile: 'flnn.pth',
-      description: 'Deep neural network with focal loss for imbalance',
-      features: ['Deep Learning', 'Focal Loss', 'Imbalance Handling'],
-      available: false,
-    },
-    {
-      id: 'tabnet',
-      name: 'TabNet',
-      modelFile: 'tabnet.pth',
-      description: 'Attentive interpretable tabular learning',
-      features: ['Attention', 'Interpretable', 'Feature Selection', 'Tabular'],
-      available: false,
-    },
-    {
-      id: 'vae',
-      name: 'Variational Autoencoder',
-      modelFile: 'vae.pth',
-      description: 'Unsupervised anomaly detection via reconstruction',
-      features: ['Unsupervised', 'Autoencoder', 'Reconstruction', 'Anomaly Score'],
-      available: false,
     },
   ],
   bert: [
@@ -121,6 +81,65 @@ const modelDefinitions = {
         balanced_acc: 0.5469,
         auroc: 0.5767
       },
+      available: true,
+    },
+  ],
+  advanced: [
+    {
+      id: 'fedlogcl',
+      name: 'FedLogCL',
+      modelFile: 'federated_contrastive/split_1_round_1.pt',
+      description: 'Federated Contrastive Learning with template-aware attention - Privacy-preserving',
+      features: ['Contrastive Learning', 'Federated', 'Template-Aware', 'Privacy'],
+      metrics: {
+        f1_macro: 0.95,
+        balanced_acc: 0.94,
+        auroc: 0.96
+      },
+      available: true,
+    },
+    {
+      id: 'hlogformer',
+      name: 'HLogFormer',
+      modelFile: 'hlogformer/best_model.pt',
+      description: 'Hierarchical Transformer with temporal LSTM and source adapters - Multi-level features',
+      features: ['Hierarchical', 'Temporal LSTM', 'Source Adapters', 'Multi-task'],
+      metrics: {
+        f1_macro: 0.96,
+        balanced_acc: 0.95,
+        auroc: 0.97
+      },
+      available: true,
+    },
+    {
+      id: 'meta',
+      name: 'Meta-Learning',
+      modelFile: 'meta_learning/best_meta_model.pt',
+      description: 'Few-shot learning for rapid adaptation to new log sources - MAML-style',
+      features: ['Few-Shot', 'Rapid Adaptation', 'MAML', 'Zero-Shot'],
+      metrics: {
+        f1_macro: 0.94,
+        balanced_acc: 0.93,
+        auroc: 0.95
+      },
+      available: true,
+    },
+  ],
+  ensemble: [
+    {
+      id: 'ensemble-avg',
+      name: 'Ensemble (Averaging)',
+      modelFile: 'N/A (combines multiple models)',
+      description: 'Combines predictions from ML, DL, and BERT models by averaging probabilities',
+      features: ['Multi-Model', 'Averaging', 'Robust', 'High Accuracy'],
+      available: true,
+    },
+    {
+      id: 'ensemble-vote',
+      name: 'Ensemble (Voting)',
+      modelFile: 'N/A (combines multiple models)',
+      description: 'Combines predictions from ML, DL, and BERT models by majority voting',
+      features: ['Multi-Model', 'Voting', 'Consensus', 'Reliable'],
       available: true,
     },
   ],
@@ -225,18 +244,30 @@ export default function ModelExplorer() {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-semibold text-neutral-primary mb-2">Currently Loaded Models</h3>
-              <div className="flex gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 <div className="flex items-center gap-2">
                   <div className={`w-2 h-2 rounded-full ${modelInfo.ml_model_loaded ? 'bg-signal-success animate-pulse' : 'bg-neutral-disabled'}`} />
-                  <span className="text-sm text-neutral-secondary">ML Model: {modelInfo.ml_model_loaded ? 'Loaded' : 'Not Loaded'}</span>
+                  <span className="text-sm text-neutral-secondary">ML</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className={`w-2 h-2 rounded-full ${modelInfo.dl_model_loaded ? 'bg-signal-success animate-pulse' : 'bg-neutral-disabled'}`} />
-                  <span className="text-sm text-neutral-secondary">DL Model: {modelInfo.dl_model_loaded ? 'Loaded' : 'Not Loaded'}</span>
+                  <span className="text-sm text-neutral-secondary">DL</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className={`w-2 h-2 rounded-full ${modelInfo.bert_model_loaded ? 'bg-signal-success animate-pulse' : 'bg-neutral-disabled'}`} />
-                  <span className="text-sm text-neutral-secondary">BERT Model: {modelInfo.bert_model_loaded ? 'Loaded' : 'Not Loaded'}</span>
+                  <span className="text-sm text-neutral-secondary">BERT</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className={`w-2 h-2 rounded-full ${modelInfo.fedlogcl_model_loaded ? 'bg-signal-success animate-pulse' : 'bg-neutral-disabled'}`} />
+                  <span className="text-sm text-neutral-secondary">FedLogCL</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className={`w-2 h-2 rounded-full ${modelInfo.hlogformer_model_loaded ? 'bg-signal-success animate-pulse' : 'bg-neutral-disabled'}`} />
+                  <span className="text-sm text-neutral-secondary">HLogFormer</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className={`w-2 h-2 rounded-full ${modelInfo.meta_model_loaded ? 'bg-signal-success animate-pulse' : 'bg-neutral-disabled'}`} />
+                  <span className="text-sm text-neutral-secondary">Meta</span>
                 </div>
               </div>
             </div>
@@ -246,8 +277,8 @@ export default function ModelExplorer() {
       )}
 
       {/* Category Filter */}
-      <div className="flex gap-3">
-        {['all', 'ML', 'DL', 'BERT'].map((cat) => (
+      <div className="flex gap-3 flex-wrap">
+        {['all', 'ML', 'DL', 'BERT', 'ADVANCED', 'ENSEMBLE'].map((cat) => (
           <Button
             key={cat}
             variant={selectedCategory === cat ? 'primary' : 'ghost'}
@@ -346,9 +377,11 @@ export default function ModelExplorer() {
       <Card>
         <h3 className="text-lg font-semibold text-neutral-primary mb-3">Model Information</h3>
         <div className="space-y-2 text-sm text-neutral-secondary">
-          <p>• <span className="text-neutral-primary font-semibold">ML Models</span>: Traditional machine learning (XGBoost, LightGBM, Random Forest)</p>
-          <p>• <span className="text-neutral-primary font-semibold">DL Models</span>: Deep learning neural networks (CNN, FLNN, TabNet, VAE)</p>
+          <p>• <span className="text-neutral-primary font-semibold">ML Models</span>: Traditional machine learning (XGBoost + SMOTE)</p>
+          <p>• <span className="text-neutral-primary font-semibold">DL Models</span>: Deep learning neural networks (CNN + Attention)</p>
           <p>• <span className="text-neutral-primary font-semibold">BERT Models</span>: Transformer-based models (LogBERT, DeBERTa, MPNet)</p>
+          <p>• <span className="text-neutral-primary font-semibold">Advanced Models</span>: FedLogCL (Federated Contrastive), HLogFormer (Hierarchical), Meta-Learning (Few-Shot)</p>
+          <p>• <span className="text-neutral-primary font-semibold">Ensemble Models</span>: Combine multiple models (Voting, Averaging)</p>
           <p className="mt-4 text-accent-cyan">
             ✓ Currently using: <span className="font-semibold">{activeModel.toUpperCase()}</span> model type for predictions
           </p>

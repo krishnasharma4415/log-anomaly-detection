@@ -39,9 +39,9 @@ class PredictRequestSerializer(serializers.Serializer):
         help_text="List of raw log strings to analyze"
     )
     model_type = serializers.ChoiceField(
-        choices=['ml', 'dl', 'bert'],
+        choices=['ml', 'dl', 'bert', 'fedlogcl', 'hlogformer', 'meta', 'ensemble'],
         default='ml',
-        help_text="Model type to use for prediction"
+        help_text="Model type to use for prediction (ml, dl, bert, fedlogcl, hlogformer, meta, ensemble)"
     )
     save_to_db = serializers.BooleanField(
         default=False,

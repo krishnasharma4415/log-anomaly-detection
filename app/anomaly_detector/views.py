@@ -187,8 +187,9 @@ def predict(request):
     Request body:
     {
         "logs": ["log line 1", "log line 2", ...],
-        "model_type": "ml",  // or "dl", "bert"
+        "model_type": "ml",  // or "dl", "bert", "ensemble"
         "bert_model_key": "best",  // optional, for BERT models: "best", "logbert", "dapt_bert", "deberta_v3", "mpnet"
+        "ensemble_method": "averaging",  // optional, for ensemble: "voting" or "averaging"
         "save_to_db": false
     }
     """
@@ -200,6 +201,7 @@ def predict(request):
     logs = serializer.validated_data['logs']
     model_type = serializer.validated_data['model_type']
     bert_model_key = request.data.get('bert_model_key', 'best')
+    ensemble_method = request.data.get('ensemble_method', 'averaging')
     save_to_db = serializer.validated_data.get('save_to_db', False)
     
     start_time = time.time()
@@ -209,7 +211,12 @@ def predict(request):
         model_service = ModelService.get_instance()
         
         # Batch predict
-        results = model_service.batch_predict(logs, model_type, bert_model_key=bert_model_key)
+        results = model_service.batch_predict(
+            logs, 
+            model_type, 
+            bert_model_key=bert_model_key,
+            ensemble_method=ensemble_method
+        )
         
         # Save to database if requested
         if save_to_db:
@@ -228,7 +235,8 @@ def predict(request):
             'processing_time_ms': processing_time,
             'model_used': {
                 'type': model_type,
-                'bert_model_key': bert_model_key if model_type == 'bert' else None
+                'bert_model_key': bert_model_key if model_type == 'bert' else None,
+                'ensemble_method': ensemble_method if model_type == 'ensemble' else None
             }
         }
         

@@ -37,28 +37,50 @@ class ApiService {
   }
 
   // Predict single or multiple logs
-  async predict(logs, modelType = 'ml', saveToDb = false, bertModelKey = 'best') {
+  async predict(logs, modelType = 'ml', saveToDb = false, bertModelKey = 'best', ensembleMethod = 'averaging') {
+    const requestBody = {
+      logs: Array.isArray(logs) ? logs : [logs],
+      model_type: modelType,
+      save_to_db: saveToDb,
+    };
+    
+    // Add BERT model key if BERT is selected
+    if (modelType === 'bert') {
+      requestBody.bert_model_key = bertModelKey;
+    }
+    
+    // Add ensemble method if ensemble is selected
+    if (modelType === 'ensemble') {
+      requestBody.ensemble_method = ensembleMethod;
+    }
+    
     return this.request('/api/predict', {
       method: 'POST',
-      body: JSON.stringify({
-        logs: Array.isArray(logs) ? logs : [logs],
-        model_type: modelType,
-        bert_model_key: bertModelKey,
-        save_to_db: saveToDb,
-      }),
+      body: JSON.stringify(requestBody),
     });
   }
 
   // Analyze logs with metadata
-  async analyze(logs, modelType = 'ml', saveToDb = false, bertModelKey = 'best') {
+  async analyze(logs, modelType = 'ml', saveToDb = false, bertModelKey = 'best', ensembleMethod = 'averaging') {
+    const requestBody = {
+      logs: Array.isArray(logs) ? logs : [logs],
+      model_type: modelType,
+      save_to_db: saveToDb,
+    };
+    
+    // Add BERT model key if BERT is selected
+    if (modelType === 'bert') {
+      requestBody.bert_model_key = bertModelKey;
+    }
+    
+    // Add ensemble method if ensemble is selected
+    if (modelType === 'ensemble') {
+      requestBody.ensemble_method = ensembleMethod;
+    }
+    
     return this.request('/api/analyze', {
       method: 'POST',
-      body: JSON.stringify({
-        logs: Array.isArray(logs) ? logs : [logs],
-        model_type: modelType,
-        bert_model_key: bertModelKey,
-        save_to_db: saveToDb,
-      }),
+      body: JSON.stringify(requestBody),
     });
   }
 

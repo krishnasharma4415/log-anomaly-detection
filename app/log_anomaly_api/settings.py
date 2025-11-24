@@ -183,6 +183,9 @@ MODEL_CONFIG = {
     'ml_model_path': MODELS_PATH / 'ml_models' / 'deployment' / 'best_model_for_deployment.pkl',
     'dl_model_path': MODELS_PATH / 'dl_models' / 'deployment',
     'bert_model_path': MODELS_PATH / 'bert_models',  # Updated to point to bert_models directory
+    'fedlogcl_model_path': MODELS_PATH / 'federated_contrastive',
+    'hlogformer_model_path': MODELS_PATH / 'hlogformer',
+    'meta_model_path': MODELS_PATH / 'meta_learning',
     'features_path': FEATURES_PATH / 'enhanced_imbalanced_features.pkl',
     'label_map': {
         0: 'normal',

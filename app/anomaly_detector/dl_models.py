@@ -8,7 +8,7 @@ import torch.nn.functional as F
 
 
 class CNNWithAttention(nn.Module):
-    """1D CNN with Multi-Head Attention for log anomaly detection"""
+    """1D CNN with Multi-Head Attention for log anomaly detection - EXACT match with demo"""
     
     def __init__(self, input_dim, num_classes=2, embed_dim=128, num_heads=4, dropout=0.3):
         super(CNNWithAttention, self).__init__()
@@ -16,15 +16,15 @@ class CNNWithAttention(nn.Module):
         self.input_dim = input_dim
         self.num_classes = num_classes
         
-        # Convolutional layers
+        # Convolutional layers - EXACT match with demo/demo_dl_models.py
         self.conv1 = nn.Conv1d(1, 64, kernel_size=3, padding=1)
         self.bn1 = nn.BatchNorm1d(64)
         self.conv2 = nn.Conv1d(64, 128, kernel_size=3, padding=1)
         self.bn2 = nn.BatchNorm1d(128)
-        self.conv3 = nn.Conv1d(128, 128, kernel_size=3, padding=1)
-        self.bn3 = nn.BatchNorm1d(128)
+        self.conv3 = nn.Conv1d(128, embed_dim, kernel_size=3, padding=1)
+        self.bn3 = nn.BatchNorm1d(embed_dim)
         
-        self.pool = nn.AdaptiveAvgPool1d(embed_dim)
+        self.pool = nn.AdaptiveAvgPool1d(16)  # Fixed to 16 as in demo
         
         # Multi-head attention
         self.attention = nn.MultiheadAttention(
@@ -34,10 +34,10 @@ class CNNWithAttention(nn.Module):
             batch_first=True
         )
         
-        # Classification head
-        self.fc1 = nn.Linear(embed_dim, 64)
+        # Classification head - EXACT match with demo
+        self.fc1 = nn.Linear(embed_dim * 16, 256)
         self.dropout = nn.Dropout(dropout)
-        self.fc2 = nn.Linear(64, num_classes)
+        self.fc2 = nn.Linear(256, num_classes)
         
     def forward(self, x):
         # x shape: (batch_size, input_dim)
@@ -48,24 +48,25 @@ class CNNWithAttention(nn.Module):
         x = F.relu(self.bn2(self.conv2(x)))
         x = F.relu(self.bn3(self.conv3(x)))
         
-        # Adaptive pooling to fixed length
-        x = self.pool(x)  # (batch_size, 128, embed_dim)
+        # Adaptive pooling to fixed length (16)
+        x = self.pool(x)  # (batch_size, embed_dim, 16)
         
         # Transpose for attention: (batch_size, seq_len, embed_dim)
-        x = x.transpose(1, 2)
+        x = x.permute(0, 2, 1)  # (batch_size, 16, embed_dim)
         
-        # Multi-head attention
+        # Multi-head attention with residual connection
         attn_output, _ = self.attention(x, x, x)
+        x = x + attn_output  # Residual connection as in demo
         
-        # Global average pooling
-        x = attn_output.mean(dim=1)  # (batch_size, embed_dim)
+        # Flatten
+        x = x.reshape(x.size(0), -1)  # (batch_size, embed_dim * 16)
         
         # Classification
         x = F.relu(self.fc1(x))
         x = self.dropout(x)
-        x = self.fc2(x)
+        logits = self.fc2(x)
         
-        return x
+        return logits
 
 
 class FocalLossNN(nn.Module):
@@ -206,26 +207,39 @@ class TransformerEncoder(nn.Module):
 
 
 def load_dl_model(model_path, device='cpu'):
-    """Load a trained DL model from checkpoint"""
+    """Load a trained DL model from checkpoint - EXACT match with demo"""
     checkpoint = torch.load(model_path, map_location=device, weights_only=False)
     
-    model_class = checkpoint['model_class']
-    model_params = checkpoint['model_params']
+    model_class = checkpoint.get('model_class', 'cnn_attention')
+    model_params = checkpoint.get('model_params', {})
+    
+    # Ensure input_dim is set
+    if 'input_dim' not in model_params:
+        model_params['input_dim'] = 200  # Default from demo
     
     # Create model instance based on class name
-    if model_class == 'cnn_attention':
+    if model_class in ['cnn_attention', 'cnn']:
         model = CNNWithAttention(**model_params)
-    elif model_class == 'focal_loss_nn':
+    elif model_class in ['focal_loss_nn', 'flnn']:
         model = FocalLossNN(**model_params)
-    elif model_class == 'stacked_autoencoder':
+    elif model_class in ['stacked_autoencoder', 'stacked_ae']:
         model = StackedAutoencoder(**model_params)
     elif model_class == 'transformer':
         model = TransformerEncoder(**model_params)
     else:
-        raise ValueError(f"Unknown model class: {model_class}")
+        # Try to infer from checkpoint keys
+        state_dict = checkpoint.get('model_state_dict', checkpoint)
+        if 'conv1.weight' in state_dict:
+            model = CNNWithAttention(input_dim=model_params.get('input_dim', 200))
+        else:
+            raise ValueError(f"Unknown model class: {model_class}")
     
     # Load state dict
-    model.load_state_dict(checkpoint['model_state_dict'])
+    if 'model_state_dict' in checkpoint:
+        model.load_state_dict(checkpoint['model_state_dict'])
+    else:
+        model.load_state_dict(checkpoint)
+    
     model.to(device)
     model.eval()
     

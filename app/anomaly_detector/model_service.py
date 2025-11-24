@@ -17,6 +17,10 @@ from sklearn.preprocessing import StandardScaler
 
 from .dl_models import load_dl_model
 from .bert_models import load_bert_model
+from .advanced_models import (
+    load_fedlogcl_model, load_hlogformer_model, load_meta_model,
+    FedLogCLModel, HLogFormer, MetaLearner
+)
 from .feature_extraction import (
     preprocess_log_text,
     extract_bert_embedding,
@@ -60,6 +64,12 @@ class EnhancedModelService:
         self.bert_models = {}
         self.bert_tokenizers = {}
         self.bert_metadata = {}
+        
+        # Advanced models
+        self.fedlogcl_model = None
+        self.hlogformer_model = None
+        self.meta_model = None
+        self.advanced_metadata = {}
         
         # BERT for feature extraction (768-dim embeddings) - CRITICAL
         self.bert_tokenizer = None
@@ -151,6 +161,9 @@ class EnhancedModelService:
             
             # Load BERT models for inference
             self._load_bert_models()
+            
+            # Load advanced models
+            self._load_advanced_models()
                 
         except Exception as e:
             logger.error(f"Error loading models: {e}", exc_info=True)
@@ -218,6 +231,77 @@ class EnhancedModelService:
                 
         except Exception as e:
             logger.error(f"Error loading BERT models: {e}", exc_info=True)
+    
+    def _load_advanced_models(self):
+        """Load advanced models (FedLogCL, HLogFormer, Meta-Learning)"""
+        try:
+            # Load FedLogCL
+            fedlogcl_path = settings.MODEL_CONFIG.get('fedlogcl_model_path')
+            if fedlogcl_path and fedlogcl_path.exists():
+                # Find latest model file
+                model_files = list(fedlogcl_path.glob("split_*_round_*.pt"))
+                if not model_files:
+                    model_files = list(fedlogcl_path.glob("best_*.pt"))
+                
+                if model_files:
+                    model_files.sort(key=lambda x: x.stat().st_mtime)
+                    model_file = model_files[-1]
+                    
+                    try:
+                        logger.info(f"Loading FedLogCL model from {model_file}")
+                        self.fedlogcl_model, metadata = load_fedlogcl_model(model_file, self.device)
+                        self.advanced_metadata['fedlogcl'] = metadata
+                        logger.info("[OK] FedLogCL model loaded")
+                    except Exception as e:
+                        logger.warning(f"Failed to load FedLogCL model: {e}")
+            
+            # Load HLogFormer
+            hlogformer_path = settings.MODEL_CONFIG.get('hlogformer_model_path')
+            if hlogformer_path and hlogformer_path.exists():
+                possible_files = [
+                    hlogformer_path / "best_model.pt",
+                    hlogformer_path / "final_production_model.pt",
+                ]
+                
+                for model_file in possible_files:
+                    if model_file.exists():
+                        try:
+                            logger.info(f"Loading HLogFormer model from {model_file}")
+                            self.hlogformer_model, metadata = load_hlogformer_model(model_file, self.device)
+                            self.advanced_metadata['hlogformer'] = metadata
+                            logger.info("[OK] HLogFormer model loaded")
+                            break
+                        except Exception as e:
+                            logger.warning(f"Failed to load HLogFormer model: {e}")
+            
+            # Load Meta-Learning model
+            meta_path = settings.MODEL_CONFIG.get('meta_model_path')
+            if meta_path and meta_path.exists():
+                possible_files = [
+                    meta_path / "best_meta_model.pt",
+                    meta_path / "final_meta_model.pt",
+                ]
+                
+                for model_file in possible_files:
+                    if model_file.exists():
+                        try:
+                            logger.info(f"Loading Meta-Learning model from {model_file}")
+                            self.meta_model, metadata = load_meta_model(model_file, self.device)
+                            self.advanced_metadata['meta'] = metadata
+                            logger.info("[OK] Meta-Learning model loaded")
+                            break
+                        except Exception as e:
+                            logger.warning(f"Failed to load Meta-Learning model: {e}")
+            
+            if self.fedlogcl_model or self.hlogformer_model or self.meta_model:
+                loaded = []
+                if self.fedlogcl_model: loaded.append("FedLogCL")
+                if self.hlogformer_model: loaded.append("HLogFormer")
+                if self.meta_model: loaded.append("Meta-Learning")
+                logger.info(f"[OK] Loaded advanced models: {', '.join(loaded)}")
+                
+        except Exception as e:
+            logger.error(f"Error loading advanced models: {e}", exc_info=True)
     
     def extract_features(self, log_text: str, source_type: str = 'unknown', 
                         timestamp: Optional[datetime] = None, label: Optional[int] = None) -> np.ndarray:
@@ -478,8 +562,265 @@ class EnhancedModelService:
             logger.error(f"BERT prediction error: {e}", exc_info=True)
             raise
     
+    def predict_ensemble(self, features: np.ndarray, log_text: str = None, method: str = 'averaging') -> Dict:
+        """
+        Ensemble prediction combining ML, DL, and BERT models
+        Matches demo/demo_all_models.py ensemble logic
+        
+        Args:
+            features: Feature array for ML/DL models
+            log_text: Raw log text for BERT model
+            method: 'voting' or 'averaging'
+        
+        Returns:
+            Ensemble prediction result
+        """
+        start_time = time.time()
+        predictions_dict = {}
+        
+        try:
+            # ML prediction
+            if self.ml_model is not None:
+                try:
+                    ml_result = self.predict_ml(features)
+                    predictions_dict['ML'] = (
+                        ml_result['predicted_class'],
+                        ml_result['probabilities'][1]  # Anomaly probability
+                    )
+                except Exception as e:
+                    logger.warning(f"ML prediction failed: {e}")
+            
+            # DL prediction
+            if self.dl_model is not None:
+                try:
+                    dl_result = self.predict_dl(features)
+                    predictions_dict['DL'] = (
+                        dl_result['predicted_class'],
+                        dl_result['probabilities'][1]
+                    )
+                except Exception as e:
+                    logger.warning(f"DL prediction failed: {e}")
+            
+            # BERT prediction
+            if log_text and len(self.bert_models) > 0:
+                try:
+                    bert_result = self.predict_bert(log_text, model_key='best')
+                    predictions_dict['BERT'] = (
+                        bert_result['predicted_class'],
+                        bert_result['probabilities'][1]
+                    )
+                except Exception as e:
+                    logger.warning(f"BERT prediction failed: {e}")
+            
+            if not predictions_dict:
+                raise ValueError("No models available for ensemble prediction")
+            
+            # Combine predictions
+            all_preds = np.array([pred for pred, _ in predictions_dict.values()])
+            all_probs = np.array([prob for _, prob in predictions_dict.values()])
+            
+            if method == 'voting':
+                # Majority voting
+                ensemble_pred = int(np.bincount(all_preds).argmax())
+                ensemble_prob = float(all_probs.mean())
+            elif method == 'averaging':
+                # Average probabilities
+                ensemble_prob = float(all_probs.mean())
+                ensemble_pred = int(ensemble_prob > 0.5)
+            else:
+                raise ValueError(f"Unknown ensemble method: {method}")
+            
+            inference_time = (time.time() - start_time) * 1000
+            
+            return {
+                'predicted_class': ensemble_pred,
+                'predicted_class_name': self.label_map[ensemble_pred],
+                'confidence': float(max(ensemble_prob, 1 - ensemble_prob)),
+                'probabilities': [1 - ensemble_prob, ensemble_prob],
+                'inference_time_ms': inference_time,
+                'model_name': f'Ensemble ({method})',
+                'individual_predictions': {
+                    name: {
+                        'predicted_class': int(pred),
+                        'anomaly_probability': float(prob)
+                    }
+                    for name, (pred, prob) in predictions_dict.items()
+                },
+                'ensemble_method': method,
+                'models_used': list(predictions_dict.keys())
+            }
+            
+        except Exception as e:
+            logger.error(f"Ensemble prediction error: {e}", exc_info=True)
+            raise
+    
+    def predict_fedlogcl(self, features: np.ndarray) -> Dict:
+        """Make prediction using FedLogCL model"""
+        if self.fedlogcl_model is None:
+            raise ValueError("FedLogCL model not loaded")
+        
+        start_time = time.time()
+        
+        try:
+            # Convert features to tensor
+            features_tensor = torch.FloatTensor(features).to(self.device)
+            
+            with torch.no_grad():
+                # Use forward_features method for extracted features
+                projected, logits = self.fedlogcl_model.forward_features(features_tensor)
+                probabilities = torch.softmax(logits, dim=1)
+                prediction = torch.argmax(logits, dim=1)
+            
+            prediction = prediction.cpu().numpy()[0]
+            probabilities = probabilities.cpu().numpy()[0]
+            
+            inference_time = (time.time() - start_time) * 1000
+            
+            return {
+                'predicted_class': int(prediction),
+                'predicted_class_name': self.label_map[int(prediction)],
+                'confidence': float(probabilities[prediction]),
+                'probabilities': probabilities.tolist(),
+                'inference_time_ms': inference_time,
+                'model_name': 'FedLogCL (Federated Contrastive Learning)'
+            }
+        except Exception as e:
+            logger.error(f"FedLogCL prediction error: {e}", exc_info=True)
+            raise
+    
+    def predict_hlogformer(self, log_text: str, template_id: int = 0, timestamp: float = 0.5) -> Dict:
+        """Make prediction using HLogFormer model"""
+        if self.hlogformer_model is None:
+            raise ValueError("HLogFormer model not loaded")
+        
+        start_time = time.time()
+        
+        try:
+            from transformers import BertTokenizer
+            
+            # Initialize tokenizer if needed
+            if not hasattr(self, 'hlogformer_tokenizer'):
+                self.hlogformer_tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+            
+            # Tokenize
+            encoding = self.hlogformer_tokenizer(
+                log_text,
+                max_length=128,
+                padding='max_length',
+                truncation=True,
+                return_tensors='pt'
+            ).to(self.device)
+            
+            # Prepare inputs
+            template_ids = torch.tensor([template_id], dtype=torch.long).to(self.device)
+            timestamps = torch.tensor([timestamp], dtype=torch.float32).to(self.device)
+            
+            # Clip template IDs to valid range
+            max_template_id = self.hlogformer_model.template_embedding.num_embeddings - 1
+            template_ids = torch.clamp(template_ids, 0, max_template_id)
+            
+            with torch.no_grad():
+                logits = self.hlogformer_model(
+                    encoding['input_ids'],
+                    encoding['attention_mask'],
+                    template_ids,
+                    timestamps
+                )
+                probabilities = torch.softmax(logits, dim=1)
+                prediction = torch.argmax(logits, dim=1)
+            
+            prediction = prediction.cpu().numpy()[0]
+            probabilities = probabilities.cpu().numpy()[0]
+            
+            inference_time = (time.time() - start_time) * 1000
+            
+            return {
+                'predicted_class': int(prediction),
+                'predicted_class_name': self.label_map[int(prediction)],
+                'confidence': float(probabilities[prediction]),
+                'probabilities': probabilities.tolist(),
+                'inference_time_ms': inference_time,
+                'model_name': 'HLogFormer (Hierarchical Transformer)'
+            }
+        except Exception as e:
+            logger.error(f"HLogFormer prediction error: {e}", exc_info=True)
+            raise
+    
+    def predict_meta(self, features: np.ndarray, support_X: Optional[np.ndarray] = None, 
+                    support_y: Optional[np.ndarray] = None, adapt: bool = False) -> Dict:
+        """Make prediction using Meta-Learning model with optional few-shot adaptation"""
+        if self.meta_model is None:
+            raise ValueError("Meta-Learning model not loaded")
+        
+        start_time = time.time()
+        
+        try:
+            # Adapt model if support set provided
+            model = self.meta_model
+            if adapt and support_X is not None and support_y is not None:
+                model = self._adapt_meta_model(support_X, support_y)
+            
+            # Make prediction
+            features_tensor = torch.FloatTensor(features).to(self.device)
+            
+            with torch.no_grad():
+                logits = model.predict(features_tensor)
+                probabilities = torch.softmax(logits, dim=1)
+                prediction = torch.argmax(logits, dim=1)
+            
+            prediction = prediction.cpu().numpy()[0]
+            probabilities = probabilities.cpu().numpy()[0]
+            
+            inference_time = (time.time() - start_time) * 1000
+            
+            return {
+                'predicted_class': int(prediction),
+                'predicted_class_name': self.label_map[int(prediction)],
+                'confidence': float(probabilities[prediction]),
+                'probabilities': probabilities.tolist(),
+                'inference_time_ms': inference_time,
+                'model_name': 'Meta-Learning (Few-Shot)',
+                'adapted': adapt and support_X is not None
+            }
+        except Exception as e:
+            logger.error(f"Meta-Learning prediction error: {e}", exc_info=True)
+            raise
+    
+    def _adapt_meta_model(self, support_X: np.ndarray, support_y: np.ndarray, 
+                         inner_lr: float = 0.01, inner_steps: int = 5) -> MetaLearner:
+        """Adapt meta-learning model using few-shot examples"""
+        from torch.optim import SGD
+        
+        # Create a copy of the model
+        adapted_model = MetaLearner(
+            self.meta_model.input_dim,
+            self.meta_model.hidden_dims,
+            self.meta_model.embedding_dim,
+            self.meta_model.dropout,
+            self.meta_model.num_classes
+        ).to(self.device)
+        adapted_model.load_state_dict(self.meta_model.state_dict())
+        
+        # Adapt using support set
+        optimizer = SGD(adapted_model.parameters(), lr=inner_lr)
+        
+        support_X_tensor = torch.FloatTensor(support_X).to(self.device)
+        support_y_tensor = torch.LongTensor(support_y).to(self.device)
+        
+        adapted_model.train()
+        for step in range(inner_steps):
+            optimizer.zero_grad()
+            logits = adapted_model.predict(support_X_tensor)
+            loss = F.cross_entropy(logits, support_y_tensor)
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(adapted_model.parameters(), 1.0)
+            optimizer.step()
+        
+        adapted_model.eval()
+        return adapted_model
+    
     def batch_predict(self, logs: List[str], model_type: str = 'ml', 
-                     bert_model_key: str = 'best') -> List[Dict]:
+                     bert_model_key: str = 'best', ensemble_method: str = 'averaging') -> List[Dict]:
         """Batch prediction for multiple logs"""
         results = []
         
@@ -487,8 +828,28 @@ class EnhancedModelService:
             try:
                 parsed = self.parse_log(log)
                 
-                if model_type == 'bert':
+                if model_type == 'ensemble':
+                    # Extract features for ML/DL
+                    features = self.extract_features(log, parsed['source_type'])
+                    features = features.reshape(1, -1)
+                    
+                    # Ensemble prediction
+                    prediction = self.predict_ensemble(features, log, method=ensemble_method)
+                elif model_type == 'bert':
                     prediction = self.predict_bert(log, model_key=bert_model_key)
+                elif model_type == 'fedlogcl':
+                    # FedLogCL uses extracted features
+                    features = self.extract_features(log, parsed['source_type'])
+                    features = features.reshape(1, -1)
+                    prediction = self.predict_fedlogcl(features)
+                elif model_type == 'hlogformer':
+                    # HLogFormer uses raw text with template and timestamp
+                    prediction = self.predict_hlogformer(log)
+                elif model_type == 'meta':
+                    # Meta-learning uses extracted features
+                    features = self.extract_features(log, parsed['source_type'])
+                    features = features.reshape(1, -1)
+                    prediction = self.predict_meta(features)
                 else:
                     features = self.extract_features(log, parsed['source_type'])
                     features = features.reshape(1, -1)
@@ -551,11 +912,31 @@ class EnhancedModelService:
                 'imbalance_ratio': metadata.get('imbalance_ratio'),
             }
         
+        # Advanced models info
+        advanced_models_info = {}
+        for key, metadata in self.advanced_metadata.items():
+            advanced_models_info[key] = {
+                'loaded': True,
+                'metrics': {
+                    'test_f1': metadata.get('test_f1'),
+                    'best_f1': metadata.get('best_f1'),
+                    'avg_f1': metadata.get('avg_f1'),
+                },
+                'training_info': {
+                    'iteration': metadata.get('iteration'),
+                    'round': metadata.get('round'),
+                    'epoch': metadata.get('epoch'),
+                }
+            }
+        
         return {
             'ml_model_loaded': self.ml_model is not None,
             'dl_model_loaded': self.dl_model is not None,
             'bert_model_loaded': self.bert_model is not None,
             'bert_inference_models_loaded': len(self.bert_models) > 0,
+            'fedlogcl_model_loaded': self.fedlogcl_model is not None,
+            'hlogformer_model_loaded': self.hlogformer_model is not None,
+            'meta_model_loaded': self.meta_model is not None,
             'device': str(self.device),
             'label_map': self.label_map,
             'feature_dimensions': feature_dims,
@@ -564,9 +945,15 @@ class EnhancedModelService:
             'models_available': {
                 'ml': ['XGBoost + SMOTE'] if self.ml_model else [],
                 'dl': ['CNN + Attention'] if self.dl_model else [],
-                'bert': list(self.bert_models.keys()) if self.bert_models else []
+                'bert': list(self.bert_models.keys()) if self.bert_models else [],
+                'advanced': [
+                    'FedLogCL' if self.fedlogcl_model else None,
+                    'HLogFormer' if self.hlogformer_model else None,
+                    'Meta-Learning' if self.meta_model else None
+                ]
             },
             'bert_models': bert_models_info,
+            'advanced_models': advanced_models_info,
             'feature_pipeline': {
                 'bert_embeddings': 768,
                 'bert_statistical': 28,
