@@ -1,7 +1,7 @@
 Content,Prediction,Prediction_Label,Anomaly_Probability,Confidence
-INFO: Request processed in 50ms,1,anomaly,0.51322246,0.51322246
-ERROR: Authentication failed - invalid token,1,anomaly,0.5190596,0.5190596
-INFO: Cache cleared successfully,1,anomaly,0.50892586,0.50892586
-CRITICAL: Service unavailable - max connections reached,1,anomaly,0.50430363,0.50430363
-WARNING: Response time exceeds threshold,1,anomaly,0.5264686,0.5264686
-INFO: Configuration reloaded,1,anomaly,0.50317013,0.50317013
+INFO: Request processed in 50ms,1,anomaly,0.5137625,0.5137625
+ERROR: Authentication failed - invalid token,1,anomaly,0.5163886,0.5163886
+INFO: Cache cleared successfully,1,anomaly,0.5074569,0.5074569
+CRITICAL: Service unavailable - max connections reached,1,anomaly,0.5035226,0.5035226
+WARNING: Response time exceeds threshold,1,anomaly,0.5252743,0.5252743
+INFO: Configuration reloaded,1,anomaly,0.50282395,0.50282395

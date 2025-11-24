@@ -1,16 +1,16 @@
 Content,Prediction,Prediction_Label,Anomaly_Probability,Confidence
-INFO: Application started successfully at port 8080,1,anomaly,0.5372233,0.5372233
-ERROR: Connection timeout after 30 seconds to database server,1,anomaly,0.5204156,0.5204156
-WARNING: Memory usage at 85% threshold exceeded,1,anomaly,0.5207988,0.5207988
-CRITICAL: Database connection failed - max retries reached,1,anomaly,0.52433264,0.52433264
-INFO: User authentication successful for user john.doe,1,anomaly,0.5278484,0.5278484
-ERROR: Null pointer exception in module UserService.processRequest,1,anomaly,0.51722586,0.51722586
-INFO: Data processing completed in 2.5 seconds,1,anomaly,0.54379207,0.54379207
-ALERT: Disk space critically low - only 5% remaining,1,anomaly,0.52336264,0.52336264
-INFO: HTTP request processed successfully in 120ms,1,anomaly,0.5356082,0.5356082
-ERROR: Authentication failed for user admin - invalid credentials,1,anomaly,0.51099294,0.51099294
-WARNING: High CPU usage detected - 95% utilization,1,anomaly,0.52310663,0.52310663
-INFO: Scheduled backup completed successfully,1,anomaly,0.51073325,0.51073325
-CRITICAL: Out of memory error in worker thread,1,anomaly,0.5256828,0.5256828
-ERROR: Failed to parse configuration file - invalid JSON,1,anomaly,0.51610976,0.51610976
-INFO: Service health check passed,1,anomaly,0.514397,0.514397
+INFO: Application started successfully at port 8080,0,normal,0.47646946,0.5235306
+ERROR: Connection timeout after 30 seconds to database server,0,normal,0.46272612,0.5372738
+WARNING: Memory usage at 85% threshold exceeded,0,normal,0.4737927,0.52620727
+CRITICAL: Database connection failed - max retries reached,0,normal,0.47087038,0.5291297
+INFO: User authentication successful for user john.doe,0,normal,0.47196788,0.5280321
+ERROR: Null pointer exception in module UserService.processRequest,0,normal,0.4638033,0.5361967
+INFO: Data processing completed in 2.5 seconds,0,normal,0.4652815,0.5347185
+ALERT: Disk space critically low - only 5% remaining,0,normal,0.4723675,0.5276325
+INFO: HTTP request processed successfully in 120ms,0,normal,0.46647567,0.53352433
+ERROR: Authentication failed for user admin - invalid credentials,0,normal,0.47215465,0.5278453
+WARNING: High CPU usage detected - 95% utilization,0,normal,0.47339526,0.5266047
+INFO: Scheduled backup completed successfully,0,normal,0.46619067,0.5338093
+CRITICAL: Out of memory error in worker thread,0,normal,0.46386105,0.53613895
+ERROR: Failed to parse configuration file - invalid JSON,0,normal,0.46244562,0.5375544
+INFO: Service health check passed,0,normal,0.4704733,0.52952677
