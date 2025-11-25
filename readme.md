@@ -133,9 +133,9 @@ This project follows a **7-stage end-to-end pipeline** from raw logs to producti
 │  Script: scripts/anomaly-labeling.py                                    │
 │  Input: Raw structured logs (EventTemplate + Content)                   │
 │  Output: Labeled datasets (*_labeled.csv) with AnomalyLabel column      │
-│  Key Features:                                                           │
+│  Key Features:                                                          │
 │  • Smart Pattern Library (TF-IDF + Embeddings + ML Classifier)          │
-│  • Interactive labeling with confidence scores                           │
+│  • Interactive labeling with confidence scores                          │
 │  • Cross-source transfer learning via fuzzy matching                    │
 │  • Bulk operations and feedback learning                                │
 └─────────────────────────────────────────────────────────────────────────┘
@@ -145,7 +145,7 @@ This project follows a **7-stage end-to-end pipeline** from raw logs to producti
 │  Script: scripts/data-processing.py                                     │
 │  Input: *_labeled.csv files                                             │
 │  Output: *_enhanced.csv with temporal/statistical features              │
-│  Key Features:                                                           │
+│  Key Features:                                                          │
 │  • 16 source-specific timestamp parsers                                 │
 │  • Temporal features (hour, day_of_week, business_hours, etc.)         │
 │  • Sequence features (time_diff, burst detection, log frequency)        │
@@ -158,7 +158,7 @@ This project follows a **7-stage end-to-end pipeline** from raw logs to producti
 │  Script: scripts/feature-engineering.py                                 │
 │  Input: *_enhanced.csv files                                            │
 │  Output: enhanced_imbalanced_features.pkl (7 feature variants)          │
-│  Key Features:                                                           │
+│  Key Features:                                                          │
 │  • BERT embeddings (768-dim) via bert-base-uncased                      │
 │  • Drain3 template mining with enhanced features (10-dim)               │
 │  • Statistical features (112-dim) over multiple windows                 │
@@ -176,13 +176,13 @@ This project follows a **7-stage end-to-end pipeline** from raw logs to producti
 │  Output: Best ML model + per-split results                              │
 │  Models (12 total):                                                     │
 │  • XGBoost, LightGBM, Random Forest, Gradient Boosting                  │
-│  • Logistic Regression, SVM, KNN, Decision Tree, Naive Bayes           │
+│  • Logistic Regression, SVM, KNN, Decision Tree, Naive Bayes            │
 │  • Balanced Bagging, Balanced RF, Easy Ensemble                         │
 │  Imbalance Handling:                                                    │
 │  • SMOTE/BorderlineSMOTE/ADASYN (inside CV pipeline)                    │
 │  • Focal loss weights, class weights                                    │
 │  • Threshold tuning per source                                          │
-│  Results: 85% avg F1-Macro, 87% Balanced Acc, 0.91 AUROC               │
+│  Results: 85% avg F1-Macro, 87% Balanced Acc, 0.91 AUROC                │
 └─────────────────────────────────────────────────────────────────────────┘
                                     ↓
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -192,7 +192,7 @@ This project follows a **7-stage end-to-end pipeline** from raw logs to producti
 │  Output: Best DL model + per-split results                              │
 │  Models (6 total):                                                      │
 │  • Focal Loss Neural Network (FLNN)                                     │
-│  • Variational Autoencoder (VAE) for unsupervised detection            │
+│  • Variational Autoencoder (VAE) for unsupervised detection             │
 │  • 1D-CNN with Multi-Head Attention                                     │
 │  • TabNet (attentive tabular learning)                                  │
 │  • Stacked Autoencoder + Classifier                                     │
@@ -201,7 +201,7 @@ This project follows a **7-stage end-to-end pipeline** from raw logs to producti
 │  • Mixed precision training (AMP)                                       │
 │  • Source-adaptive strategies (extreme/high/moderate imbalance)         │
 │  • Early stopping, LR scheduling, gradient clipping                     │
-│  Results: 82% avg F1-Macro, 84% Balanced Acc, 0.88 AUROC               │
+│  Results: 82% avg F1-Macro, 84% Balanced Acc, 0.88 AUROC                │
 └─────────────────────────────────────────────────────────────────────────┘
                                     ↓
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -211,14 +211,14 @@ This project follows a **7-stage end-to-end pipeline** from raw logs to producti
 │  Output: Best BERT model + per-split results                            │
 │  Models (4 total):                                                      │
 │  • LogBERT (bert-base-uncased with MLM pretraining)                     │
-│  • Domain-Adapted BERT (DAPT with adversarial training)                │
+│  • Domain-Adapted BERT (DAPT with adversarial training)                 │
 │  • DeBERTa-v3 (disentangled attention)                                  │
 │  • MPNet (attention-weighted pooling)                                   │
 │  Training:                                                              │
-│  • Max length: 512 tokens, Batch: 32, LR: 3e-5                         │
+│  • Max length: 512 tokens, Batch: 32, LR: 3e-5                          │
 │  • SMOTE + Focal Loss + Label Smoothing                                 │
 │  • Mixed precision (AMP), gradient checkpointing                        │
-│  Results: 88% avg F1-Macro, 90% Balanced Acc, 0.94 AUROC               │
+│  Results: 88% avg F1-Macro, 90% Balanced Acc, 0.94 AUROC                │
 └─────────────────────────────────────────────────────────────────────────┘
                                     ↓
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -227,19 +227,19 @@ This project follows a **7-stage end-to-end pipeline** from raw logs to producti
 │           meta-learning.py                                              │
 │  Input: enhanced_imbalanced_features.pkl + raw texts                    │
 │  Output: Specialized models for specific scenarios                      │
-│                                                                          │
+│                                                                         │
 │  7A. Hierarchical Transformer (HLogFormer)                              │
 │      • 4-level architecture: BERT → Template Attention → LSTM → Adapters│
 │      • Template-aware multi-head attention                              │
 │      • Source-specific adapters with adversarial training               │
 │      • Temporal consistency loss                                        │
-│                                                                          │
+│                                                                         │
 │  7B. Federated Contrastive Learning (FedLogCL)                          │
 │      • Federated averaging across log sources                           │
 │      • Contrastive learning with template alignment                     │
 │      • Privacy-preserving cross-source training                         │
 │      • Weighted aggregation (samples + templates + imbalance)           │
-│                                                                          │
+│                                                                         │
 │  7C. Meta-Learning (MAML + Prototypical Networks)                       │
 │      • Few-shot learning for new log sources                            │
 │      • Model-Agnostic Meta-Learning (MAML) with inner loop adaptation   │
