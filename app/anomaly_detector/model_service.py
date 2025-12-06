@@ -19,7 +19,7 @@ from .dl_models import load_dl_model
 from .bert_models import load_bert_model
 from .advanced_models import (
     load_fedlogcl_model, load_hlogformer_model, load_meta_model,
-    FedLogCLModel, HLogFormer, MetaLearner
+    FedLogCLModel, HLogFormer, ImprovedMetaLearner
 )
 from .feature_extraction import (
     preprocess_log_text,
@@ -138,7 +138,7 @@ class EnhancedModelService:
             # Load BERT for feature extraction (CRITICAL)
             logger.info("Loading BERT for feature extraction...")
             self.bert_tokenizer = AutoTokenizer.from_pretrained('bert-base-uncased')
-            self.bert_model = AutoModel.from_pretrained('bert-base-uncased')
+            self.bert_model = AutoModel.from_pretrained('bert-base-uncased', use_safetensors=True)
             self.bert_model.to(self.device)
             self.bert_model.eval()
             logger.info("[OK] BERT feature extractor loaded (768-dim embeddings)")
@@ -787,12 +787,12 @@ class EnhancedModelService:
             raise
     
     def _adapt_meta_model(self, support_X: np.ndarray, support_y: np.ndarray, 
-                         inner_lr: float = 0.01, inner_steps: int = 5) -> MetaLearner:
+                         inner_lr: float = 0.01, inner_steps: int = 5) -> ImprovedMetaLearner:
         """Adapt meta-learning model using few-shot examples"""
         from torch.optim import SGD
         
         # Create a copy of the model
-        adapted_model = MetaLearner(
+        adapted_model = ImprovedMetaLearner(
             self.meta_model.input_dim,
             self.meta_model.hidden_dims,
             self.meta_model.embedding_dim,

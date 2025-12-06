@@ -1,3 +1,4 @@
+Meta-Learning for Few-Shot Log Anomaly Detection in Extreme Imbalance Settings
 import os
 import sys
 import pickle
@@ -32,7 +33,6 @@ from sklearn.metrics import f1_score, accuracy_score, balanced_accuracy_score, m
 from sklearn.metrics import precision_score, recall_score, roc_auc_score, average_precision_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-
 SEED = 42
 np.random.seed(SEED)
 torch.manual_seed(SEED)
@@ -57,8 +57,6 @@ MODELS_PATH = ROOT / "models" / "meta_learning"
 
 RESULTS_PATH.mkdir(parents=True, exist_ok=True)
 MODELS_PATH.mkdir(parents=True, exist_ok=True)
-
-
 feat_file = FEAT_PATH / "enhanced_imbalanced_features.pkl"
 with open(feat_file, 'rb') as f:
     feat_data = pickle.load(f)
@@ -74,7 +72,6 @@ print(f"Loaded {len(data_dict)} sources")
 print(f"Classes: {num_classes}")
 
 LABEL_MAP = {0: 'normal', 1: 'anomaly'}
-
 def calculate_metrics(y_true, y_pred, y_proba=None):
     metrics = {}
     metrics['accuracy'] = accuracy_score(y_true, y_pred)
@@ -108,8 +105,6 @@ def calculate_metrics(y_true, y_pred, y_proba=None):
         metrics['auprc'] = 0.0
     
     return metrics
-
-
 def create_few_shot_episode(X, y, n_way, k_shot, q_query, balance=True):
     classes = np.unique(y)
     if len(classes) < n_way:
@@ -159,11 +154,6 @@ def create_few_shot_episode(X, y, n_way, k_shot, q_query, balance=True):
     query_y = query_y[shuffle_query]
     
     return support_X, support_y, query_X, query_y
-
-# ============================================================================
-# BALANCED EPISODE SAMPLING
-# ============================================================================
-
 def create_balanced_imbalanced_episode(X, y, k_shot_range=(3, 10), q_query=15, allow_replacement=True):
     """Create episodes with flexible imbalance matching source distribution
     
@@ -268,12 +258,6 @@ def create_imbalanced_episode(X, y, minority_k_shot, majority_k_shot, q_query_pe
     query_y = query_y[shuffle_query]
     
     return support_X, support_y, query_X, query_y
-
-
-# ============================================================================
-# LOSS FUNCTIONS
-# ============================================================================
-
 def prototypical_loss(embeddings, labels, n_way):
     classes = torch.unique(labels)
     prototypes = []
@@ -336,12 +320,6 @@ def combined_meta_loss(embeddings, logits, labels, prototypes=None,
         focal = focal + alpha_contrastive * contrastive
     
     return focal
-
-
-# ============================================================================
-# EPISODE CACHING FOR SPEED
-# ============================================================================
-
 class EpisodeCache:
     def __init__(self, cache_size=500):
         self.cache = {}
@@ -372,11 +350,6 @@ class EpisodeCache:
         total = self.hits + self.misses
         hit_rate = self.hits / total if total > 0 else 0
         return f"Cache hit rate: {hit_rate:.2%} ({self.hits}/{total})"
-
-# ============================================================================
-# DATA AUGMENTATION
-# ============================================================================
-
 def augment_support_set(support_X, support_y, augment_factor=2):
     """Augment minority class samples with noise and mixup"""
     minority_cls = np.argmin(np.bincount(support_y))
@@ -402,11 +375,6 @@ def augment_support_set(support_X, support_y, augment_factor=2):
     support_y_aug = np.concatenate([support_y] + augmented_y)
     
     return support_X_aug, support_y_aug
-
-# ============================================================================
-# ADAPTIVE LEARNING UTILITIES
-# ============================================================================
-
 def adaptive_inner_steps(imbalance_ratio, base_steps=10):
     """Adjust inner loop steps based on task difficulty"""
     if imbalance_ratio > 100:
@@ -428,11 +396,6 @@ class TaskAdaptiveLR:
         elif imbalance_ratio < 5:
             return self.base_lr * 1.5  # Faster for balanced
         return self.base_lr
-
-# ============================================================================
-# IMPROVED ARCHITECTURE
-# ============================================================================
-
 class ResidualBlock(nn.Module):
     def __init__(self, dim, dropout=0.4):
         super().__init__()
@@ -488,11 +451,6 @@ def attention_pooling(input_dim):
         nn.Linear(input_dim, 1),
         nn.Softmax(dim=1)
     )
-
-# ============================================================================
-# MAML INNER LOOP WITH OPTIMIZATIONS
-# ============================================================================
-
 def maml_inner_loop(model, support_X, support_y, inner_lr, inner_steps, loss_fn, use_amp=True):
     model_copy = ImprovedMetaLearner(model.input_dim, model.hidden_dims, model.embedding_dim, 
                                      model.dropout, model.num_classes).to(device)
@@ -636,11 +594,6 @@ def process_single_task(encoder_state, classifier_state, source_name, source_fea
     task_loss = focal_loss(query_logits, query_y_tensor)
     
     return task_loss.cpu()
-
-# ============================================================================
-# PROTOTYPE REFINEMENT
-# ============================================================================
-
 def compute_prototypes(embeddings, labels):
     classes = torch.unique(labels)
     prototypes = []
@@ -675,12 +628,6 @@ def refined_prototypes(embeddings, labels, momentum=0.9):
         prototypes.append(refined_proto)
     
     return torch.stack(prototypes)
-
-
-# ============================================================================
-# OPTIMIZED HYPERPARAMETERS
-# ============================================================================
-
 OPTIMIZED_CONFIG = {
     'input_dim': 200,
     'hidden_dims': [512, 256, 128],
@@ -725,11 +672,6 @@ input_dim = OPTIMIZED_CONFIG['input_dim']
 hidden_dims = OPTIMIZED_CONFIG['hidden_dims']
 embedding_dim = OPTIMIZED_CONFIG['embedding_dim']
 dropout = OPTIMIZED_CONFIG['dropout']
-
-# ============================================================================
-# IMPROVED META-LEARNER WITH RESIDUAL CONNECTIONS
-# ============================================================================
-
 class ImprovedMetaLearner(nn.Module):
     def __init__(self, input_dim, hidden_dims, embedding_dim, dropout, num_classes):
         super().__init__()
@@ -859,11 +801,6 @@ print(f"  K-shot (majority): {k_shot_majority}")
 print(f"  Query samples: {q_query}")
 print(f"  Early stopping patience: {early_stopping_patience}")
 print(f"  LR scheduler: CosineAnnealingWarmRestarts")
-
-# ============================================================================
-# PREPARE TRAINING DATA WITH META-VALIDATION SPLIT
-# ============================================================================
-
 train_sources = []
 source_imbalance_ratios = {}
 
@@ -919,11 +856,6 @@ for source_name in train_sources:
         print(f"  {source_name}: {len(y)} samples, imbalance {imb_ratio:.2f}:1, k-shot {k_min}/{k_maj}")
 
 print(f"\nPrepared {len(source_features)} sources for meta-training")
-
-# ============================================================================
-# META-TRAINING LOOP WITH IMPROVEMENTS
-# ============================================================================
-
 print("\nStarting Meta-Training with speed optimizations...")
 
 best_meta_loss = float('inf')
@@ -994,7 +926,6 @@ def evaluate_meta_validation(model, val_sources, source_features, source_labels,
 curriculum_sources = get_curriculum_sources(curriculum_phase, meta_train_sources, source_imbalance_ratios)
 if not curriculum_sources:
     curriculum_sources = meta_train_sources[:len(meta_train_sources)//2]
-
 print(f"Starting with curriculum phase {curriculum_phase}: {len(curriculum_sources)} sources")
 
 for iteration in range(num_meta_iterations):
@@ -1168,7 +1099,6 @@ if any(key.startswith('_orig_mod.') for key in state_dict.keys()):
 
 model.load_state_dict(state_dict)
 print(f"Loaded best meta-model from iteration {checkpoint['iteration']}")
-
 print("\nEvaluating on test sources...")
 
 test_results = []
@@ -1312,7 +1242,6 @@ if test_results:
 
 else:
     print("\nNo test results generated")
-
 print("\nPrototypical Network Evaluation...")
 
 prototypical_results = []
@@ -1424,7 +1353,6 @@ if prototypical_results:
     proto_file = RESULTS_PATH / f"prototypical_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
     df_proto.to_csv(proto_file, index=False)
     print(f"\nPrototypical results saved to: {proto_file}")
-
 print("\nFew-Shot Transfer Learning Evaluation...")
 
 transfer_results = []
@@ -1541,7 +1469,6 @@ if transfer_results:
     transfer_file = RESULTS_PATH / f"transfer_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
     df_transfer.to_csv(transfer_file, index=False)
     print(f"\nTransfer results saved to: {transfer_file}")
-
 print("\n" + "="*80)
 print("COMPARATIVE ANALYSIS")
 print("="*80)
@@ -1591,8 +1518,6 @@ if test_results and prototypical_results and transfer_results:
         comparison_file = RESULTS_PATH / f"method_comparison_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
         df_comparison.to_csv(comparison_file, index=False)
         print(f"\nComparison saved to: {comparison_file}")
-
-# Clean state dict before saving (remove _orig_mod. prefix if present)
 final_state_dict = model.state_dict()
 if any(key.startswith('_orig_mod.') for key in final_state_dict.keys()):
     final_state_dict = {key.replace('_orig_mod.', ''): value for key, value in final_state_dict.items()}
@@ -1624,7 +1549,6 @@ torch.save({
 }, MODELS_PATH / 'final_meta_model.pt')
 
 print(f"\nFinal model saved to: {MODELS_PATH / 'final_meta_model.pt'}")
-
 try:
     import matplotlib.pyplot as plt
     
@@ -1671,41 +1595,3 @@ try:
     plt.close()
 except Exception as e:
     print(f"Visualization skipped: {e}")
-
-print("\n" + "="*80)
-print("IMPROVEMENTS IMPLEMENTED:")
-print("="*80)
-print("  ✓ Adaptive Inner Steps: Based on imbalance ratio (5-15 steps)")
-print("  ✓ Balanced Episode Sampling: Controlled 3:1 imbalance ratio")
-print("  ✓ Combined Meta Loss: Focal + Prototypical + Contrastive")
-print("  ✓ Residual Connections: 2 residual blocks in encoder")
-print("  ✓ Data Augmentation: Gaussian noise + MixUp for minority class")
-print("  ✓ Refined Prototypes: EMA with momentum=0.9")
-print("  ✓ Task-Adaptive LR: Adjusted based on imbalance")
-print("  ✓ Meta-Validation Split: 80/20 train/val split")
-print("  ✓ Optimized Hyperparameters: Deeper network, higher dropout")
-print("  ✓ Early Stopping: Patience = 100 iterations")
-print("  ✓ LR Scheduling: CosineAnnealingWarmRestarts")
-print("  ✓ Gradient Clipping: Inner loop stabilization")
-print("  ✓ Curriculum Learning: Progressive difficulty (3 phases)")
-print("="*80)
-
-print("\n" + "="*80)
-print("SPEED OPTIMIZATIONS (8GB GPU):")
-print("="*80)
-print("  ✓ Mixed Precision Training (AMP): 30-50% speedup")
-print("  ✓ Episode Caching: 40-60% reduction in episode creation time")
-print("  ✓ Batched Inner Loop: 25-35% faster inner updates")
-print("  ✓ Early Stopping per Task: 20-30% reduction in iterations")
-print("  ✓ Gradient Accumulation: Reduce memory by 50-75%")
-print("  ✓ CUDNN Benchmark: Auto-tuned convolution algorithms")
-print("  ✓ Non-blocking Transfers: Async GPU data transfers")
-print("  ✓ Periodic Cache Clearing: Prevent OOM errors")
-print("  ✓ torch.compile: 20-30% speedup (PyTorch 2.0+)")
-print("="*80)
-print(f"\nExpected Total Speedup: 2-3x faster training")
-print(f"Memory Usage: Optimized for 8GB GPU")
-if episode_cache:
-    print(f"Final {episode_cache.get_stats()}")
-
-print("\nMeta-LogAD pipeline complete!")

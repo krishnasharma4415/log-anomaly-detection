@@ -1,5 +1,6 @@
 import Card from '../components/ui/Card';
 import { BarChart, Bar, LineChart, Line, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, Area, AreaChart } from 'recharts';
+import { useChartTheme } from '../hooks/useChartTheme';
 
 const confidenceData = [
   { range: '0-20%', count: 45 },
@@ -47,30 +48,25 @@ const aurocCurve = [
 ];
 
 export default function Visualizations() {
+  const chartTheme = useChartTheme();
+
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-neutral-primary mb-2">Visualization Center</h1>
-        <p className="text-neutral-secondary">Advanced analytics and model performance visualizations</p>
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">Visualization Center</h1>
+        <p className="text-slate-600 dark:text-slate-400">Advanced analytics and model performance visualizations</p>
       </div>
 
       {/* Row 1 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card neon>
-          <h3 className="text-lg font-semibold text-neutral-primary mb-4">Confidence Distribution</h3>
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">Confidence Distribution</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={confidenceData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#3B3F52" />
-              <XAxis dataKey="range" stroke="#C5C7D3" />
-              <YAxis stroke="#C5C7D3" />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: '#2A2D3E',
-                  border: '1px solid #3B3F52',
-                  borderRadius: '8px',
-                  color: '#FFFFFF',
-                }}
-              />
+              <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.gridColor} />
+              <XAxis dataKey="range" stroke={chartTheme.axisColor} />
+              <YAxis stroke={chartTheme.axisColor} />
+              <Tooltip contentStyle={chartTheme.tooltipStyle} />
               <Bar dataKey="count" fill="url(#confidenceGradient)" radius={[8, 8, 0, 0]} />
               <defs>
                 <linearGradient id="confidenceGradient" x1="0" y1="0" x2="0" y2="1">
@@ -83,20 +79,13 @@ export default function Visualizations() {
         </Card>
 
         <Card>
-          <h3 className="text-lg font-semibold text-neutral-primary mb-4">Feature Importance</h3>
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">Feature Importance</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={featureImportance} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" stroke="#3B3F52" />
-              <XAxis type="number" stroke="#C5C7D3" />
-              <YAxis dataKey="feature" type="category" stroke="#C5C7D3" width={150} />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: '#2A2D3E',
-                  border: '1px solid #3B3F52',
-                  borderRadius: '8px',
-                  color: '#FFFFFF',
-                }}
-              />
+              <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.gridColor} />
+              <XAxis type="number" stroke={chartTheme.axisColor} />
+              <YAxis dataKey="feature" type="category" stroke={chartTheme.axisColor} width={150} />
+              <Tooltip contentStyle={chartTheme.tooltipStyle} />
               <Bar dataKey="importance" fill="#A259FF" radius={[0, 8, 8, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -106,20 +95,13 @@ export default function Visualizations() {
       {/* Row 2 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
-          <h3 className="text-lg font-semibold text-neutral-primary mb-4">Per-Source Heatmap</h3>
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">Per-Source Heatmap</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={sourceHeatmap}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#3B3F52" />
-              <XAxis dataKey="source" stroke="#C5C7D3" />
-              <YAxis stroke="#C5C7D3" />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: '#2A2D3E',
-                  border: '1px solid #3B3F52',
-                  borderRadius: '8px',
-                  color: '#FFFFFF',
-                }}
-              />
+              <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.gridColor} />
+              <XAxis dataKey="source" stroke={chartTheme.axisColor} />
+              <YAxis stroke={chartTheme.axisColor} />
+              <Tooltip contentStyle={chartTheme.tooltipStyle} />
               <Legend />
               <Bar dataKey="normal" stackId="a" fill="#34D399" radius={[0, 0, 0, 0]} />
               <Bar dataKey="anomaly" stackId="a" fill="#F43F5E" radius={[8, 8, 0, 0]} />
@@ -128,22 +110,15 @@ export default function Visualizations() {
         </Card>
 
         <Card neon>
-          <h3 className="text-lg font-semibold text-neutral-primary mb-4">Multi-Model Radar Chart</h3>
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">Multi-Model Radar Chart</h3>
           <ResponsiveContainer width="100%" height={300}>
             <RadarChart data={modelComparison.slice(0, 4)}>
-              <PolarGrid stroke="#3B3F52" />
-              <PolarAngleAxis dataKey="model" stroke="#C5C7D3" />
-              <PolarRadiusAxis stroke="#C5C7D3" />
+              <PolarGrid stroke={chartTheme.gridColor} />
+              <PolarAngleAxis dataKey="model" stroke={chartTheme.axisColor} />
+              <PolarRadiusAxis stroke={chartTheme.axisColor} />
               <Radar name="F1-Score" dataKey="f1" stroke="#4B5DFF" fill="#4B5DFF" fillOpacity={0.3} />
               <Radar name="Accuracy" dataKey="accuracy" stroke="#00C6FF" fill="#00C6FF" fillOpacity={0.3} />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: '#2A2D3E',
-                  border: '1px solid #3B3F52',
-                  borderRadius: '8px',
-                  color: '#FFFFFF',
-                }}
-              />
+              <Tooltip contentStyle={chartTheme.tooltipStyle} />
               <Legend />
             </RadarChart>
           </ResponsiveContainer>
@@ -152,20 +127,13 @@ export default function Visualizations() {
 
       {/* Row 3 */}
       <Card className="lg:col-span-2">
-        <h3 className="text-lg font-semibold text-neutral-primary mb-4">AUROC Curve</h3>
+        <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">AUROC Curve</h3>
         <ResponsiveContainer width="100%" height={400}>
           <AreaChart data={aurocCurve}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#3B3F52" />
-            <XAxis dataKey="fpr" label={{ value: 'False Positive Rate', position: 'insideBottom', offset: -5 }} stroke="#C5C7D3" />
-            <YAxis label={{ value: 'True Positive Rate', angle: -90, position: 'insideLeft' }} stroke="#C5C7D3" />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: '#2A2D3E',
-                border: '1px solid #3B3F52',
-                borderRadius: '8px',
-                color: '#FFFFFF',
-              }}
-            />
+            <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.gridColor} />
+            <XAxis dataKey="fpr" label={{ value: 'False Positive Rate', position: 'insideBottom', offset: -5 }} stroke={chartTheme.axisColor} />
+            <YAxis label={{ value: 'True Positive Rate', angle: -90, position: 'insideLeft' }} stroke={chartTheme.axisColor} />
+            <Tooltip contentStyle={chartTheme.tooltipStyle} />
             <Area type="monotone" dataKey="tpr" stroke="#4B5DFF" fill="url(#aurocGradient)" strokeWidth={3} />
             <Line type="linear" dataKey="fpr" stroke="#7C7F92" strokeDasharray="5 5" dot={false} />
             <defs>
@@ -176,7 +144,7 @@ export default function Visualizations() {
             </defs>
           </AreaChart>
         </ResponsiveContainer>
-        <p className="text-center text-sm text-neutral-secondary mt-4">
+        <p className="text-center text-sm text-slate-600 dark:text-slate-400 mt-4">
           AUROC: 0.94 | AUC represents the model's ability to distinguish between classes
         </p>
       </Card>

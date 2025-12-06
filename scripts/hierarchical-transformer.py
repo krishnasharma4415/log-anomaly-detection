@@ -1,6 +1,3 @@
-# ============================================================================
-# IMPORTS
-# ============================================================================
 import os
 import sys
 import gc
@@ -33,10 +30,6 @@ from drain3 import TemplateMiner
 from drain3.template_miner_config import TemplateMinerConfig
 
 from tqdm import tqdm
-
-# ============================================================================
-# CONFIGURATION & SETUP
-# ============================================================================
 SEED = 42
 random.seed(SEED)
 np.random.seed(SEED)
@@ -51,7 +44,7 @@ print(f"Device: {device}")
 if torch.cuda.is_available():
     print(f"GPU: {torch.cuda.get_device_name(0)}")
 
-TEST_MODE = True
+TEST_MODE = False
 TRAIN_FINAL_MODEL = True
 
 ROOT = Path(r"C:\Computer Science\AIMLDL\log-anomaly-detection")
@@ -110,19 +103,8 @@ ALPHA_TEMPORAL = 0.15
 ALPHA_SOURCE = 0.05
 
 # Optimized data loading settings
-USE_AMP = True
-
-# IMPORTANT: Windows multiprocessing issues
-# NUM_WORKERS = 0 is safest on Windows (avoids worker crashes)
-# On Linux/Mac, you can set NUM_WORKERS = 4 for 15-25% speedup
-# 
-# To enable on Linux/Mac:
-#   NUM_WORKERS = 4
-#   PREFETCH_FACTOR = 2
-#   PERSISTENT_WORKERS = True
-
 if torch.cuda.is_available():
-    NUM_WORKERS = 0  # Safe for Windows
+    NUM_WORKERS = 0 
     PIN_MEMORY = True
 else:
     NUM_WORKERS = 0
@@ -173,14 +155,6 @@ else:
     response = input("Continue anyway? (y/n): ")
     if response.lower() != 'y':
         sys.exit(0)
-
-print("All checks passed!")
-print("="*80)
-
-
-# ============================================================================
-# TEMPLATE EXTRACTION
-# ============================================================================
 def extract_templates_for_source(texts, source_name):
     config = TemplateMinerConfig()
     config.drain_sim_th = 0.4
@@ -260,11 +234,6 @@ def extract_all_templates():
     return template_data
 
 template_data = extract_all_templates()
-
-
-# ============================================================================
-# DATA PREPARATION
-# ============================================================================
 def normalize_timestamps(texts):
     timestamps = np.arange(len(texts), dtype=np.float32)
     if len(timestamps) > 1:
@@ -302,10 +271,6 @@ def prepare_source_data(source_name):
             timestamps = timestamps[selected_indices]
     
     return texts, labels, template_ids, timestamps, source_id
-
-# ============================================================================
-# DATASET CLASSES
-# ============================================================================
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 
 # OPTIMIZATION 1: Pre-tokenized dataset (30-40% faster)
@@ -488,11 +453,6 @@ class AugmentedLogDataset(Dataset):
             'timestamps': torch.tensor(float(self.timestamps[idx]), dtype=torch.float32),
             'source_ids': torch.tensor(int(self.source_ids[idx]), dtype=torch.long)
         }
-
-
-# ============================================================================
-# MODEL COMPONENTS
-# ============================================================================
 class GradientReversalFunction(torch.autograd.Function):
     @staticmethod
     def forward(ctx, x, lambda_):
@@ -534,8 +494,6 @@ class TemplateAwareAttention(nn.Module):
         scores = torch.matmul(q, k.transpose(-2, -1)) / (self.head_dim ** 0.5)
         
         # Add template-aware bias
-        # template_bias shape: [batch, n_heads]
-        # scores shape: [batch, n_heads, seq_len, seq_len]
         template_bias = self.template_bias(template_ids)  # [batch, n_heads]
         template_bias = template_bias.unsqueeze(2).unsqueeze(3)  # [batch, n_heads, 1, 1]
         scores = scores + template_bias * self.template_alpha
@@ -624,12 +582,6 @@ class SourceDiscriminator(nn.Module):
     
     def forward(self, x):
         return self.classifier(x)
-
-
-# ============================================================================
-# MAIN MODEL
-# ============================================================================
-# OPTIMIZATION 4: Optimized BERT freezing (10-15% faster)
 class HLogFormer(nn.Module):
     def __init__(self, n_sources, n_templates, freeze_layers=6):
         super().__init__()
@@ -715,12 +667,6 @@ class HLogFormer(nn.Module):
             for i in range(self.freeze_layers):
                 self.bert.encoder.layer[i].eval()
         return self
-
-
-# ============================================================================
-# LOSS FUNCTIONS
-# ============================================================================
-# FIX 2: Imbalanced Loss Function with class weights
 def compute_class_weights(labels):
     """Compute balanced class weights"""
     unique, counts = np.unique(labels, return_counts=True)
@@ -789,12 +735,6 @@ def compute_loss(outputs, batch, class_weights=None):
         'loss_temporal': loss_temporal.item(),
         'loss_source': loss_source.item()
     }
-
-
-# ============================================================================
-# METRICS & EVALUATION
-# ============================================================================
-# FIX 7: Enhanced metrics for imbalanced data
 def calculate_metrics(y_true, y_pred, y_proba=None):
     from sklearn.metrics import confusion_matrix, precision_recall_curve, average_precision_score
     
@@ -852,10 +792,6 @@ def calculate_metrics(y_true, y_pred, y_proba=None):
         metrics['auroc'] = 0.0
     
     return metrics
-
-# ============================================================================
-# TRAINING & EVALUATION LOOPS
-# ============================================================================
 def train_epoch(model, dataloader, optimizer, scheduler, scaler, device, class_weights=None):
     model.train()
     total_loss = 0
@@ -1043,11 +979,6 @@ def train_model(model, train_loader, val_loader, device, num_epochs=NUM_EPOCHS, 
         gc.collect()
     
     return best_f1
-
-
-# ============================================================================
-# LOSO CROSS-VALIDATION
-# ============================================================================
 def run_loso_split(split_idx, split):
     test_source = split['test_source']
     train_sources = [s for s in split['train_sources'] if s in usable_sources]
@@ -1173,15 +1104,6 @@ def run_loso_split(split_idx, split):
         'mcc': test_metrics['mcc'],
         'per_class': test_metrics['per_class']
     }
-
-
-# ============================================================================
-# MAIN EXECUTION
-# ============================================================================
-print("\n" + "="*80)
-print("HLOGFORMER: Hierarchical Transformer for Log Anomaly Detection")
-print("="*80)
-
 all_results = []
 
 splits_to_process = splits[:MAX_SPLITS] if TEST_MODE and MAX_SPLITS else splits
@@ -1221,7 +1143,6 @@ print(f"Average AUROC: {results_df['AUROC'].mean():.4f} +/- {results_df['AUROC']
 print(f"Average MCC: {results_df['MCC'].mean():.4f} +/- {results_df['MCC'].std():.4f}")
 print(f"Best source: {results_df.iloc[0]['Test Source']} (F1: {results_df.iloc[0]['F1-Macro']:.4f})")
 print(f"Worst source: {results_df.iloc[-1]['Test Source']} (F1: {results_df.iloc[-1]['F1-Macro']:.4f})")
-
 timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
 results_dir = RESULTS_PATH / f"results_{timestamp}"
 results_dir.mkdir(exist_ok=True)
@@ -1246,7 +1167,6 @@ with open(results_dir / "complete_results.pkl", 'wb') as f:
     }, f)
 
 print(f"\nResults saved to: {results_dir}")
-
 if TRAIN_FINAL_MODEL:
     print("\n" + "="*80)
     print("TRAINING FINAL PRODUCTION MODEL ON ALL DATA")
@@ -1370,29 +1290,3 @@ if TRAIN_FINAL_MODEL:
     gc.collect()
 
 print(f"\nAll training complete. Models saved at: {MODELS_PATH}")
-
-if TEST_MODE:
-    print("\n" + "="*80)
-    print("TEST MODE COMPLETE")
-    print("="*80)
-    print("Pipeline tested successfully!")
-    print("\nTo run full training:")
-    print("1. Open scripts/hierarchical-transformer.py")
-    print("2. Change line 52: TEST_MODE = False")
-    print("3. Run: python scripts/hierarchical-transformer.py")
-    print("\nFull training will:")
-    print("  - Process all 16 LOSO splits")
-    print("  - Train for 5 epochs per split")
-    print("  - Use full batch size (16)")
-    print("  - Use all samples from each source")
-    print("  - Take approximately 8-12 hours on RTX 4060")
-    print("="*80)
-else:
-    print("\n" + "="*80)
-    print("FULL TRAINING COMPLETE")
-    print("="*80)
-    print("Models available:")
-    print(f"  LOSO best model: {MODELS_PATH / 'best_model.pt'}")
-    if TRAIN_FINAL_MODEL:
-        print(f"  Production model: {MODELS_PATH / 'final_production_model.pt'}")
-    print("="*80)

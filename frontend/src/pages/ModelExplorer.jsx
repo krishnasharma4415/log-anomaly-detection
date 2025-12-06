@@ -4,6 +4,7 @@ import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import { CheckCircle, Loader } from 'lucide-react';
 import { useToast } from '../components/ui/Toast';
+import { useModel } from '../context/ModelContext';
 import api from '../services/api';
 import { SkeletonCard } from '../components/ui/Skeleton';
 
@@ -147,7 +148,7 @@ const modelDefinitions = {
 
 export default function ModelExplorer() {
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [activeModel, setActiveModel] = useState('ml'); // ml, dl, or bert
+  const { activeModel, updateActiveModel } = useModel();
   const [modelInfo, setModelInfo] = useState(null);
   const [modelMetrics, setModelMetrics] = useState({});
   const [loading, setLoading] = useState(true);
@@ -160,7 +161,7 @@ export default function ModelExplorer() {
   const fetchModelData = async () => {
     try {
       setLoading(true);
-      
+
       // Fetch model info from Django
       const info = await api.getModelInfo();
       setModelInfo(info);
@@ -183,12 +184,12 @@ export default function ModelExplorer() {
 
   const getAllModels = () => {
     const allModels = [];
-    
+
     Object.entries(modelDefinitions).forEach(([category, models]) => {
       models.forEach(model => {
         const categoryUpper = category.toUpperCase();
         const metrics = modelMetrics[category];
-        
+
         allModels.push({
           ...model,
           category: categoryUpper,
@@ -201,25 +202,25 @@ export default function ModelExplorer() {
         });
       });
     });
-    
+
     return allModels;
   };
 
-  const filteredModels = selectedCategory === 'all' 
+  const filteredModels = selectedCategory === 'all'
     ? getAllModels()
     : getAllModels().filter(m => m.category === selectedCategory);
 
-  const handleSetActive = (modelType) => {
-    setActiveModel(modelType);
-    addToast(`Switched to ${modelType.toUpperCase()} model type`, 'success');
+  const handleSetActive = (modelType, modelName) => {
+    updateActiveModel(modelType, modelName);
+    addToast(`Switched to ${modelName}`, 'success');
   };
 
   if (loading) {
     return (
       <div className="space-y-8">
         <div>
-          <h1 className="text-3xl font-bold text-neutral-primary mb-2">Model Explorer</h1>
-          <p className="text-neutral-secondary">Loading model information...</p>
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">Model Explorer</h1>
+          <p className="text-slate-600 dark:text-slate-400">Loading model information...</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <SkeletonCard />
@@ -234,8 +235,8 @@ export default function ModelExplorer() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-neutral-primary mb-2">Model Explorer</h1>
-        <p className="text-neutral-secondary">Browse and compare all available models</p>
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">Model Explorer</h1>
+        <p className="text-slate-600 dark:text-slate-400">Browse and compare all available models</p>
       </div>
 
       {/* Model Status Info */}
@@ -243,31 +244,31 @@ export default function ModelExplorer() {
         <Card neon className="bg-indigo-900/20">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold text-neutral-primary mb-2">Currently Loaded Models</h3>
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">Currently Loaded Models</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${modelInfo.ml_model_loaded ? 'bg-signal-success animate-pulse' : 'bg-neutral-disabled'}`} />
-                  <span className="text-sm text-neutral-secondary">ML</span>
+                  <div className="w-2 h-2 rounded-full ${modelInfo.ml_model_loaded ? 'bg-green-500 animate-pulse' : 'bg-slate-400 dark:bg-slate-600'}" />
+                  <span className="text-sm text-slate-600 dark:text-slate-400">ML</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${modelInfo.dl_model_loaded ? 'bg-signal-success animate-pulse' : 'bg-neutral-disabled'}`} />
-                  <span className="text-sm text-neutral-secondary">DL</span>
+                  <div className="w-2 h-2 rounded-full ${modelInfo.dl_model_loaded ? 'bg-green-500 animate-pulse' : 'bg-slate-400 dark:bg-slate-600'}" />
+                  <span className="text-sm text-slate-600 dark:text-slate-400">DL</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${modelInfo.bert_model_loaded ? 'bg-signal-success animate-pulse' : 'bg-neutral-disabled'}`} />
-                  <span className="text-sm text-neutral-secondary">BERT</span>
+                  <div className="w-2 h-2 rounded-full ${modelInfo.bert_model_loaded ? 'bg-green-500 animate-pulse' : 'bg-slate-400 dark:bg-slate-600'}" />
+                  <span className="text-sm text-slate-600 dark:text-slate-400">BERT</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${modelInfo.fedlogcl_model_loaded ? 'bg-signal-success animate-pulse' : 'bg-neutral-disabled'}`} />
-                  <span className="text-sm text-neutral-secondary">FedLogCL</span>
+                  <div className="w-2 h-2 rounded-full ${modelInfo.fedlogcl_model_loaded ? 'bg-green-500 animate-pulse' : 'bg-slate-400 dark:bg-slate-600'}" />
+                  <span className="text-sm text-slate-600 dark:text-slate-400">FedLogCL</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${modelInfo.hlogformer_model_loaded ? 'bg-signal-success animate-pulse' : 'bg-neutral-disabled'}`} />
-                  <span className="text-sm text-neutral-secondary">HLogFormer</span>
+                  <div className="w-2 h-2 rounded-full ${modelInfo.hlogformer_model_loaded ? 'bg-green-500 animate-pulse' : 'bg-slate-400 dark:bg-slate-600'}" />
+                  <span className="text-sm text-slate-600 dark:text-slate-400">HLogFormer</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${modelInfo.meta_model_loaded ? 'bg-signal-success animate-pulse' : 'bg-neutral-disabled'}`} />
-                  <span className="text-sm text-neutral-secondary">Meta</span>
+                  <div className="w-2 h-2 rounded-full ${modelInfo.meta_model_loaded ? 'bg-green-500 animate-pulse' : 'bg-slate-400 dark:bg-slate-600'}" />
+                  <span className="text-sm text-slate-600 dark:text-slate-400">Meta</span>
                 </div>
               </div>
             </div>
@@ -294,13 +295,13 @@ export default function ModelExplorer() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredModels.map((model) => (
           <div key={model.id}>
-            <Card 
-              neon={model.isLoaded} 
+            <Card
+              neon={model.isLoaded}
               className={`h-full flex flex-col ${!model.available ? 'opacity-60' : ''}`}
             >
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="text-lg font-semibold text-neutral-primary mb-1">{model.name}</h3>
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-1">{model.name}</h3>
                   <div className="flex gap-2">
                     <Badge variant="primary">{model.category}</Badge>
                     {model.isLoaded && (
@@ -316,31 +317,31 @@ export default function ModelExplorer() {
                 </div>
               </div>
 
-              <p className="text-sm text-neutral-secondary mb-4">{model.description}</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">{model.description}</p>
 
               {/* Metrics */}
               <div className="grid grid-cols-2 gap-3 mb-4">
-                <div className="bg-neutral-dark rounded-lg p-3">
-                  <p className="text-xs text-neutral-secondary mb-1">F1-Score</p>
-                  <p className="text-xl font-bold text-primary">
+                <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-3 transition-colors duration-200">
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mb-1">F1-Score</p>
+                  <p className="text-xl font-bold text-primary-600 dark:text-primary-400">
                     {model.f1Score === 'N/A' ? 'N/A' : `${model.f1Score}%`}
                   </p>
                 </div>
-                <div className="bg-neutral-dark rounded-lg p-3">
-                  <p className="text-xs text-neutral-secondary mb-1">AUROC</p>
-                  <p className="text-xl font-bold text-accent-cyan">
+                <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-3 transition-colors duration-200">
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mb-1">AUROC</p>
+                  <p className="text-xl font-bold text-cyan-600 dark:text-cyan-400">
                     {model.auroc === 'N/A' ? 'N/A' : `${model.auroc}%`}
                   </p>
                 </div>
-                <div className="bg-neutral-dark rounded-lg p-3">
-                  <p className="text-xs text-neutral-secondary mb-1">Balanced Acc</p>
-                  <p className="text-xl font-bold text-accent-purple">
+                <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-3 transition-colors duration-200">
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mb-1">Balanced Acc</p>
+                  <p className="text-xl font-bold text-purple-600 dark:text-purple-400">
                     {model.balancedAcc === 'N/A' ? 'N/A' : `${model.balancedAcc}%`}
                   </p>
                 </div>
-                <div className="bg-neutral-dark rounded-lg p-3">
-                  <p className="text-xs text-neutral-secondary mb-1">Latency</p>
-                  <p className="text-xl font-bold text-signal-success">{model.latency}ms</p>
+                <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-3 transition-colors duration-200">
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mb-1">Latency</p>
+                  <p className="text-xl font-bold text-green-600 dark:text-green-400">{model.latency}ms</p>
                 </div>
               </div>
 
@@ -354,7 +355,7 @@ export default function ModelExplorer() {
               </div>
 
               {/* Model File Info */}
-              <div className="text-xs text-neutral-disabled mb-4 font-mono">
+              <div className="text-xs text-slate-400 dark:text-slate-500 mb-4 font-mono">
                 {model.modelFile}
               </div>
 
@@ -363,7 +364,7 @@ export default function ModelExplorer() {
                 variant={model.isLoaded ? 'secondary' : 'primary'}
                 size="md"
                 className="w-full mt-auto"
-                onClick={() => handleSetActive(model.category.toLowerCase())}
+                onClick={() => handleSetActive(model.category.toLowerCase(), model.name)}
                 disabled={!model.available || model.isLoaded}
               >
                 {!model.available ? 'Not Available' : model.isLoaded ? 'Currently Loaded' : 'Use This Model'}
@@ -375,18 +376,18 @@ export default function ModelExplorer() {
 
       {/* Info Card */}
       <Card>
-        <h3 className="text-lg font-semibold text-neutral-primary mb-3">Model Information</h3>
-        <div className="space-y-2 text-sm text-neutral-secondary">
-          <p>• <span className="text-neutral-primary font-semibold">ML Models</span>: Traditional machine learning (XGBoost + SMOTE)</p>
-          <p>• <span className="text-neutral-primary font-semibold">DL Models</span>: Deep learning neural networks (CNN + Attention)</p>
-          <p>• <span className="text-neutral-primary font-semibold">BERT Models</span>: Transformer-based models (LogBERT, DeBERTa, MPNet)</p>
-          <p>• <span className="text-neutral-primary font-semibold">Advanced Models</span>: FedLogCL (Federated Contrastive), HLogFormer (Hierarchical), Meta-Learning (Few-Shot)</p>
-          <p>• <span className="text-neutral-primary font-semibold">Ensemble Models</span>: Combine multiple models (Voting, Averaging)</p>
-          <p className="mt-4 text-accent-cyan">
-            ✓ Currently using: <span className="font-semibold">{activeModel.toUpperCase()}</span> model type for predictions
+        <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-3">Model Information</h3>
+        <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+          <p>• <span className="text-slate-900 dark:text-slate-100 font-semibold">ML Models</span>: Traditional machine learning (XGBoost + SMOTE)</p>
+          <p>• <span className="text-slate-900 dark:text-slate-100 font-semibold">DL Models</span>: Deep learning neural networks (CNN + Attention)</p>
+          <p>• <span className="text-slate-900 dark:text-slate-100 font-semibold">BERT Models</span>: Transformer-based models (LogBERT, DeBERTa, MPNet)</p>
+          <p>• <span className="text-slate-900 dark:text-slate-100 font-semibold">Advanced Models</span>: FedLogCL (Federated Contrastive), HLogFormer (Hierarchical), Meta-Learning (Few-Shot)</p>
+          <p>• <span className="text-slate-900 dark:text-slate-100 font-semibold">Ensemble Models</span>: Combine multiple models (Voting, Averaging)</p>
+          <p className="mt-4 text-cyan-600 dark:text-cyan-400">
+            ✓ Currently using: <span className="font-semibold">{activeModel.name}</span> for predictions
           </p>
           {modelInfo && (
-            <p className="text-neutral-disabled">
+            <p className="text-slate-400 dark:text-slate-500">
               Label mapping: {Object.entries(modelInfo.label_map).map(([k, v]) => `${k}=${v}`).join(', ')}
             </p>
           )}

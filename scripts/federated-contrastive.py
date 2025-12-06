@@ -1,3 +1,4 @@
+Federated Contrastive Learning for Privacy-Preserving Cross-Source Log Anomaly Detection
 import os
 import sys
 import pickle
@@ -28,7 +29,6 @@ from scipy import stats
 
 from drain3 import TemplateMiner
 from drain3.template_miner_config import TemplateMinerConfig
-
 TEST_MODE = True
 
 SEED = 42
@@ -56,7 +56,6 @@ if TEST_MODE:
     print("  - Max 500 pairs per client")
     print("Set TEST_MODE = False for full training")
     print("="*80 + "\n")
-
 ROOT = Path(r"C:\Computer Science\AIMLDL\log-anomaly-detection")
 FEAT_PATH = ROOT / "features"
 DATA_PATH = ROOT / "dataset" / "labeled_data" / "normalized"
@@ -75,7 +74,7 @@ HIDDEN_DIM = 256
 
 NUM_ROUNDS = 2 if TEST_MODE else 10
 LOCAL_EPOCHS = 1
-BATCH_SIZE = 16 if TEST_MODE else 32
+BATCH_SIZE = 32
 LR_ENCODER = 2e-5
 LR_HEAD = 1e-3
 ACCUMULATION_STEPS = 2
@@ -90,7 +89,6 @@ BETA_TEMPLATES = 0.4
 GAMMA_IMBALANCE = 0.3
 
 TEMPERATURE = 0.07
-
 print("Loading features...")
 feat_file = FEAT_PATH / "enhanced_imbalanced_features.pkl"
 with open(feat_file, 'rb') as f:
@@ -106,7 +104,6 @@ with open(split_file, 'rb') as f:
 usable_sources = [s for s in data_dict.keys() if s not in EXCLUDED_SOURCES and data_dict[s]['labels'] is not None]
 print(f"Usable sources: {len(usable_sources)}")
 print(f"Sources: {usable_sources}")
-
 def extract_templates(texts, source_name):
     config = TemplateMinerConfig()
     config.drain_sim_th = 0.4
@@ -125,7 +122,6 @@ def extract_templates(texts, source_name):
             templates[tid] = result["template_mined"]
     
     return np.array(template_ids), templates
-
 def create_contrastive_pairs(texts, labels, template_ids, source_name, augment=False):
     pairs = []
     pair_labels = []
@@ -174,11 +170,7 @@ def create_contrastive_pairs(texts, labels, template_ids, source_name, augment=F
                 pairs.append((idx1, idx2, 1))
                 pair_labels.append(minority_label)
     
-    if TEST_MODE and len(pairs) > 500:
-        pairs = random.sample(pairs, 500)
-    
     return pairs, pair_labels
-
 class ContrastivePairDataset(Dataset):
     def __init__(self, texts, labels, template_ids, pairs, tokenizer, max_length=64):
         self.texts = texts
@@ -262,7 +254,6 @@ class FedLogCLModel(nn.Module):
         
         logits = self.classifier(projected)
         return projected, logits
-
 def contrastive_loss(z1, z2, is_similar, temperature=0.07):
     z1 = F.normalize(z1, dim=1)
     z2 = F.normalize(z2, dim=1)
@@ -293,7 +284,6 @@ def template_alignment_loss(z1, z2, tid1, tid2):
     similarity = F.cosine_similarity(z1, z2)
     loss = F.binary_cross_entropy_with_logits(similarity, same_template)
     return loss
-
 def train_client(model, dataloader, optimizer, scheduler, scaler, device):
     model.train()
     total_loss = 0
@@ -374,7 +364,6 @@ def evaluate_client(model, dataloader, device):
             pass
     
     return f1, bal_acc, auroc
-
 def federated_averaging(global_model, client_models, client_weights):
     global_dict = global_model.state_dict()
     
@@ -406,7 +395,6 @@ def calculate_client_weights(client_data_sizes, client_template_counts, client_i
     weights = weights / weights.sum()
     
     return weights
-
 def run_federated_round(global_model, client_data, tokenizer, round_num, device):
     client_models = []
     client_weights_data = []
@@ -490,7 +478,6 @@ def run_federated_round(global_model, client_data, tokenizer, round_num, device)
     torch.cuda.empty_cache()
     
     return global_model
-
 def prepare_client_data(source_name, data_dict, tokenizer, augment=False):
     texts = data_dict[source_name]['texts']
     labels = data_dict[source_name]['labels']
@@ -565,56 +552,6 @@ def evaluate_global_model(global_model, test_texts, test_labels, test_template_i
             pass
     
     return f1, bal_acc, auroc, all_embeddings
-
-def evaluate_global_model(global_model, test_texts, test_labels, test_template_ids, tokenizer, device):
-    test_pairs = [(i, i, 1) for i in range(len(test_texts))]
-    
-    test_dataset = ContrastivePairDataset(
-        test_texts, test_labels, test_template_ids, test_pairs, tokenizer, MAX_LENGTH
-    )
-    test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE * 2, shuffle=False, num_workers=0)
-    
-    global_model.eval()
-    all_preds = []
-    all_labels = []
-    all_probs = []
-    all_embeddings = []
-    
-    with torch.no_grad():
-        for batch in test_loader:
-            input_ids = batch['input_ids1'].to(device)
-            attention_mask = batch['attention_mask1'].to(device)
-            labels = batch['label1'].to(device)
-            tids = batch['template_id1'].to(device)
-            
-            with autocast():
-                embeddings, logits = global_model(input_ids, attention_mask, tids)
-            
-            probs = F.softmax(logits, dim=1)
-            preds = torch.argmax(logits, dim=1)
-            
-            all_preds.extend(preds.cpu().numpy())
-            all_labels.extend(labels.cpu().numpy())
-            all_probs.extend(probs.cpu().numpy())
-            all_embeddings.extend(embeddings.cpu().numpy())
-    
-    all_preds = np.array(all_preds)
-    all_labels = np.array(all_labels)
-    all_probs = np.array(all_probs)
-    all_embeddings = np.array(all_embeddings)
-    
-    f1 = f1_score(all_labels, all_preds, average='macro', zero_division=0)
-    bal_acc = balanced_accuracy_score(all_labels, all_preds)
-    
-    auroc = 0.0
-    if len(np.unique(all_labels)) == 2:
-        try:
-            auroc = roc_auc_score(all_labels, all_probs[:, 1])
-        except:
-            pass
-    
-    return f1, bal_acc, auroc, all_embeddings
-
 def run_loso_split(split_idx, split, data_dict, tokenizer, device):
     test_source = split['test_source']
     train_sources = [s for s in split['train_sources'] if s in usable_sources]
@@ -721,7 +658,6 @@ def run_loso_split(split_idx, split, data_dict, tokenizer, device):
         'history': history,
         'embeddings_path': str(embeddings_path)
     }
-
 print("\nInitializing tokenizer...")
 tokenizer = AutoTokenizer.from_pretrained(BERT_MODEL)
 
@@ -750,7 +686,50 @@ for split_idx, split in enumerate(usable_splits):
     
     gc.collect()
     torch.cuda.empty_cache()
+print("\n" + "="*80)
+print("SAVING FINAL BEST MODEL")
+print("="*80)
 
+# Find the split with the best F1 score
+best_result = max(all_results, key=lambda x: x['final_f1'])
+best_split_idx = best_result['split_idx']
+
+print(f"Best performing model from Split {best_split_idx + 1}")
+print(f"  Test Source: {best_result['test_source']}")
+print(f"  Final F1: {best_result['final_f1']:.4f}")
+
+# Load the best model checkpoint
+best_checkpoint_files = list(MODELS_PATH.glob(f"split_{best_split_idx}_round_*.pt"))
+if best_checkpoint_files:
+    # Find the checkpoint with the best F1
+    best_checkpoint = None
+    best_checkpoint_f1 = 0
+    
+    for checkpoint_file in best_checkpoint_files:
+        checkpoint = torch.load(checkpoint_file)
+        if checkpoint['test_f1'] > best_checkpoint_f1:
+            best_checkpoint_f1 = checkpoint['test_f1']
+            best_checkpoint = checkpoint
+    
+    # Save the final production model
+    final_model_path = MODELS_PATH / "final_best_model.pt"
+    torch.save({
+        'model_state': best_checkpoint['model_state'],
+        'test_source': best_result['test_source'],
+        'f1_score': best_result['final_f1'],
+        'balanced_acc': best_result['final_bal_acc'],
+        'auroc': best_result['final_auroc'],
+        'config': {
+            'bert_model': BERT_MODEL,
+            'projection_dim': PROJECTION_DIM,
+            'hidden_dim': HIDDEN_DIM,
+            'max_length': MAX_LENGTH,
+            'num_classes': 2
+        },
+        'timestamp': timestamp
+    }, final_model_path)
+    
+    print(f"\nFinal model saved to: {final_model_path}")
 print("\n" + "="*80)
 print("FEDERATED CONTRASTIVE LEARNING RESULTS")
 print("="*80)
@@ -770,7 +749,6 @@ results_df = pd.DataFrame([{
 results_df = results_df.sort_values('Final F1', ascending=False)
 
 print("\n" + results_df.to_string(index=False))
-
 print("\n" + "="*60)
 print("AGGREGATE STATISTICS")
 print("="*60)
@@ -780,7 +758,6 @@ print(f"Average Balanced Acc: {results_df['Balanced Acc'].mean():.4f} ± {result
 print(f"Average AUROC: {results_df['AUROC'].mean():.4f} ± {results_df['AUROC'].std():.4f}")
 print(f"Best source: {results_df.iloc[0]['Test Source']} (F1: {results_df.iloc[0]['Final F1']:.4f})")
 print(f"Worst source: {results_df.iloc[-1]['Test Source']} (F1: {results_df.iloc[-1]['Final F1']:.4f})")
-
 timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
 results_dir = RESULTS_PATH / f"results_{timestamp}"
 results_dir.mkdir(exist_ok=True)
@@ -813,256 +790,3 @@ print(f"  - loso_results.csv")
 print(f"  - complete_results.pkl")
 print(f"  - training_history.json")
 print(f"  - embeddings saved per split")
-
-print("\n" + "="*80)
-print("TRAINING FINAL PRODUCTION MODEL ON ALL DATA")
-print("="*80)
-
-print("\nPreparing all available data...")
-all_train_sources = usable_sources
-print(f"Training on {len(all_train_sources)} sources: {all_train_sources}")
-
-all_client_data = {}
-max_templates_final = 0
-
-for source in all_train_sources:
-    print(f"  Preparing {source}...")
-    augment = source in ['HealthApp_2k', 'Spark_2k']
-    all_client_data[source] = prepare_client_data(source, data_dict, tokenizer, augment)
-    max_templates_final = max(max_templates_final, all_client_data[source]['num_templates'])
-
-print(f"\nMax templates across all sources: {max_templates_final}")
-
-final_model = FedLogCLModel(
-    BERT_MODEL, PROJECTION_DIM, HIDDEN_DIM, 
-    max_templates_final, num_classes=2
-).to(device)
-
-if torch.cuda.is_available():
-    final_model.encoder.gradient_checkpointing_enable()
-
-print(f"\nTraining final model for {NUM_ROUNDS} rounds...")
-
-final_history = {'round': [], 'avg_val_f1': [], 'avg_val_bal_acc': []}
-
-for round_num in range(NUM_ROUNDS):
-    print(f"\nFinal Model - Round {round_num + 1}/{NUM_ROUNDS}")
-    
-    final_model = run_federated_round(final_model, all_client_data, tokenizer, round_num, device)
-    
-    round_val_f1 = []
-    round_val_bal_acc = []
-    
-    for source, data in all_client_data.items():
-        val_dataset = ContrastivePairDataset(
-            data['val_texts'], data['val_labels'], data['val_template_ids'],
-            data['val_pairs'], tokenizer, MAX_LENGTH
-        )
-        val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE * 2, shuffle=False, num_workers=0)
-        
-        val_f1, val_bal_acc, _ = evaluate_client(final_model, val_loader, device)
-        round_val_f1.append(val_f1)
-        round_val_bal_acc.append(val_bal_acc)
-        
-        del val_loader
-    
-    avg_val_f1 = np.mean(round_val_f1)
-    avg_val_bal_acc = np.mean(round_val_bal_acc)
-    
-    print(f"  Average Val F1: {avg_val_f1:.4f}")
-    print(f"  Average Val Bal Acc: {avg_val_bal_acc:.4f}")
-    
-    final_history['round'].append(round_num + 1)
-    final_history['avg_val_f1'].append(avg_val_f1)
-    final_history['avg_val_bal_acc'].append(avg_val_bal_acc)
-    
-    checkpoint_path = MODELS_PATH / f"final_model_round_{round_num}.pt"
-    torch.save({
-        'round': round_num,
-        'model_state': final_model.state_dict(),
-        'avg_val_f1': avg_val_f1,
-        'avg_val_bal_acc': avg_val_bal_acc,
-        'history': final_history
-    }, checkpoint_path)
-    
-    gc.collect()
-    torch.cuda.empty_cache()
-
-print("\n" + "="*80)
-print("SAVING FINAL PRODUCTION MODEL")
-print("="*80)
-
-deployment_dir = MODELS_PATH / "deployment"
-deployment_dir.mkdir(exist_ok=True)
-
-final_model_path = deployment_dir / "fedlogcl_production_model.pt"
-
-torch.save({
-    'model_state_dict': final_model.state_dict(),
-    'model_config': {
-        'bert_model': BERT_MODEL,
-        'projection_dim': PROJECTION_DIM,
-        'hidden_dim': HIDDEN_DIM,
-        'max_templates': max_templates_final,
-        'num_classes': 2,
-        'max_length': MAX_LENGTH
-    },
-    'training_config': {
-        'num_rounds': NUM_ROUNDS,
-        'local_epochs': LOCAL_EPOCHS,
-        'batch_size': BATCH_SIZE,
-        'lr_encoder': LR_ENCODER,
-        'lr_head': LR_HEAD,
-        'lambda_contrastive': LAMBDA_CONTRASTIVE,
-        'lambda_focal': LAMBDA_FOCAL,
-        'lambda_template': LAMBDA_TEMPLATE,
-        'alpha_samples': ALPHA_SAMPLES,
-        'beta_templates': BETA_TEMPLATES,
-        'gamma_imbalance': GAMMA_IMBALANCE
-    },
-    'training_sources': all_train_sources,
-    'loso_results': {
-        'avg_f1': float(results_df['Final F1'].mean()),
-        'std_f1': float(results_df['Final F1'].std()),
-        'avg_bal_acc': float(results_df['Balanced Acc'].mean()),
-        'avg_auroc': float(results_df['AUROC'].mean())
-    },
-    'final_history': final_history,
-    'timestamp': timestamp
-}, final_model_path)
-
-print(f"\nProduction model saved to: {final_model_path}")
-
-tokenizer.save_pretrained(deployment_dir / "tokenizer")
-print(f"Tokenizer saved to: {deployment_dir / 'tokenizer'}")
-
-with open(deployment_dir / "model_info.json", 'w') as f:
-    json.dump({
-        'model_name': 'FedLogCL Production Model',
-        'description': 'Federated Contrastive Learning for Log Anomaly Detection',
-        'training_sources': all_train_sources,
-        'num_sources': len(all_train_sources),
-        'max_templates': int(max_templates_final),
-        'loso_avg_f1': float(results_df['Final F1'].mean()),
-        'loso_std_f1': float(results_df['Final F1'].std()),
-        'loso_avg_bal_acc': float(results_df['Balanced Acc'].mean()),
-        'loso_avg_auroc': float(results_df['AUROC'].mean()),
-        'final_avg_val_f1': float(final_history['avg_val_f1'][-1]),
-        'final_avg_val_bal_acc': float(final_history['avg_val_bal_acc'][-1]),
-        'model_config': {
-            'bert_model': BERT_MODEL,
-            'projection_dim': PROJECTION_DIM,
-            'hidden_dim': HIDDEN_DIM,
-            'max_length': MAX_LENGTH
-        },
-        'timestamp': timestamp,
-        'test_mode': TEST_MODE
-    }, f, indent=2)
-
-print(f"Model info saved to: {deployment_dir / 'model_info.json'}")
-
-print("\n" + "="*80)
-print("DEPLOYMENT INSTRUCTIONS")
-print("="*80)
-print("\nTo use the production model:")
-print("1. Load model:")
-print("   checkpoint = torch.load('models/federated_contrastive/deployment/fedlogcl_production_model.pt')")
-print("   model = FedLogCLModel(**checkpoint['model_config'])")
-print("   model.load_state_dict(checkpoint['model_state_dict'])")
-print("\n2. Load tokenizer:")
-print("   tokenizer = AutoTokenizer.from_pretrained('models/federated_contrastive/deployment/tokenizer')")
-print("\n3. Inference:")
-print("   encoded = tokenizer(log_text, max_length=64, padding='max_length', truncation=True, return_tensors='pt')")
-print("   with torch.no_grad():")
-print("       _, logits = model(encoded['input_ids'], encoded['attention_mask'])")
-print("       prediction = torch.argmax(logits, dim=1)")
-
-print("\n" + "="*80)
-print("FINAL SUMMARY")
-print("="*80)
-print(f"\nLOSO Evaluation Results:")
-print(f"  Sources evaluated: {len(all_results)}")
-print(f"  Average F1-Macro: {results_df['Final F1'].mean():.4f} ± {results_df['Final F1'].std():.4f}")
-print(f"  Average Balanced Acc: {results_df['Balanced Acc'].mean():.4f} ± {results_df['Balanced Acc'].std():.4f}")
-print(f"  Average AUROC: {results_df['AUROC'].mean():.4f} ± {results_df['AUROC'].std():.4f}")
-
-print(f"\nFinal Production Model:")
-print(f"  Trained on: {len(all_train_sources)} sources")
-print(f"  Final validation F1: {final_history['avg_val_f1'][-1]:.4f}")
-print(f"  Final validation Bal Acc: {final_history['avg_val_bal_acc'][-1]:.4f}")
-print(f"  Model location: {final_model_path}")
-
-print("\n" + "="*80)
-print("TESTING PRODUCTION MODEL INFERENCE")
-print("="*80)
-
-test_logs = [
-    "User authentication failed for admin",
-    "System started successfully",
-    "Connection timeout after 30 seconds",
-    "Memory usage at 95%",
-    "Request processed in 120ms",
-    "ERROR: Segmentation fault in module core",
-    "INFO: Database connection established",
-    "WARNING: Disk space low on /dev/sda1"
-]
-
-print("\nRunning inference on sample logs...")
-final_model.eval()
-
-for log_text in test_logs:
-    encoded = tokenizer(
-        log_text,
-        max_length=MAX_LENGTH,
-        padding='max_length',
-        truncation=True,
-        return_tensors='pt'
-    )
-    
-    input_ids = encoded['input_ids'].to(device)
-    attention_mask = encoded['attention_mask'].to(device)
-    
-    with torch.no_grad():
-        with autocast():
-            embeddings, logits = final_model(input_ids, attention_mask)
-        
-        probs = F.softmax(logits, dim=1)
-        prediction = torch.argmax(logits, dim=1)
-    
-    label = 'normal' if prediction[0] == 0 else 'anomaly'
-    confidence = float(probs[0, prediction[0]])
-    
-    print(f"\nLog: {log_text}")
-    print(f"  Prediction: {label} (confidence: {confidence:.4f})")
-    print(f"  Probabilities: Normal={probs[0, 0]:.4f}, Anomaly={probs[0, 1]:.4f}")
-
-print("\n" + "="*80)
-print("INFERENCE EXAMPLE CODE")
-print("="*80)
-print("""
-To use the production model in your own code:
-
-import torch
-import torch.nn.functional as F
-from transformers import AutoTokenizer
-
-checkpoint = torch.load('models/federated_contrastive/deployment/fedlogcl_production_model.pt')
-tokenizer = AutoTokenizer.from_pretrained('models/federated_contrastive/deployment/tokenizer')
-
-model = FedLogCLModel(**checkpoint['model_config'])
-model.load_state_dict(checkpoint['model_state_dict'])
-model.eval()
-
-log_text = "Your log message here"
-encoded = tokenizer(log_text, max_length=64, padding='max_length', truncation=True, return_tensors='pt')
-
-with torch.no_grad():
-    _, logits = model(encoded['input_ids'], encoded['attention_mask'])
-    probs = F.softmax(logits, dim=1)
-    prediction = torch.argmax(logits, dim=1)
-
-print(f"Prediction: {'normal' if prediction[0] == 0 else 'anomaly'}")
-print(f"Confidence: {probs[0, prediction[0]]:.4f}")
-""")
-
-print("\nFedLogCL training complete!")

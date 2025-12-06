@@ -21,7 +21,7 @@ class LogBERT(nn.Module):
         super(LogBERT, self).__init__()
         
         self.config = BertConfig.from_pretrained(model_name)
-        self.bert = BertModel.from_pretrained(model_name, config=self.config)
+        self.bert = BertModel.from_pretrained(model_name, config=self.config, use_safetensors=True)
         self.dropout = nn.Dropout(dropout)
         
         hidden_size = self.config.hidden_size
@@ -91,7 +91,7 @@ class DomainAdaptedBERT(nn.Module):
         super(DomainAdaptedBERT, self).__init__()
         
         self.config = BertConfig.from_pretrained(model_name)
-        self.bert = BertModel.from_pretrained(model_name, config=self.config)
+        self.bert = BertModel.from_pretrained(model_name, config=self.config, use_safetensors=True)
         self.dropout = nn.Dropout(dropout)
         
         hidden_size = self.config.hidden_size
@@ -173,7 +173,7 @@ class DeBERTaV3Classifier(nn.Module):
         super(DeBERTaV3Classifier, self).__init__()
         
         self.config = DebertaV2Config.from_pretrained(model_name)
-        self.deberta = DebertaV2Model.from_pretrained(model_name, config=self.config)
+        self.deberta = DebertaV2Model.from_pretrained(model_name, config=self.config, use_safetensors=True)
         self.dropout = nn.Dropout(dropout)
         
         hidden_size = self.config.hidden_size
@@ -239,7 +239,7 @@ class MPNetClassifier(nn.Module):
         super(MPNetClassifier, self).__init__()
         
         self.config = MPNetConfig.from_pretrained(model_name)
-        self.mpnet = MPNetModel.from_pretrained(model_name, config=self.config)
+        self.mpnet = MPNetModel.from_pretrained(model_name, config=self.config, use_safetensors=True)
         self.dropout = nn.Dropout(dropout)
         
         hidden_size = self.config.hidden_size
@@ -311,45 +311,74 @@ def load_bert_model(model_path, model_type='deberta_v3', device='cpu'):
         metadata: Model metadata including config and metrics
     """
     import pickle
+    import logging
     from pathlib import Path
+    
+    logger = logging.getLogger(__name__)
     
     model_path = Path(model_path)
     
     # Determine file paths
+    pt_path = None
+    pkl_path = None
+    
     if model_path.is_dir():
         pt_path = model_path / 'model_state.pt'
         pkl_path = model_path / 'complete_model.pkl'
     elif str(model_path).endswith('.pkl'):
         pkl_path = model_path
         pt_path = model_path.parent / 'model_state.pt'
-    else:
+    elif str(model_path).endswith('.pt'):
         pt_path = model_path
-        pkl_path = None
-    
-    # Try to load from .pt file first (state dict only - avoids pickle issues)
-    if pt_path.exists():
-        checkpoint = torch.load(pt_path, map_location=device, weights_only=False)
-    elif pkl_path and pkl_path.exists():
-        # Fallback to pkl but extract state dict only
-        with open(pkl_path, 'rb') as f:
-            pkl_data = pickle.load(f)
-            # Extract state dict from pickled model
-            if 'model' in pkl_data and hasattr(pkl_data['model'], 'state_dict'):
-                checkpoint = {
-                    'model_state_dict': pkl_data['model'].cpu().state_dict(),
-                    'model_config': pkl_data.get('model_config', {}),
-                    'bert_config': pkl_data.get('bert_config', {}),
-                    'num_classes': pkl_data.get('num_classes', 2),
-                    'label_map': pkl_data.get('label_map', {0: 'normal', 1: 'anomaly'}),
-                    'optimal_threshold': pkl_data.get('optimal_threshold', 0.5),
-                    'training_samples': pkl_data.get('training_info', {}).get('training_samples'),
-                    'imbalance_ratio': pkl_data.get('training_info', {}).get('imbalance_ratio'),
-                    'timestamp': pkl_data.get('training_info', {}).get('timestamp'),
-                }
-            else:
-                raise ValueError("Invalid pickle format")
+        pkl_path = model_path.parent / 'complete_model.pkl'
     else:
-        raise FileNotFoundError(f"Model file not found: {model_path}")
+        # Fallback assumption
+        pt_path = model_path
+    
+    checkpoint = None
+    
+    # Try to load from .pt file first (state dict only)
+    if pt_path and pt_path.exists():
+        try:
+            checkpoint = torch.load(pt_path, map_location=device, weights_only=False)
+            logger.info(f"Loaded encoded state from {pt_path}")
+        except Exception as e:
+            logger.warning(f"Failed to load .pt file with torch.load: {e}")
+            checkpoint = None
+
+    # Fallback to pkl if .pt failed or doesn't exist
+    if checkpoint is None and pkl_path and pkl_path.exists():
+        try:
+            with open(pkl_path, 'rb') as f:
+                pkl_data = pickle.load(f)
+                # Extract state dict from pickled model
+                if 'model' in pkl_data:
+                    # Handle both raw model object and dict container
+                    if hasattr(pkl_data['model'], 'state_dict'):
+                         state_dict = pkl_data['model'].cpu().state_dict()
+                    else:
+                         # model might be the dictionary itself or in a weird format
+                         state_dict = pkl_data['model']
+                         
+                    checkpoint = {
+                        'model_state_dict': state_dict,
+                        'model_config': pkl_data.get('model_config', {}),
+                        'bert_config': pkl_data.get('bert_config', {}),
+                        'num_classes': pkl_data.get('num_classes', 2),
+                        'label_map': pkl_data.get('label_map', {0: 'normal', 1: 'anomaly'}),
+                        'optimal_threshold': pkl_data.get('optimal_threshold', 0.5),
+                        'training_samples': pkl_data.get('training_info', {}).get('training_samples'),
+                        'imbalance_ratio': pkl_data.get('training_info', {}).get('imbalance_ratio'),
+                        'timestamp': pkl_data.get('training_info', {}).get('timestamp'),
+                    }
+                    logger.info(f"Loaded model state from {pkl_path}")
+                else:
+                    logger.warning("Invalid pickle format: 'model' key missing")
+        except Exception as e:
+            logger.error(f"Failed to load backup .pkl file: {e}")
+            
+    if checkpoint is None:
+        raise FileNotFoundError(f"Could not load model from {model_path} (checked .pt and .pkl)")
     
     # Extract model parameters
     model_config = checkpoint.get('model_config', {})

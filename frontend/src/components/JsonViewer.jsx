@@ -15,16 +15,16 @@ export default function JsonViewer({ data, className = '' }) {
       <div className="absolute top-2 right-2 z-10">
         <button
           onClick={handleCopy}
-          className="p-2 bg-neutral-surface rounded-lg border border-neutral-border hover:border-primary transition-colors"
+          className="p-2 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-primary-500 dark:hover:border-primary-500 transition-colors"
         >
           {copied ? (
-            <Check className="w-4 h-4 text-signal-success" />
+            <Check className="w-4 h-4 text-green-500" />
           ) : (
-            <Copy className="w-4 h-4 text-neutral-secondary" />
+            <Copy className="w-4 h-4 text-slate-600 dark:text-slate-400" />
           )}
         </button>
       </div>
-      <div className="bg-neutral-dark border border-neutral-border rounded-lg p-4 overflow-x-auto font-mono text-sm">
+      <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-4 overflow-x-auto font-mono text-sm transition-colors duration-200">
         <JsonNode data={data} level={0} />
       </div>
     </div>
@@ -35,19 +35,19 @@ function JsonNode({ data, level }) {
   const [isExpanded, setIsExpanded] = useState(level < 2);
 
   if (data === null) {
-    return <span className="text-neutral-disabled">null</span>;
+    return <span className="text-slate-400 dark:text-slate-500">null</span>;
   }
 
   if (typeof data === 'boolean') {
-    return <span className="text-accent-purple">{data.toString()}</span>;
+    return <span className="text-purple-500 dark:text-purple-400">{data.toString()}</span>;
   }
 
   if (typeof data === 'number') {
-    return <span className="text-accent-cyan">{data}</span>;
+    return <span className="text-cyan-500 dark:text-cyan-400">{data}</span>;
   }
 
   if (typeof data === 'string') {
-    return <span className="text-signal-success">"{data}"</span>;
+    return <span className="text-green-500 dark:text-green-400">"{data}"</span>;
   }
 
   if (Array.isArray(data)) {
@@ -55,16 +55,16 @@ function JsonNode({ data, level }) {
       <div>
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="inline-flex items-center gap-1 text-neutral-secondary hover:text-neutral-primary"
+          className="inline-flex items-center gap-1 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
         >
           {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-          <span className="text-neutral-disabled">[{data.length}]</span>
+          <span className="text-slate-400 dark:text-slate-500">[{data.length}]</span>
         </button>
         {isExpanded && (
-          <div className="ml-4 border-l border-neutral-border pl-4 mt-1">
+          <div className="ml-4 border-l border-slate-200 dark:border-slate-700 pl-4 mt-1">
             {data.map((item, index) => (
               <div key={index} className="py-1">
-                <span className="text-neutral-disabled">{index}: </span>
+                <span className="text-slate-400 dark:text-slate-500">{index}: </span>
                 <JsonNode data={item} level={level + 1} />
               </div>
             ))}
@@ -80,17 +80,17 @@ function JsonNode({ data, level }) {
       <div>
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="inline-flex items-center gap-1 text-neutral-secondary hover:text-neutral-primary"
+          className="inline-flex items-center gap-1 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
         >
           {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-          <span className="text-neutral-disabled">{'{'}{keys.length}{'}'}</span>
+          <span className="text-slate-400 dark:text-slate-500">{'{'}{keys.length}{'}'}</span>
         </button>
         {isExpanded && (
-          <div className="ml-4 border-l border-neutral-border pl-4 mt-1">
+          <div className="ml-4 border-l border-slate-200 dark:border-slate-700 pl-4 mt-1">
             {keys.map((key) => (
               <div key={key} className="py-1">
-                <span className="text-primary">"{key}"</span>
-                <span className="text-neutral-disabled">: </span>
+                <span className="text-primary-600 dark:text-primary-400">"{key}"</span>
+                <span className="text-slate-400 dark:text-slate-500">: </span>
                 <JsonNode data={data[key]} level={level + 1} />
               </div>
             ))}
@@ -100,5 +100,5 @@ function JsonNode({ data, level }) {
     );
   }
 
-  return <span className="text-neutral-primary">{String(data)}</span>;
+  return <span className="text-slate-900 dark:text-slate-100">{String(data)}</span>;
 }

@@ -27,12 +27,12 @@ export default function BatchAnalysis() {
     }
 
     setLoading(true);
-    
+
     try {
       // Read file content
       const text = await file.text();
       const logs = text.split('\n').filter(line => line.trim());
-      
+
       if (logs.length === 0) {
         addToast('File is empty or invalid', 'error');
         setLoading(false);
@@ -41,7 +41,7 @@ export default function BatchAnalysis() {
 
       // Analyze logs
       const response = await api.predict(logs, 'ml', false);
-      
+
       if (response.status === 'success' && response.logs) {
         const transformedResults = response.logs.map((logResult, i) => ({
           id: i + 1,
@@ -51,7 +51,7 @@ export default function BatchAnalysis() {
           confidence: logResult.prediction?.confidence || 0,
           source: logResult.source_type || 'Unknown',
         }));
-        
+
         setResults(transformedResults);
         addToast(`Batch analysis completed: ${logs.length} logs processed`, 'success');
       } else {
@@ -72,21 +72,21 @@ export default function BatchAnalysis() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-neutral-primary mb-2">Batch Analysis</h1>
-        <p className="text-neutral-secondary">Upload and analyze multiple log files at once</p>
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">Batch Analysis</h1>
+        <p className="text-slate-600 dark:text-slate-400">Upload and analyze multiple log files at once</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card neon className="lg:col-span-1">
-          <h3 className="text-lg font-semibold text-neutral-primary mb-4">Upload File</h3>
-          
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">Upload File</h3>
+
           <label className="block">
-            <div className="border-2 border-dashed border-neutral-border rounded-lg p-8 text-center cursor-pointer hover:border-primary hover:shadow-neon transition-all">
-              <Upload className="w-12 h-12 mx-auto mb-3 text-neutral-disabled" />
-              <p className="text-sm text-neutral-secondary mb-1">
+            <div className="border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-lg p-8 text-center cursor-pointer hover:border-primary-500 dark:hover:border-primary-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+              <Upload className="w-12 h-12 mx-auto mb-3 text-slate-400 dark:text-slate-500" />
+              <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">
                 {file ? file.name : 'Click to upload or drag and drop'}
               </p>
-              <p className="text-xs text-neutral-disabled">CSV, TXT, or JSON files</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500">CSV, TXT, or JSON files</p>
             </div>
             <input
               type="file"
@@ -97,14 +97,14 @@ export default function BatchAnalysis() {
           </label>
 
           {file && (
-            <div className="mt-4 p-3 bg-neutral-dark rounded-lg flex items-center justify-between">
+            <div className="mt-4 p-3 bg-slate-50 dark:bg-slate-900 rounded-lg flex items-center justify-between transition-colors duration-200">
               <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-primary" />
-                <span className="text-sm text-neutral-primary">{file.name}</span>
+                <FileText className="w-4 h-4 text-primary-600 dark:text-primary-400" />
+                <span className="text-sm text-slate-900 dark:text-slate-100">{file.name}</span>
               </div>
               <button
                 onClick={() => setFile(null)}
-                className="text-neutral-secondary hover:text-signal-error transition-colors"
+                className="text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
               >
                 <Trash2 className="w-4 h-4" />
               </button>
@@ -125,7 +125,7 @@ export default function BatchAnalysis() {
 
         <Card className="lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-neutral-primary">Results</h3>
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Results</h3>
             {results && (
               <Button variant="secondary" size="sm" icon={Download} onClick={handleDownload}>
                 Download Results
@@ -137,22 +137,22 @@ export default function BatchAnalysis() {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-neutral-border">
-                    <th className="text-left py-3 px-4 text-sm font-medium text-neutral-secondary">#</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-neutral-secondary">Log Message</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-neutral-secondary">Source</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-neutral-secondary">Class</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-neutral-secondary">Confidence</th>
+                  <tr className="border-b border-slate-200 dark:border-slate-700">
+                    <th className="text-left py-3 px-4 text-sm font-medium text-slate-600 dark:text-slate-400">#</th>
+                    <th className="text-left py-3 px-4 text-sm font-medium text-slate-600 dark:text-slate-400">Log Message</th>
+                    <th className="text-left py-3 px-4 text-sm font-medium text-slate-600 dark:text-slate-400">Source</th>
+                    <th className="text-left py-3 px-4 text-sm font-medium text-slate-600 dark:text-slate-400">Class</th>
+                    <th className="text-left py-3 px-4 text-sm font-medium text-slate-600 dark:text-slate-400">Confidence</th>
                   </tr>
                 </thead>
                 <tbody>
                   {results.map((result) => (
                     <tr
                       key={result.id}
-                      className="border-b border-neutral-border hover:bg-neutral-dark transition-colors"
+                      className="border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                     >
-                      <td className="py-3 px-4 text-sm text-neutral-secondary">{result.id}</td>
-                      <td className="py-3 px-4 text-sm text-neutral-primary max-w-md truncate">{result.log}</td>
+                      <td className="py-3 px-4 text-sm text-slate-600 dark:text-slate-400">{result.id}</td>
+                      <td className="py-3 px-4 text-sm text-slate-900 dark:text-slate-100 max-w-md truncate">{result.log}</td>
                       <td className="py-3 px-4 text-sm">
                         <Badge variant="info">{result.source}</Badge>
                       </td>
@@ -161,7 +161,7 @@ export default function BatchAnalysis() {
                           {result.class}
                         </Badge>
                       </td>
-                      <td className="py-3 px-4 text-sm text-neutral-primary font-semibold">
+                      <td className="py-3 px-4 text-sm text-slate-900 dark:text-slate-100 font-semibold">
                         {(result.confidence * 100).toFixed(1)}%
                       </td>
                     </tr>
@@ -171,8 +171,8 @@ export default function BatchAnalysis() {
             </div>
           ) : (
             <div className="text-center py-12">
-              <FileText className="w-12 h-12 mx-auto mb-3 text-neutral-disabled" />
-              <p className="text-neutral-secondary">No results yet. Upload a file to begin analysis.</p>
+              <FileText className="w-12 h-12 mx-auto mb-3 text-slate-400 dark:text-slate-500" />
+              <p className="text-slate-600 dark:text-slate-400">No results yet. Upload a file to begin analysis.</p>
             </div>
           )}
         </Card>

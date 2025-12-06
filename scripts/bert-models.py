@@ -40,11 +40,6 @@ from sklearn.metrics import (
 from sklearn.model_selection import StratifiedKFold, train_test_split
 
 from imblearn.over_sampling import SMOTE, BorderlineSMOTE, ADASYN
-
-# =============================================================================
-# CONFIGURATION
-# =============================================================================
-
 SEED = 42
 np.random.seed(SEED)
 torch.manual_seed(SEED)
@@ -97,11 +92,31 @@ print(f"Models will be saved to: {MODELS_PATH}")
 print(f"Results will be saved to: {RESULTS_PATH}")
 
 LABEL_MAP = {0: 'normal', 1: 'anomaly'}
+feat_file = FEAT_PATH / "enhanced_imbalanced_features.pkl"
+if not feat_file.exists():
+    print(f"Error: {feat_file} not found")
+    sys.exit(1)
 
-# FIXED CONFIGURATION
+with open(feat_file, 'rb') as f:
+    feat_data = pickle.load(f)
+    dat = feat_data['hybrid_features_data']
+    num_classes = feat_data['config'].get('num_classes', 2)
+
+split_file = FEAT_PATH / "enhanced_cross_source_splits.pkl"
+if not split_file.exists():
+    print(f"Error: {split_file} not found")
+    sys.exit(1)
+
+with open(split_file, 'rb') as f:
+    split_data = pickle.load(f)
+    splts = split_data['splits']
+
+print(f"Loaded {len(dat)} log sources")
+print(f"Loaded {len(splts)} cross-source splits")
+print(f"Number of classes: {num_classes}")
 BERT_CONFIG = {
-    'max_length': 16,              # FIXED: Increased from 32
-    'batch_size': 64,               # FIXED: Reduced from 256 for stability
+    'max_length': 256,              # FIXED: Increased from 32
+    'batch_size': 32,               # FIXED: Reduced from 256 for stability
     'learning_rate': 2e-5,          # FIXED: More conservative
     'weight_decay': 0.01,
     'num_epochs': 1,               # FIXED: Increased from 1
@@ -154,38 +169,6 @@ print(f"Batch size: {BERT_CONFIG['batch_size']}")
 print(f"Learning rate: {BERT_CONFIG['learning_rate']}")
 print(f"Epochs: {BERT_CONFIG['num_epochs']}")
 print(f"Device: {device}")
-
-# =============================================================================
-# DATA LOADING
-# =============================================================================
-
-feat_file = FEAT_PATH / "enhanced_imbalanced_features.pkl"
-if not feat_file.exists():
-    print(f"Error: {feat_file} not found")
-    sys.exit(1)
-
-with open(feat_file, 'rb') as f:
-    feat_data = pickle.load(f)
-    dat = feat_data['hybrid_features_data']
-    num_classes = feat_data['config'].get('num_classes', 2)
-
-split_file = FEAT_PATH / "enhanced_cross_source_splits.pkl"
-if not split_file.exists():
-    print(f"Error: {split_file} not found")
-    sys.exit(1)
-
-with open(split_file, 'rb') as f:
-    split_data = pickle.load(f)
-    splts = split_data['splits']
-
-print(f"Loaded {len(dat)} log sources")
-print(f"Loaded {len(splts)} cross-source splits")
-print(f"Number of classes: {num_classes}")
-
-# =============================================================================
-# TEXT PREPROCESSING - FIXED: Added proper log preprocessing
-# =============================================================================
-
 def preprocess_log(text):
     """Preprocess log text to normalize patterns"""
     text = str(text).lower()
@@ -200,11 +183,6 @@ def preprocess_log(text):
     text = re.sub(r'\s+', ' ', text)  # Multiple spaces
     
     return text.strip()
-
-# =============================================================================
-# DATASET - FIXED: Added preprocessing and better augmentation
-# =============================================================================
-
 class LogDataset(Dataset):
     """Dataset for log anomaly detection with text and optional features"""
     
@@ -317,11 +295,6 @@ class LabelSmoothingCrossEntropy(nn.Module):
         nll = F.nll_loss(log_preds, target, reduction='mean')
         
         return self.smoothing * loss / n_classes + (1 - self.smoothing) * nll
-
-# =============================================================================
-# MODEL ARCHITECTURES
-# =============================================================================
-
 class LogBERT(nn.Module):
     """LogBERT: BERT with log-specific adaptations and MLM pretraining"""
     
@@ -591,11 +564,6 @@ class MPNetClassifier(nn.Module):
         logits = self.classifier(pooled_output)
         
         return logits
-
-# =============================================================================
-# UTILITY FUNCTIONS
-# =============================================================================
-
 def compute_file_hash(filepath):
     """Compute MD5 hash of file for reproducibility"""
     with open(filepath, 'rb') as f:
@@ -761,11 +729,6 @@ def apply_smote_if_needed(texts, labels, imbalance_ratio):
     except Exception as e:
         print(f"  ⚠️  SMOTE failed: {e}. Using original data.")
         return texts, labels, np.arange(len(texts))
-
-# =============================================================================
-# TRAINING FUNCTIONS
-# =============================================================================
-
 def train_epoch(model, dataloader, optimizer, scheduler, criterion, device, 
                 accumulation_steps=1, gradient_clip=1.0, use_amp=True, scaler=None):
     """Train for one epoch with mixed precision support - FIXED version"""
@@ -1412,11 +1375,6 @@ def process_single_split(split_idx, split, model_configs_to_test):
         'train_samples': int(len(train_labels)),
         'test_samples': int(len(test_labels))
     }
-
-# =============================================================================
-# MAIN EXECUTION
-# =============================================================================
-
 print("\n" + "="*80)
 print("STARTING BERT MODELS PIPELINE - CROSS-SOURCE EVALUATION")
 print("="*80 + "\n")
@@ -1450,11 +1408,6 @@ for split_idx, split in enumerate(splts_to_process):
     gc.collect()
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
-
-# =============================================================================
-# AGGREGATE RESULTS
-# =============================================================================
-
 print("\n" + "="*80)
 print("AGGREGATE RESULTS - ALL SPLITS")
 print("="*80 + "\n")
@@ -1523,11 +1476,6 @@ best_overall_model = df_overall.iloc[0]['Model']
 print(f"\n🏆 Best Overall Model: {best_overall_model}")
 print(f"   Average F1-Macro: {df_overall.iloc[0]['Avg F1-Macro']:.4f}")
 print(f"   Average Balanced Acc: {df_overall.iloc[0]['Avg Balanced Acc']:.4f}")
-
-# =============================================================================
-# SAVE RESULTS
-# =============================================================================
-
 print("\n" + "="*80)
 print("SAVING RESULTS")
 print("="*80 + "\n")
@@ -1579,11 +1527,6 @@ with open(config_file, 'w') as f:
         'num_splits_processed': len(all_split_results)
     }, f, indent=2)
 print(f"✓ Saved: experiment_config.json")
-
-# =============================================================================
-# TRAIN FINAL DEPLOYMENT MODELS
-# =============================================================================
-
 print("\n" + "="*80)
 print("TRAINING FINAL DEPLOYMENT MODELS")
 print("="*80 + "\n")
@@ -1701,11 +1644,6 @@ for model_key, model_config in MODEL_CONFIGS.items():
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
         gc.collect()
-
-# =============================================================================
-# SAVE DEPLOYMENT MODELS
-# =============================================================================
-
 print("\n" + "="*80)
 print("SAVING DEPLOYMENT MODELS")
 print("="*80 + "\n")
@@ -1831,11 +1769,6 @@ if best_model_key in deployment_models:
         f.write(f"Timestamp: {timestamp}\n")
     
     print(f"\n✓ Best model ({best_overall_model}) copied to: best_model/")
-
-# =============================================================================
-# VISUALIZATION
-# =============================================================================
-
 print("\n" + "="*80)
 print("CREATING VISUALIZATIONS")
 print("="*80 + "\n")
@@ -1987,18 +1920,3 @@ plt.savefig(viz_file, dpi=300, bbox_inches='tight', facecolor='white')
 print(f"✓ Saved: aggregate_visualization.png")
 
 plt.show()
-
-# =============================================================================
-# FINAL SUMMARY
-# =============================================================================
-
-print("\n" + "="*80)
-print("PIPELINE COMPLETE")
-print("="*80 + "\n")
-
-print(f"✓ Processed {len(all_split_results)} splits")
-print(f"✓ Trained {len(MODEL_CONFIGS)} model architectures")
-print(f"✓ Best Model: {best_overall_model}")
-print(f"✓ Results saved to: {results_dir}")
-print(f"✓ Deployment models saved to: {deployment_dir}")
-print(f"\nAll done! 🎉")

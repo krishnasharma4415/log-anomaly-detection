@@ -51,7 +51,7 @@ export default function LogAnalyzer() {
     }
 
     setLoading(true);
-    
+
     try {
       // Prepare request parameters
       const requestParams = {
@@ -59,25 +59,25 @@ export default function LogAnalyzer() {
         model_type: selectedModel,
         save_to_db: false,
       };
-      
+
       // Add BERT model key if BERT is selected
       if (selectedModel === 'bert') {
         requestParams.bert_model_key = selectedBertModel;
       }
-      
+
       // Add ensemble method if ensemble is selected
       if (selectedModel === 'ensemble') {
         requestParams.ensemble_method = selectedEnsembleMethod;
       }
-      
+
       const response = await api.request('/api/predict', {
         method: 'POST',
         body: JSON.stringify(requestParams),
       });
-      
+
       if (response.status === 'success' && response.logs && response.logs.length > 0) {
         const logResult = response.logs[0];
-        
+
         // Transform Django API response to match our UI format
         const transformedResult = {
           raw: logResult.raw || logInput,
@@ -97,7 +97,7 @@ export default function LogAnalyzer() {
             features_extracted: 848,
           },
         };
-        
+
         setResult(transformedResult);
         addToast('Log analyzed successfully', 'success');
       } else {
@@ -112,28 +112,28 @@ export default function LogAnalyzer() {
   };
 
   const getConfidenceColor = (confidence) => {
-    if (confidence >= 0.9) return 'text-signal-success';
-    if (confidence >= 0.7) return 'text-signal-warning';
-    return 'text-signal-error';
+    if (confidence >= 0.9) return 'text-green-500';
+    if (confidence >= 0.7) return 'text-yellow-500';
+    return 'text-red-500';
   };
 
   return (
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-neutral-primary mb-2">Real-Time Log Analyzer</h1>
-        <p className="text-neutral-secondary">Analyze individual log entries with AI-powered anomaly detection</p>
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">Real-Time Log Analyzer</h1>
+        <p className="text-slate-600 dark:text-slate-400">Analyze individual log entries with AI-powered anomaly detection</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left Panel - Input */}
         <div className="space-y-6">
           <Card neon>
-            <h3 className="text-lg font-semibold text-neutral-primary mb-4 flex items-center gap-2">
-              <Scan className="w-5 h-5 text-primary" />
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
+              <Scan className="w-5 h-5 text-primary-600 dark:text-primary-400" />
               Log Input
             </h3>
-            
+
             <TextArea
               label="Enter log message"
               placeholder="Paste your log entry here...&#10;Example: Apr 15 12:34:56 server sshd[1234]: Failed password for admin from 192.168.1.100"
@@ -159,7 +159,7 @@ export default function LogAnalyzer() {
                   value={selectedBertModel}
                   onChange={(e) => setSelectedBertModel(e.target.value)}
                 />
-                <p className="text-xs text-neutral-tertiary mt-1">
+                <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
                   Select which BERT model to use for prediction
                 </p>
               </div>
@@ -173,7 +173,7 @@ export default function LogAnalyzer() {
                   value={selectedEnsembleMethod}
                   onChange={(e) => setSelectedEnsembleMethod(e.target.value)}
                 />
-                <p className="text-xs text-neutral-tertiary mt-1">
+                <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
                   Choose how to combine predictions from multiple models
                 </p>
               </div>
@@ -185,9 +185,9 @@ export default function LogAnalyzer() {
                   type="checkbox"
                   checked={showMetadata}
                   onChange={(e) => setShowMetadata(e.target.checked)}
-                  className="w-4 h-4 rounded border-neutral-border bg-neutral-dark text-primary focus:ring-primary focus:ring-offset-0"
+                  className="w-4 h-4 rounded border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-primary-600 focus:ring-primary-500 focus:ring-offset-0"
                 />
-                <span className="text-sm text-neutral-secondary">Show metadata</span>
+                <span className="text-sm text-slate-600 dark:text-slate-400">Show metadata</span>
               </label>
             </div>
 
@@ -205,7 +205,7 @@ export default function LogAnalyzer() {
 
           {/* Sample Logs */}
           <Card>
-            <h4 className="text-sm font-semibold text-neutral-primary mb-3">Sample Logs</h4>
+            <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-3">Sample Logs</h4>
             <div className="space-y-2">
               {[
                 'Apr 15 12:34:56 server sshd[1234]: Failed password for admin',
@@ -215,7 +215,7 @@ export default function LogAnalyzer() {
                 <button
                   key={i}
                   onClick={() => setLogInput(sample)}
-                  className="w-full text-left px-3 py-2 bg-neutral-dark rounded-lg text-xs font-mono text-neutral-secondary hover:text-neutral-primary hover:bg-neutral-surface transition-colors"
+                  className="w-full text-left px-3 py-2 bg-slate-50 dark:bg-slate-900 rounded-lg text-xs font-mono text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                 >
                   {sample}
                 </button>
@@ -235,8 +235,8 @@ export default function LogAnalyzer() {
                 {/* Prediction Card */}
                 <Card neon={result.prediction.class_name !== 'normal'}>
                   <div className="flex items-start justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-neutral-primary">Prediction Result</h3>
-                    <Badge 
+                    <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Prediction Result</h3>
+                    <Badge
                       variant={result.prediction.class_name === 'normal' ? 'success' : 'error'}
                       pulse={result.prediction.class_name !== 'normal'}
                     >
@@ -245,11 +245,11 @@ export default function LogAnalyzer() {
                   </div>
 
                   {result.prediction.class_name !== 'normal' && (
-                    <div className="mb-4 p-3 bg-signal-error/10 border border-signal-error/30 rounded-lg flex items-start gap-3">
-                      <AlertCircle className="w-5 h-5 text-signal-error flex-shrink-0 mt-0.5" />
+                    <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start gap-3">
+                      <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
                       <div>
-                        <p className="text-sm font-medium text-signal-error">Security Anomaly Detected</p>
-                        <p className="text-xs text-neutral-secondary mt-1">This log entry shows suspicious activity patterns</p>
+                        <p className="text-sm font-medium text-red-600 dark:text-red-400">Security Anomaly Detected</p>
+                        <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">This log entry shows suspicious activity patterns</p>
                       </div>
                     </div>
                   )}
@@ -257,35 +257,34 @@ export default function LogAnalyzer() {
                   <div className="space-y-4">
                     <div>
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm text-neutral-secondary">Confidence Score</span>
+                        <span className="text-sm text-slate-600 dark:text-slate-400">Confidence Score</span>
                         <span className={`text-lg font-bold ${getConfidenceColor(result.prediction.confidence)}`}>
                           {(result.prediction.confidence * 100).toFixed(1)}%
                         </span>
                       </div>
-                      <div className="h-3 bg-neutral-dark rounded-full overflow-hidden">
+                      <div className="h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                         <div
                           style={{
                             width: `${result.prediction.confidence * 100}%`,
                             boxShadow: '0 0 10px currentColor',
                           }}
-                          className={`h-full transition-all duration-800 ${
-                            result.prediction.confidence >= 0.9 
-                              ? 'bg-signal-success' 
-                              : result.prediction.confidence >= 0.7 
-                              ? 'bg-signal-warning' 
-                              : 'bg-signal-error'
-                          }`}
+                          className={`h-full transition-all duration-800 ${result.prediction.confidence >= 0.9
+                              ? 'bg-signal-success'
+                              : result.prediction.confidence >= 0.7
+                                ? 'bg-signal-warning'
+                                : 'bg-signal-error'
+                            }`}
                         />
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4 pt-4 border-t border-neutral-border">
+                    <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-200 dark:border-slate-700">
                       <div>
-                        <p className="text-xs text-neutral-secondary mb-1">Log Type</p>
+                        <p className="text-xs text-slate-600 dark:text-slate-400 mb-1">Log Type</p>
                         <Badge variant="info">{result.log_type}</Badge>
                       </div>
                       <div>
-                        <p className="text-xs text-neutral-secondary mb-1">Classification</p>
+                        <p className="text-xs text-slate-600 dark:text-slate-400 mb-1">Classification</p>
                         <Badge variant={result.prediction.class_name === 'normal' ? 'success' : 'error'}>
                           {result.prediction.class_name}
                         </Badge>
@@ -296,30 +295,30 @@ export default function LogAnalyzer() {
 
                 {/* Parsed Content */}
                 <Card>
-                  <h4 className="text-sm font-semibold text-neutral-primary mb-3">Parsed Content</h4>
+                  <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-3">Parsed Content</h4>
                   <LogViewer log={result.parsed_content} />
                 </Card>
 
                 {/* Metadata */}
                 {showMetadata && result.metadata && (
                   <Card>
-                    <h4 className="text-sm font-semibold text-neutral-primary mb-3">Analysis Metadata</h4>
+                    <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-3">Analysis Metadata</h4>
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
-                        <p className="text-neutral-secondary mb-1">Model Used</p>
-                        <p className="text-neutral-primary font-medium">{result.metadata.model_used.toUpperCase()}</p>
+                        <p className="text-slate-600 dark:text-slate-400 mb-1">Model Used</p>
+                        <p className="text-slate-900 dark:text-slate-100 font-medium">{result.metadata.model_used.toUpperCase()}</p>
                       </div>
                       <div>
-                        <p className="text-neutral-secondary mb-1">Inference Time</p>
-                        <p className="text-neutral-primary font-medium">{result.metadata.inference_time_ms}ms</p>
+                        <p className="text-slate-600 dark:text-slate-400 mb-1">Inference Time</p>
+                        <p className="text-slate-900 dark:text-slate-100 font-medium">{result.metadata.inference_time_ms}ms</p>
                       </div>
                       <div>
-                        <p className="text-neutral-secondary mb-1">Features Extracted</p>
-                        <p className="text-neutral-primary font-medium">{result.metadata.features_extracted}</p>
+                        <p className="text-slate-600 dark:text-slate-400 mb-1">Features Extracted</p>
+                        <p className="text-slate-900 dark:text-slate-100 font-medium">{result.metadata.features_extracted}</p>
                       </div>
                       <div>
-                        <p className="text-neutral-secondary mb-1">Timestamp</p>
-                        <p className="text-neutral-primary font-medium font-mono text-xs">
+                        <p className="text-slate-600 dark:text-slate-400 mb-1">Timestamp</p>
+                        <p className="text-slate-900 dark:text-slate-100 font-medium font-mono text-xs">
                           {new Date(result.metadata.timestamp).toLocaleString()}
                         </p>
                       </div>
@@ -329,7 +328,7 @@ export default function LogAnalyzer() {
 
                 {/* Full JSON Response */}
                 <Card>
-                  <h4 className="text-sm font-semibold text-neutral-primary mb-3">Full JSON Response</h4>
+                  <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-3">Full JSON Response</h4>
                   <JsonViewer data={result} />
                 </Card>
               </div>
@@ -339,11 +338,11 @@ export default function LogAnalyzer() {
               >
                 <Card className="h-full flex items-center justify-center min-h-[400px]">
                   <div className="text-center">
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
-                      <Scan className="w-8 h-8 text-primary" />
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center">
+                      <Scan className="w-8 h-8 text-primary-600 dark:text-primary-400" />
                     </div>
-                    <h3 className="text-lg font-semibold text-neutral-primary mb-2">No Analysis Yet</h3>
-                    <p className="text-neutral-secondary text-sm">Enter a log message and click "Analyze Log" to see results</p>
+                    <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">No Analysis Yet</h3>
+                    <p className="text-slate-600 dark:text-slate-400 text-sm">Enter a log message and click "Analyze Log" to see results</p>
                   </div>
                 </Card>
               </div>

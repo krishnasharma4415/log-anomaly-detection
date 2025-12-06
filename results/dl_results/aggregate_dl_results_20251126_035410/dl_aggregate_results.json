@@ -1,0 +1,40 @@
+{
+  "experiment_info": {
+    "timestamp": "2025-11-26T03:54:52.436502",
+    "feature_type": "selected_imbalanced",
+    "num_classes": 2,
+    "label_map": {
+      "0": "normal",
+      "1": "anomaly"
+    },
+    "total_splits": 16,
+    "processed_splits": 2,
+    "device": "cuda",
+    "cuda_available": true
+  },
+  "aggregate_metrics": {
+    "avg_f1_macro": 0.6237231183353689,
+    "std_f1_macro": 0.4809110951930637,
+    "avg_balanced_acc": 0.6380518468572903,
+    "avg_auroc": 0.6603628368582245,
+    "avg_auprc": 0.6384138294875772,
+    "avg_mcc": 0.24893319140889097
+  },
+  "best_model": "cnn_attention",
+  "model_frequency": {
+    "CNN_ATTENTION": 1,
+    "TRANSFORMER": 1
+  },
+  "per_model_performance": {
+    "cnn_attention": {
+      "avg_f1": 0.6131577440252879,
+      "std_f1": 0.49585279083392864,
+      "avg_auroc": 0.503019146795366
+    },
+    "transformer": {
+      "avg_f1": 0.3901981792828168,
+      "std_f1": 0.1506569592325941,
+      "avg_auroc": 0.477378268235358
+    }
+  }
+}

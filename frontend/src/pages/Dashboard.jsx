@@ -6,10 +6,12 @@ import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, Cart
 import Badge from '../components/ui/Badge';
 import api from '../services/api';
 import { SkeletonCard } from '../components/ui/Skeleton';
+import { useChartTheme } from '../hooks/useChartTheme';
 
 const COLORS = ['#4B5DFF', '#00C6FF', '#A259FF', '#22E1FF', '#34D399', '#FBBF24'];
 
 export default function Dashboard() {
+  const chartTheme = useChartTheme();
   const [stats, setStats] = useState({
     totalLogs: 0,
     anomalyRate: 0,
@@ -89,8 +91,8 @@ export default function Dashboard() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-neutral-primary mb-2">Dashboard</h1>
-        <p className="text-neutral-secondary">Real-time overview of log anomaly detection system</p>
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">Dashboard</h1>
+        <p className="text-slate-600 dark:text-slate-400">Real-time overview of log anomaly detection system</p>
       </div>
 
       {/* Metrics Grid */}
@@ -128,20 +130,13 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Anomaly Timeline */}
         <Card neon>
-          <h3 className="text-lg font-semibold text-neutral-primary mb-4">Anomaly Timeline</h3>
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">Anomaly Timeline</h3>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={timelineData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#3B3F52" />
-              <XAxis dataKey="time" stroke="#C5C7D3" />
-              <YAxis stroke="#C5C7D3" />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: '#2A2D3E',
-                  border: '1px solid #3B3F52',
-                  borderRadius: '8px',
-                  color: '#FFFFFF',
-                }}
-              />
+              <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.gridColor} />
+              <XAxis dataKey="time" stroke={chartTheme.axisColor} />
+              <YAxis stroke={chartTheme.axisColor} />
+              <Tooltip contentStyle={chartTheme.tooltipStyle} />
               <Legend />
               <Line type="monotone" dataKey="normal" stroke="#34D399" strokeWidth={2} dot={{ fill: '#34D399' }} />
               <Line type="monotone" dataKey="anomaly" stroke="#F43F5E" strokeWidth={2} dot={{ fill: '#F43F5E' }} />
@@ -151,7 +146,7 @@ export default function Dashboard() {
 
         {/* Class Distribution */}
         <Card>
-          <h3 className="text-lg font-semibold text-neutral-primary mb-4">Class Distribution</h3>
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">Class Distribution</h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -167,14 +162,7 @@ export default function Dashboard() {
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: '#2A2D3E',
-                  border: '1px solid #3B3F52',
-                  borderRadius: '8px',
-                  color: '#FFFFFF',
-                }}
-              />
+              <Tooltip contentStyle={chartTheme.tooltipStyle} />
               <Legend />
             </PieChart>
           </ResponsiveContainer>
@@ -185,20 +173,13 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Source Distribution */}
         <Card className="lg:col-span-2">
-          <h3 className="text-lg font-semibold text-neutral-primary mb-4">Source Distribution</h3>
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">Source Distribution</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={sourceDistribution}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#3B3F52" />
-              <XAxis dataKey="source" stroke="#C5C7D3" />
-              <YAxis stroke="#C5C7D3" />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: '#2A2D3E',
-                  border: '1px solid #3B3F52',
-                  borderRadius: '8px',
-                  color: '#FFFFFF',
-                }}
-              />
+              <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.gridColor} />
+              <XAxis dataKey="source" stroke={chartTheme.axisColor} />
+              <YAxis stroke={chartTheme.axisColor} />
+              <Tooltip contentStyle={chartTheme.tooltipStyle} />
               <Bar dataKey="count" fill="url(#colorGradient)" radius={[8, 8, 0, 0]} />
               <defs>
                 <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
@@ -212,12 +193,12 @@ export default function Dashboard() {
 
         {/* Model Performance */}
         <Card>
-          <h3 className="text-lg font-semibold text-neutral-primary mb-4">Model Performance</h3>
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">Model Performance</h3>
           <div className="space-y-4">
             <div>
               <div className="flex justify-between text-sm mb-2">
-                <span className="text-neutral-secondary">F1-Score</span>
-                <span className="text-neutral-primary font-semibold">88.5%</span>
+                <span className="text-slate-600 dark:text-slate-400">F1-Score</span>
+                <span className="text-slate-900 dark:text-slate-100 font-semibold">88.5%</span>
               </div>
               <div className="h-2 bg-neutral-dark rounded-full overflow-hidden">
                 <div
@@ -228,10 +209,10 @@ export default function Dashboard() {
             </div>
             <div>
               <div className="flex justify-between text-sm mb-2">
-                <span className="text-neutral-secondary">Balanced Accuracy</span>
-                <span className="text-neutral-primary font-semibold">91.2%</span>
+                <span className="text-slate-600 dark:text-slate-400">Balanced Accuracy</span>
+                <span className="text-slate-900 dark:text-slate-100 font-semibold">91.2%</span>
               </div>
-              <div className="h-2 bg-neutral-dark rounded-full overflow-hidden">
+              <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                 <div
                   style={{ width: '91.2%' }}
                   className="h-full bg-gradient-accent transition-all duration-1000"
@@ -240,10 +221,10 @@ export default function Dashboard() {
             </div>
             <div>
               <div className="flex justify-between text-sm mb-2">
-                <span className="text-neutral-secondary">AUROC</span>
-                <span className="text-neutral-primary font-semibold">94.0%</span>
+                <span className="text-slate-600 dark:text-slate-400">AUROC</span>
+                <span className="text-slate-900 dark:text-slate-100 font-semibold">94.0%</span>
               </div>
-              <div className="h-2 bg-neutral-dark rounded-full overflow-hidden">
+              <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                 <div
                   style={{ width: '94%' }}
                   className="h-full bg-signal-success transition-all duration-1000"
@@ -256,33 +237,33 @@ export default function Dashboard() {
 
       {/* Recent Logs Table */}
       <Card>
-        <h3 className="text-lg font-semibold text-neutral-primary mb-4">Recent Analyzed Logs</h3>
+        <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">Recent Analyzed Logs</h3>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-neutral-border">
-                <th className="text-left py-3 px-4 text-sm font-medium text-neutral-secondary">Timestamp</th>
-                <th className="text-left py-3 px-4 text-sm font-medium text-neutral-secondary">Source</th>
-                <th className="text-left py-3 px-4 text-sm font-medium text-neutral-secondary">Message</th>
-                <th className="text-left py-3 px-4 text-sm font-medium text-neutral-secondary">Class</th>
-                <th className="text-left py-3 px-4 text-sm font-medium text-neutral-secondary">Confidence</th>
+              <tr className="border-b border-slate-200 dark:border-slate-700">
+                <th className="text-left py-3 px-4 text-sm font-medium text-slate-600 dark:text-slate-400">Timestamp</th>
+                <th className="text-left py-3 px-4 text-sm font-medium text-slate-600 dark:text-slate-400">Source</th>
+                <th className="text-left py-3 px-4 text-sm font-medium text-slate-600 dark:text-slate-400">Message</th>
+                <th className="text-left py-3 px-4 text-sm font-medium text-slate-600 dark:text-slate-400">Class</th>
+                <th className="text-left py-3 px-4 text-sm font-medium text-slate-600 dark:text-slate-400">Confidence</th>
               </tr>
             </thead>
             <tbody>
               {recentLogs.map((log) => (
                 <tr
                   key={log.id}
-                  className="border-b border-neutral-border hover:bg-neutral-dark transition-colors"
+                  className="border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                 >
-                  <td className="py-3 px-4 text-sm text-neutral-secondary font-mono">{log.timestamp}</td>
+                  <td className="py-3 px-4 text-sm text-slate-600 dark:text-slate-400 font-mono">{log.timestamp}</td>
                   <td className="py-3 px-4 text-sm">
                     <Badge variant="info">{log.source}</Badge>
                   </td>
-                  <td className="py-3 px-4 text-sm text-neutral-primary max-w-md truncate">{log.message}</td>
+                  <td className="py-3 px-4 text-sm text-slate-900 dark:text-slate-100 max-w-md truncate">{log.message}</td>
                   <td className="py-3 px-4 text-sm">
                     <Badge variant={log.class === 'Normal' ? 'success' : 'error'}>{log.class}</Badge>
                   </td>
-                  <td className="py-3 px-4 text-sm text-neutral-primary font-semibold">{(log.confidence * 100).toFixed(1)}%</td>
+                  <td className="py-3 px-4 text-sm text-slate-900 dark:text-slate-100 font-semibold">{(log.confidence * 100).toFixed(1)}%</td>
                 </tr>
               ))}
             </tbody>

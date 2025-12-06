@@ -10,7 +10,7 @@ export function ToastProvider({ children }) {
   const addToast = useCallback((message, type = 'info', duration = 3000) => {
     const id = Date.now();
     setToasts(prev => [...prev, { id, message, type }]);
-    
+
     if (duration > 0) {
       setTimeout(() => {
         setToasts(prev => prev.filter(t => t.id !== id));
@@ -25,10 +25,12 @@ export function ToastProvider({ children }) {
   return (
     <ToastContext.Provider value={{ addToast, removeToast }}>
       {children}
-      <div className="fixed top-4 right-4 z-50 space-y-2">
+      <div className="fixed top-4 right-4 z-[9999] space-y-2 pointer-events-none">
         <AnimatePresence>
           {toasts.map(toast => (
-            <Toast key={toast.id} {...toast} onClose={() => removeToast(toast.id)} />
+            <div key={toast.id} className="pointer-events-auto">
+              <Toast {...toast} onClose={() => removeToast(toast.id)} />
+            </div>
           ))}
         </AnimatePresence>
       </div>
@@ -63,14 +65,19 @@ function Toast({ message, type, onClose }) {
     <div
       className={`
         flex items-center gap-3 min-w-[300px] max-w-md p-4 rounded-lg border
-        bg-neutral-surface shadow-card ${styles[type]}
+        bg-white dark:bg-slate-800 shadow-card ${styles[type]}
+        transition-colors duration-200
       `}
+      style={{
+        boxShadow: '0 10px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.1)',
+        backdropFilter: 'blur(10px)',
+      }}
     >
       <Icon className="w-5 h-5 flex-shrink-0" />
-      <p className="flex-1 text-sm text-neutral-primary">{message}</p>
+      <p className="flex-1 text-sm font-medium text-slate-900 dark:text-slate-100">{message}</p>
       <button
         onClick={onClose}
-        className="text-neutral-secondary hover:text-neutral-primary transition-colors"
+        className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
       >
         <X className="w-4 h-4" />
       </button>

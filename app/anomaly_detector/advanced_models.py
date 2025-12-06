@@ -2,10 +2,13 @@
 Advanced Model Architectures for Log Anomaly Detection
 Implements Federated Contrastive Learning, Hierarchical Transformer, and Meta-Learning models
 """
+import logging
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from transformers import AutoModel, BertModel
+
+logger = logging.getLogger(__name__)
 
 
 # ============================================================================
@@ -31,7 +34,7 @@ class FedLogCLModel(nn.Module):
     def __init__(self, model_name='bert-base-uncased', projection_dim=128, 
                  hidden_dim=256, num_templates=1000, num_classes=2):
         super().__init__()
-        self.encoder = AutoModel.from_pretrained(model_name)
+        self.encoder = AutoModel.from_pretrained(model_name, use_safetensors=True)
         self.encoder_dim = self.encoder.config.hidden_size
         
         # Projection head for contrastive learning
@@ -191,7 +194,7 @@ class HLogFormer(nn.Module):
         super().__init__()
         
         # BERT encoder
-        self.bert = BertModel.from_pretrained('bert-base-uncased')
+        self.bert = BertModel.from_pretrained('bert-base-uncased', use_safetensors=True)
         
         # Optionally freeze early layers
         if freeze_layers > 0:
@@ -270,9 +273,92 @@ class HLogFormer(nn.Module):
 # META-LEARNING MODEL
 # ============================================================================
 
-class MetaLearner(nn.Module):
-    """Meta-learning model for few-shot anomaly detection - EXACT match with demo"""
+class ResidualBlock(nn.Module):
+    """Residual block for ImprovedMetaLearner - EXACT match with training"""
+    def __init__(self, dim, dropout=0.4):
+        super().__init__()
+        self.fc1 = nn.Linear(dim, dim)
+        self.bn1 = nn.BatchNorm1d(dim)
+        self.fc2 = nn.Linear(dim, dim)
+        self.bn2 = nn.BatchNorm1d(dim)
+        self.dropout = nn.Dropout(dropout)
     
+    def forward(self, x):
+        residual = x
+        out = F.relu(self.bn1(self.fc1(x)))
+        out = self.dropout(out)
+        out = self.bn2(self.fc2(out))
+        out += residual
+        return F.relu(out)
+
+
+class ImprovedMetaLearner(nn.Module):
+    """
+    Improved Meta-learning model with ResidualBlocks - EXACT match with training
+    This is the architecture used in model-training/meta-learning.ipynb
+    """
+    def __init__(self, input_dim=200, hidden_dims=[256, 128], embedding_dim=64, 
+                 dropout=0.3, num_classes=2):
+        super().__init__()
+        self.input_dim = input_dim
+        self.hidden_dims = hidden_dims
+        self.embedding_dim = embedding_dim
+        self.dropout = dropout
+        self.num_classes = num_classes
+        
+        # Input projection layer
+        self.input_proj = nn.Sequential(
+            nn.Linear(input_dim, hidden_dims[0]),
+            nn.BatchNorm1d(hidden_dims[0]),
+            nn.ReLU(),
+            nn.Dropout(dropout)
+        )
+        
+        # Residual blocks for better gradient flow
+        self.res_blocks = nn.ModuleList([
+            ResidualBlock(hidden_dims[0], dropout) for _ in range(2)
+        ])
+        
+        # Encoder: maps from hidden_dims[0] through remaining dims to embedding_dim
+        encoder_layers = []
+        prev_dim = hidden_dims[0]
+        for i in range(1, len(hidden_dims)):
+            encoder_layers.extend([
+                nn.Linear(prev_dim, hidden_dims[i]),
+                nn.BatchNorm1d(hidden_dims[i]),
+                nn.ReLU(),
+                nn.Dropout(dropout)
+            ])
+            prev_dim = hidden_dims[i]
+        encoder_layers.append(nn.Linear(prev_dim, embedding_dim))
+        self.encoder = nn.Sequential(*encoder_layers)
+        
+        # Classifier head
+        self.classifier = nn.Sequential(
+            nn.Linear(embedding_dim, embedding_dim // 2),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.Linear(embedding_dim // 2, num_classes)
+        )
+    
+    def forward(self, x):
+        """Forward pass - returns embeddings"""
+        x = self.input_proj(x)
+        for block in self.res_blocks:
+            x = block(x)
+        embeddings = self.encoder(x)
+        return embeddings
+    
+    def predict(self, x):
+        """Prediction - returns logits"""
+        embeddings = self.forward(x)
+        logits = self.classifier(embeddings)
+        return logits
+
+
+# Keep old MetaLearner for backward compatibility (not used)
+class MetaLearner(nn.Module):
+    """Simple Meta-learning model (deprecated - use ImprovedMetaLearner)"""
     def __init__(self, input_dim=200, hidden_dims=[256, 128], embedding_dim=64, 
                  dropout=0.3, num_classes=2):
         super(MetaLearner, self).__init__()
@@ -382,28 +468,58 @@ def load_hlogformer_model(model_path, device='cpu'):
 
 
 def load_meta_model(model_path, device='cpu'):
-    """Load trained meta-learning model"""
+    """Load trained meta-learning model - uses ImprovedMetaLearner"""
     checkpoint = torch.load(model_path, map_location=device, weights_only=False)
     
     # Get model configuration from checkpoint
     input_dim = checkpoint.get('input_dim', 200)
-    hidden_dims = checkpoint.get('hidden_dims', [256, 128])
     embedding_dim = checkpoint.get('embedding_dim', 64)
     dropout = checkpoint.get('dropout', 0.3)
     num_classes = checkpoint.get('num_classes', 2)
     
-    # Create model
-    model = MetaLearner(
+    # Try to infer hidden_dims from checkpoint state_dict
+    state_dict = checkpoint.get('model', checkpoint.get('model_state_dict', checkpoint))
+    
+    # Infer dimensions from the actual checkpoint weights to ensure match
+    if 'input_proj.0.weight' in state_dict:
+        first_hidden_dim = state_dict['input_proj.0.weight'].shape[0]
+        hidden_dims = [first_hidden_dim]
+        
+        # Check encoder layers to find second hidden dim
+        if 'encoder.0.weight' in state_dict:
+            # Use shape[0] (output dim) to get the hidden dim size
+            second_hidden_dim = state_dict['encoder.0.weight'].shape[0]
+            hidden_dims.append(second_hidden_dim)
+    else:
+        # Fallback to checkpoint metadata or default
+        hidden_dims = checkpoint.get('hidden_dims', [512, 256])
+    
+    # Infer embedding_dim from classifier if available (to match checkpoint)
+    if 'classifier.0.weight' in state_dict:
+        # classifier.0 is Linear(embedding_dim, embedding_dim // 2)
+        # So shape[1] is embedding_dim
+        inferred_embedding_dim = state_dict['classifier.0.weight'].shape[1]
+        if inferred_embedding_dim != embedding_dim:
+            logger.info(f"Inferred embedding_dim={inferred_embedding_dim} from checkpoint")
+            embedding_dim = inferred_embedding_dim
+    
+    logger.info(f"Loading Meta-Learning model with hidden_dims={hidden_dims}, embedding_dim={embedding_dim}")
+    
+    # Create model using ImprovedMetaLearner (matches training architecture)
+    model = ImprovedMetaLearner(
         input_dim, hidden_dims, embedding_dim, dropout, num_classes
     ).to(device)
     
     # Load state dict
-    if 'model' in checkpoint:
-        model.load_state_dict(checkpoint['model'])
-    elif 'model_state_dict' in checkpoint:
-        model.load_state_dict(checkpoint['model_state_dict'])
-    else:
-        model.load_state_dict(checkpoint)
+    try:
+        if 'model' in checkpoint:
+            model.load_state_dict(checkpoint['model'], strict=False)
+        elif 'model_state_dict' in checkpoint:
+            model.load_state_dict(checkpoint['model_state_dict'], strict=False)
+        else:
+            model.load_state_dict(checkpoint, strict=False)
+    except Exception as e:
+        logger.warning(f"Some weights couldn't be loaded (strict=False): {e}")
     
     model.eval()
     

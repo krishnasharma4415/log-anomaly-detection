@@ -10,7 +10,7 @@ export default function Skeleton({ className = '', variant = 'default' }) {
   return (
     <div
       className={`
-        bg-neutral-surface rounded shimmer
+        bg-slate-100 dark:bg-slate-800 rounded shimmer
         ${variants[variant]} ${className}
       `}
     />
@@ -19,7 +19,7 @@ export default function Skeleton({ className = '', variant = 'default' }) {
 
 export function SkeletonCard() {
   return (
-    <div className="bg-neutral-surface rounded-xl p-6 border border-neutral-border">
+    <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 transition-colors duration-200">
       <Skeleton variant="title" className="mb-4" />
       <Skeleton variant="text" className="mb-2" />
       <Skeleton variant="text" className="mb-2" />

@@ -1,9 +1,9 @@
 const variants = {
-  primary: 'bg-gradient-primary text-white hover:shadow-neon-hover',
-  secondary: 'bg-neutral-surface text-neutral-primary border border-neutral-border hover:border-primary hover:shadow-neon',
-  ghost: 'bg-transparent text-neutral-secondary hover:bg-neutral-surface hover:text-neutral-primary',
-  danger: 'bg-signal-error text-white hover:bg-red-600',
-  success: 'bg-signal-success text-white hover:bg-green-500',
+  primary: 'bg-gradient-primary text-white hover:shadow-lg',
+  secondary: 'bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-700 hover:border-primary-500 dark:hover:border-primary-500 hover:bg-slate-50 dark:hover:bg-slate-700',
+  ghost: 'bg-transparent text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100',
+  danger: 'bg-red-500 text-white hover:bg-red-600',
+  success: 'bg-green-500 text-white hover:bg-green-600',
 };
 
 const sizes = {
@@ -12,15 +12,15 @@ const sizes = {
   lg: 'px-6 py-3 text-lg',
 };
 
-export default function Button({ 
-  children, 
-  variant = 'primary', 
-  size = 'md', 
-  className = '', 
+export default function Button({
+  children,
+  variant = 'primary',
+  size = 'md',
+  className = '',
   disabled = false,
   loading = false,
   icon: Icon,
-  ...props 
+  ...props
 }) {
   return (
     <button

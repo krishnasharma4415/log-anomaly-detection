@@ -7,80 +7,73 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Cyber Indigo Palette
+        // Minimalistic Light Palette
         primary: {
-          DEFAULT: '#4B5DFF',
-          50: '#F0F2FF',
-          100: '#E0E4FF',
-          200: '#C7CDFF',
-          300: '#A5AFFF',
-          400: '#7D8AFF',
-          500: '#4B5DFF',
-          600: '#4B5DFF',
-          700: '#2C318A',
-          800: '#1F2461',
-          900: '#131740',
-        },
-        indigo: {
-          600: '#4B5DFF',
-          700: '#2C318A',
-          900: '#131740',
+          DEFAULT: '#3B82F6', // Soft blue
+          50: '#EFF6FF',
+          100: '#DBEAFE',
+          200: '#BFDBFE',
+          300: '#93C5FD',
+          400: '#60A5FA',
+          500: '#3B82F6',
+          600: '#2563EB',
+          700: '#1D4ED8',
+          800: '#1E40AF',
+          900: '#1E3A8A',
         },
         slate: {
-          900: '#0F111A',
+          50: '#F8FAFC',
+          100: '#F1F5F9',
+          200: '#E2E8F0',
+          300: '#CBD5E1',
+          400: '#94A3B8',
+          500: '#64748B',
+          600: '#475569',
+          700: '#334155',
+          800: '#1E293B',
+          900: '#0F172A',
         },
         accent: {
-          blue: '#00C6FF',
-          cyan: '#22E1FF',
-          purple: '#A259FF',
+          blue: '#3B82F6',
+          cyan: '#06B6D4',
+          purple: '#8B5CF6',
         },
         neutral: {
-          primary: '#FFFFFF',
-          secondary: '#C5C7D3',
-          disabled: '#7C7F92',
-          surface: '#2A2D3E',
-          dark: '#0F111A',
-          border: '#3B3F52',
+          primary: '#0F172A',      // Dark text
+          secondary: '#64748B',    // Gray text
+          disabled: '#94A3B8',     // Light gray
+          surface: '#FFFFFF',      // White surface
+          dark: '#F8FAFC',         // Light gray background
+          border: '#E2E8F0',       // Light border
         },
         signal: {
-          success: '#34D399',
-          warning: '#FBBF24',
-          error: '#F43F5E',
+          success: '#10B981',
+          warning: '#F59E0B',
+          error: '#EF4444',
         },
       },
       fontFamily: {
-        sans: ['Manrope', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
       boxShadow: {
-        'card': '0px 4px 16px rgba(0, 0, 0, 0.3)',
-        'neon': '0px 0px 14px rgba(75, 93, 255, 0.6)',
-        'neon-hover': '0px 0px 20px rgba(0, 198, 255, 0.5)',
-        'neon-cyan': '0px 0px 16px rgba(34, 225, 255, 0.4)',
-        'neon-purple': '0px 0px 16px rgba(162, 89, 255, 0.4)',
+        'card': '0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.06)',
+        'card-hover': '0px 4px 6px rgba(0, 0, 0, 0.1), 0px 2px 4px rgba(0, 0, 0, 0.06)',
+        'neon': '0px 0px 0px 1px rgba(59, 130, 246, 0.15)',
+        'neon-hover': '0px 0px 0px 2px rgba(59, 130, 246, 0.25)',
       },
       backgroundImage: {
-        'gradient-primary': 'linear-gradient(135deg, #4B5DFF 0%, #A259FF 100%)',
-        'gradient-accent': 'linear-gradient(135deg, #00C6FF 0%, #22E1FF 100%)',
-        'gradient-hero': 'linear-gradient(135deg, rgba(75, 93, 255, 0.25) 0%, rgba(162, 89, 255, 0.20) 100%)',
+        'gradient-primary': 'linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%)',
+        'gradient-accent': 'linear-gradient(135deg, #06B6D4 0%, #3B82F6 100%)',
+        'gradient-hero': 'linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%)',
       },
       animation: {
-        'pulse-neon': 'pulse-neon 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'shimmer': 'shimmer 2s linear infinite',
-        'glow': 'glow 2s ease-in-out infinite alternate',
+        'fadeIn': 'fadeIn 0.3s ease-in-out',
       },
       keyframes: {
-        'pulse-neon': {
-          '0%, 100%': { opacity: '1', boxShadow: '0px 0px 14px rgba(75, 93, 255, 0.6)' },
-          '50%': { opacity: '0.8', boxShadow: '0px 0px 20px rgba(75, 93, 255, 0.8)' },
-        },
-        'shimmer': {
-          '0%': { backgroundPosition: '-1000px 0' },
-          '100%': { backgroundPosition: '1000px 0' },
-        },
-        'glow': {
-          'from': { boxShadow: '0 0 10px rgba(75, 93, 255, 0.5)' },
-          'to': { boxShadow: '0 0 20px rgba(75, 93, 255, 0.8)' },
+        'fadeIn': {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
         },
       },
     },

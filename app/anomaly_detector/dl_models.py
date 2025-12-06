@@ -7,6 +7,20 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
+class MultiHeadAttention(nn.Module):
+    """Multi-Head Attention wrapper - EXACT match with demo_dl_models.py"""
+    def __init__(self, embed_dim, num_heads=8, dropout=0.1):
+        super(MultiHeadAttention, self).__init__()
+        self.attention = nn.MultiheadAttention(embed_dim, num_heads, dropout=dropout, batch_first=True)
+        self.norm = nn.LayerNorm(embed_dim)
+        self.dropout = nn.Dropout(dropout)
+    
+    def forward(self, x):
+        attn_out, _ = self.attention(x, x, x)
+        x = self.norm(x + self.dropout(attn_out))
+        return x
+
+
 class CNNWithAttention(nn.Module):
     """1D CNN with Multi-Head Attention for log anomaly detection - EXACT match with demo"""
     
@@ -26,13 +40,8 @@ class CNNWithAttention(nn.Module):
         
         self.pool = nn.AdaptiveAvgPool1d(16)  # Fixed to 16 as in demo
         
-        # Multi-head attention
-        self.attention = nn.MultiheadAttention(
-            embed_dim=embed_dim,
-            num_heads=num_heads,
-            dropout=dropout,
-            batch_first=True
-        )
+        # Multi-head attention using wrapper class (matches training)
+        self.attention = MultiHeadAttention(embed_dim, num_heads, dropout)
         
         # Classification head - EXACT match with demo
         self.fc1 = nn.Linear(embed_dim * 16, 256)
@@ -54,9 +63,8 @@ class CNNWithAttention(nn.Module):
         # Transpose for attention: (batch_size, seq_len, embed_dim)
         x = x.permute(0, 2, 1)  # (batch_size, 16, embed_dim)
         
-        # Multi-head attention with residual connection
-        attn_output, _ = self.attention(x, x, x)
-        x = x + attn_output  # Residual connection as in demo
+        # Multi-head attention (now using wrapper)
+        x = self.attention(x)
         
         # Flatten
         x = x.reshape(x.size(0), -1)  # (batch_size, embed_dim * 16)
