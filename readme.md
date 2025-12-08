@@ -17,7 +17,6 @@
 [![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Try_Now-success?style=for-the-badge)](https://log-anomaly-frontend.vercel.app/)
 [![Demo Video](https://img.shields.io/badge/🎥_Demo_Video-Watch-red?style=for-the-badge)](LINK_TO_DEMO_VIDEO)
 [![Presentation](https://img.shields.io/badge/📊_PPT-Download-orange?style=for-the-badge)](LINK_TO_PPT)
-[![HuggingFace Models](https://img.shields.io/badge/�_Models-Download-yellow?style=for-the-badge)](https://huggingface.co/krishnas4415/log-anomaly-detection-models)
 
 </div>
 
