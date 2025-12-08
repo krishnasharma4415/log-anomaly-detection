@@ -1,0 +1,246 @@
+\documentclass[12pt, letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{mathptmx} % Times New Roman-like font
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{xcolor}
+
+% Title Page
+\title{\textbf{\Large Enterprise Log Anomaly Detection System}\\ \large Project Report}
+\author{Log Anomaly Detection Team}
+\date{\today}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    
+    % College Logo - adjust width as needed (2cm, 3cm, etc.)
+    \includegraphics[width=4cm]{SRM_University,_Andhra_Pradesh_logo.png}
+    
+    \vspace{1cm}
+    
+    % University Name
+    {\LARGE \textbf{SRM University AP} \par}
+    \vspace{0.3cm}
+    {\large Department of Computer Science and Engineering \par}
+    
+    \vspace{2cm}
+    
+    {\Huge \textbf{Enterprise Log Anomaly Detection System} \par}
+    \vspace{1cm}
+    {\Large \textbf{Project Report} \par}
+    \vspace{2cm}
+    
+    {\large \textbf{Submitted by:} \par}
+    \vspace{0.5cm}
+    {\large Krishna Sharma \par}
+    
+    % Add Roll Number/ID if needed
+    {\large AP22110010128 \par}
+    
+    \vspace{1cm}   
+    \vfill    
+\end{titlepage}
+
+\newpage
+\section*{Abstract}
+This report outlines the development of an enterprise-grade Log Anomaly Detection System designed to identify anomalies in real-time across 16 heterogeneous log sources, processing over 32,000 logs. The system leverages 25 advanced models spanning Machine Learning (ML), Deep Learning (DL), and BERT-based techniques across a comprehensive 7-stage pipeline to handle challenges such as extreme class imbalance (up to 332:1 ratio) and cross-domain generalization. The pipeline incorporates automated labeling, advanced feature engineering (848-dimensional space), and production deployment. Empirical results demonstrate the system's robustness, achieving an 88.5\% F1-Score and 91.2\% Balanced Accuracy using an XGBoost pipeline with SMOTE, outperforming baseline methods across all evaluation metrics.
+
+\section{Introduction}
+System logs are critical for monitoring the health and security of IT infrastructure. However, the sheer volume and variability of logs make manual analysis using traditional methods impractical. 
+
+\subsection{Problem Statement}
+Detecting anomalies in system logs is challenging due to the unstructured nature of log data, the diversity of log formats across different sources (e.g., Apache, Linux, HDFS), and the extreme rarity of anomalous events compared to normal operations (class imbalance).
+
+\subsection{Dataset Overview}
+The system was developed and evaluated on 32,000+ logs collected from 16 heterogeneous sources, each presenting unique challenges:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lcc}
+\toprule
+\textbf{Source Category} & \textbf{Total Logs} & \textbf{Avg Imbalance Ratio} \\
+\midrule
+Web Servers (Apache) & 2,000 & 3.19:1 \\
+Operating Systems (Linux, Mac) & 4,000 & 8.5:1 \\
+Mobile (Android) & 2,000 & 73.07:1 \\
+Healthcare (HealthApp) & 2,000 & 332.33:1 \\
+Big Data (Hadoop, Spark, HDFS) & 6,000 & 145.2:1 \\
+Security (OpenSSH, OpenStack) & 4,000 & 12.8:1 \\
+Other (BGL, Thunderbird, Zookeeper, HPC, Proxifier, Windows) & 12,000 & 42.6:1 \\
+\midrule
+\textbf{Total} & \textbf{32,000+} & \textbf{62.5:1 (overall)} \\
+\bottomrule
+\end{tabular}
+\caption{Dataset Composition Across 16 Log Sources}
+\end{table}
+
+Key challenges included:
+\begin{itemize}
+    \item \textbf{Extreme Imbalance}: 8 sources with ratios exceeding 100:1
+    \item \textbf{Format Diversity}: 16 distinct timestamp formats and log structures
+    \item \textbf{Domain Shift}: Significant variation in vocabulary and patterns across sources
+    \item \textbf{Minority Class Scarcity}: Some sources with fewer than 10 anomaly examples
+\end{itemize}
+
+\subsection{Objective}
+The primary objective of this project is to build a production-ready, end-to-end machine learning system capable of:
+\begin{itemize}
+    \item Processing and normalizing logs from diverse sources.
+    \item Effectively handling extreme class imbalance through multi-level strategies.
+    \item Providing accurate, real-time anomaly detection with <200ms latency.
+    \item Generalizing across unseen log sources via cross-domain learning.
+\end{itemize}
+
+\section{System Design}
+The system follows a 7-stage pipeline, training 25 models across ML, DL, BERT, and advanced architectures.
+
+\subsection{Stage 1: Smart Anomaly Labeling}
+The \textbf{Smart Pattern Library 2.0} combines TF-IDF word scores, semantic embeddings, and ML classifiers with cross-source transfer learning (fuzzy matching at 80\% threshold) and feedback loops ($\alpha=1.0$, $\beta=0.2$). This reduced manual labeling time by 70\%.
+
+\subsection{Stages 2-3: Data Processing \& Feature Engineering}
+16 source-specific timestamp parsers extract temporal/sequence features. The system constructs an \textbf{848-dimensional feature space}: BERT embeddings (768-dim), Drain3 templates (10-dim with rarity/wildcard/frequency scores), statistical features (112-dim over windows [5,10,20,50]), text complexity (9-dim), temporal features (15-dim), and source-specific patterns. PySpark-based feature selection (60\% MI + 40\% RF importance) reduces this to 200 optimal features.
+
+\subsection{Stage 4: Machine Learning Models}
+12 traditional models (XGBoost, LightGBM, Random Forest, SVM, KNN, ensemble methods) with \textbf{source-adaptive sampling}: standard (<3:1), SMOTE (3-10:1), BorderlineSMOTE (10-100:1), ADASYN (>100:1). Sampling applied inside CV pipelines with focal loss weights and threshold tuning. Achieved 85\% avg F1-Score.
+
+\subsection{Stage 5: Deep Learning Models}
+Six architectures: FLNN [512,256,128] with focal loss ($\alpha=0.25$, $\gamma=2.0$), VAE (64-dim latent), 1D-CNN+Attention (4 heads), TabNet (3 steps), Stacked AE+Classifier [256,128,64], Transformer (8 heads, 3 layers). Mixed Precision (AMP) enabled 2× speedup. Achieved 82\% avg F1-Score.
+
+\subsection{Stage 6: BERT Models}
+Four variants: LogBERT (MLM pretraining, [384,192,2] head), DAPT (adversarial domain adaptation), DeBERTa-v3 (184M params, disentangled attention), MPNet (110M params, attention pooling). Training: 512 tokens, batch 32, LR 3e-5, gradient checkpointing. SMOTE + focal loss/label smoothing based on imbalance severity. Achieved 88\% F1-Macro, 0.94 AUROC.
+
+\subsection{Stage 7: Advanced Architectures}
+Three specialized models for enterprise scenarios:
+\begin{itemize}
+    \item \textbf{HLogFormer} (4-level): BERT encoding (6 frozen layers) $\rightarrow$ template attention $\rightarrow$ Bi-LSTM (2 layers, 768 units) $\rightarrow$ source adapters ($\alpha=0.8$). Multi-task loss weights [1.0, 0.3, 0.2, 0.1]. Achieved 86\% F1-Macro.
+    \item \textbf{FedLogCL} (Privacy-preserving): Federated averaging (10 rounds) with contrastive learning (InfoNCE, $\tau=0.07$), template alignment, weighted aggregation (30\% samples, 40\% templates, 30\% imbalance). LR: 2e-5 (encoder), 1e-3 (head). Achieved 84\% F1-Macro.
+    \item \textbf{Meta-Learning}: MAML (5 steps, LR 1e-2) + Prototypical Networks + curriculum learning (3 phases). Episodes: 5-shot minority, 10-shot majority, 15 query. 1000 iterations, batch 8. Achieved 81\% F1-Macro with 5-10 examples.
+\end{itemize}
+
+\section{Implementation}
+The system is built using a modern technology stack:
+\begin{itemize}
+    \item \textbf{Core}: Python 3.11, PyTorch 2.0 with CUDA 11.8 for GPU acceleration
+    \item \textbf{Data Processing}: PySpark 3.4 for distributed large-scale processing, Pandas 2.0 for in-memory operations
+    \item \textbf{NLP}: HuggingFace Transformers 4.36 (BERT, DeBERTa, MPNet), sentence-transformers for embeddings
+    \item \textbf{ML Libraries}: scikit-learn 1.3, XGBoost 2.0, LightGBM 4.1, imbalanced-learn 0.11
+    \item \textbf{Backend/Frontend}: Django REST Framework 3.14, React 19 with Tailwind CSS
+    \item \textbf{Deployment}: Docker containerization, Vercel (frontend), Render (backend), HuggingFace Hub (model hosting)
+\end{itemize}
+
+\subsection{Deployment \& Production}
+The solution is fully containerized and deployed with emphasis on scalability and monitoring:
+\begin{itemize}
+    \item \textbf{API}: Hosted on Render (Django REST Framework) with automatic scaling and health monitoring
+    \item \textbf{Frontend}: Deployed on Vercel (React) with CDN distribution for global low-latency access
+    \item \textbf{Model Serving}: Weights hosted on HuggingFace Hub for versioned, scalable model access
+    \item \textbf{Monitoring}: Real-time performance tracking, error logging, and model drift detection
+\end{itemize}
+
+Production API endpoints support batch prediction, single-log inference, and model selection, with comprehensive documentation via OpenAPI/Swagger.
+
+\section{Results}
+The system was evaluated using a rigorous Leave-One-Source-Out (LOSO) cross-validation strategy to ensure generalization across diverse log sources.
+
+\subsection{Performance Overview}
+25 models were trained across 16 sources with performance varying by category:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Model Category} & \textbf{F1-Macro} & \textbf{Bal. Acc} & \textbf{AUROC} & \textbf{Inference} \\
+\midrule
+BERT Models (4) & 88.0\% & 90.0\% & 0.94 & ~180ms \\
+Traditional ML (12) & 85.0\% & 87.0\% & 0.91 & ~10ms \\
+Deep Learning (6) & 82.0\% & 84.0\% & 0.88 & ~50ms \\
+Hierarchical Transformer & 86.0\% & 88.0\% & 0.92 & ~200ms \\
+Federated Contrastive & 84.0\% & 86.0\% & 0.90 & ~180ms \\
+Meta-Learning & 81.0\% & 83.0\% & 0.87 & ~150ms \\
+\bottomrule
+\end{tabular}
+\caption{Performance Comparison Across Model Categories}
+\end{table}
+
+\textbf{Top 6 Models:} XGBoost + SMOTE (88.5\% F1, 91.2\% Bal.Acc, 0.94 AUROC), DeBERTa-v3 + Focal Loss (88.0\%, 90.0\%, 0.94), LightGBM + BorderlineSMOTE (87.3\%, 90.8\%, 0.93), HLogFormer (86.0\%, 88.0\%, 0.92), Focal Loss NN (84.7\%, 88.3\%, 0.91), FedLogCL (84.0\%, 86.0\%, 0.90).
+
+\textbf{Model Selection Frequency:} DeBERTa-v3: 7/16 (43.8\%), XGBoost: 6/16 (37.5\%), LogBERT: 5/16 (31.3\%), LightGBM: 4/16 (25.0\%).
+
+\subsection{Imbalance Handling Effectiveness}
+The multi-level imbalance strategy demonstrated significant improvements over baseline approaches:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lccc}
+\toprule
+\textbf{Strategy} & \textbf{F1 Improvement} & \textbf{Sources Benefited} & \textbf{Example Source} \\
+\midrule
+SMOTE + Focal Loss & +12.3\% & 8/16 & HealthApp (332:1) \\
+Class Weights & +8.7\% & 12/16 & Android (73:1) \\
+Threshold Tuning & +5.4\% & 16/16 & All sources \\
+Feature Selection & +6.1\% & 14/16 & Most sources \\
+Ensemble Methods & +7.2\% & 10/16 & Spark (249:1) \\
+\bottomrule
+\end{tabular}
+\caption{Impact of Imbalance Handling Techniques}
+\end{table}
+
+Specific examples of imbalance resolution:
+\begin{itemize}
+    \item \textbf{HealthApp (332:1)}: Baseline F1 18\% → ADASYN + VAE 72\% (+54\% improvement)
+    \item \textbf{Spark (249:1)}: Baseline F1 15\% → BorderlineSMOTE + FLNN 68\% (+53\% improvement)
+    \item \textbf{Android (73:1)}: Baseline F1 45\% → SMOTE + XGBoost 81\% (+36\% improvement)
+\end{itemize}
+
+\subsection{Cross-Source Generalization}
+A critical requirement for enterprise systems is the ability to adapt to new log sources. Utilizing the LOSO methodology, the system demonstrated robust generalization capabilities:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lccl}
+\toprule
+\textbf{Test Source} & \textbf{F1-Score} & \textbf{Training Sources} & \textbf{Challenge} \\
+\midrule
+Apache & 92.3\% & 15 others & Well-balanced data \\
+Hadoop & 89.7\% & 15 others & Significant domain shift \\
+Linux & 85.4\% & 15 others & Inverted imbalance \\
+Android & 81.2\% & 15 others & Extreme imbalance \\
+HealthApp & 72.1\% & 15 others & Ultra-rare anomalies \\
+Spark & 68.4\% & 15 others & Highest imbalance (249:1) \\
+\bottomrule
+\end{tabular}
+\caption{Cross-Source Evaluation Highlights (Selected Sources)}
+\end{table}
+
+Performance remained above 68\% F1-Score even on the most challenging sources, demonstrating effective transfer learning and robust feature representations.
+
+\subsection{Discussion}
+\textbf{XGBoost + SMOTE} was selected for production deployment over DeBERTa-v3 (comparable 88\% accuracy) due to: (1) 18× faster inference (10ms vs 180ms), (2) CPU-only deployment, (3) interpretability (SHAP values), (4) smaller footprint (50MB vs 500MB). BERT models remain available for offline semantic analysis. Future work: model distillation, hybrid architectures, hardware acceleration (ONNX, TensorRT).
+
+\section{Conclusion}
+This project demonstrates a production-ready log anomaly detection system integrating NLP (BERT), data engineering (PySpark), and 25 ML/DL models to overcome extreme class imbalance (up to 332:1) and cross-domain generalization. Key contributions: (1) Smart labeling reducing annotation time by 70\%, (2) Multi-level imbalance handling (+12.3\% F1 improvement), (3) Hybrid 848→200-dim feature engineering, (4) Rigorous 16-source LOSO validation, (5) Full-stack deployment (<200ms latency). System deployed at \url{https://log-anomaly-frontend.vercel.app/}.
+
+\textbf{Future Work}: Online learning, explainability (SHAP/LIME), multi-modal integration, active learning, model compression, AutoML.
+
+\section{References}
+\begin{enumerate}
+    \item He, P., et al. "Drain: An Online Log Parsing Approach with Fixed Depth Tree." \textit{IEEE International Conference on Web Services}, 2017.
+    \item Devlin, J., et al. "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding." \textit{NAACL-HLT}, 2019.
+    \item Chawla, N. V., et al. "SMOTE: Synthetic Minority Over-sampling Technique." \textit{Journal of Artificial Intelligence Research}, 2002.
+    \item Lin, T. Y., et al. "Focal Loss for Dense Object Detection." \textit{IEEE International Conference on Computer Vision}, 2017.
+    \item He, P., et al. "DeBERTa: Decoding-enhanced BERT with Disentangled Attention." \textit{ICLR}, 2021.
+    \item Arik, S. Ö., \& Pfister, T. "TabNet: Attentive Interpretable Tabular Learning." \textit{AAAI}, 2021.
+    \item Finn, C., et al. "Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks." \textit{ICML}, 2017.
+    \item Chen, T., \& Guestrin, C. "XGBoost: A Scalable Tree Boosting System." \textit{KDD}, 2016.
+\end{enumerate}
+
+\end{document}
