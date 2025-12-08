@@ -13,10 +13,10 @@
 
 ### 🔗 Quick Links
 
-[![Project Report](https://img.shields.io/badge/📄_Project_Report-View-blue?style=for-the-badge)](LINK_TO_PROJECT_REPORT)
+[![Project Report](https://img.shields.io/badge/📄_Project_Report-View-blue?style=for-the-badge)](docs/AP22110010128_Project_Report.pdf)
 [![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Try_Now-success?style=for-the-badge)](https://log-anomaly-frontend.vercel.app/)
-[![Demo Video](https://img.shields.io/badge/🎥_Demo_Video-Watch-red?style=for-the-badge)](LINK_TO_DEMO_VIDEO)
-[![Presentation](https://img.shields.io/badge/📊_PPT-Download-orange?style=for-the-badge)](LINK_TO_PPT)
+[![Demo Video](https://img.shields.io/badge/🎥_Demo_Video-Watch-red?style=for-the-badge)](https://www.youtube.com/@Krishna_Sharma_SRMAP)
+[![Presentation](https://img.shields.io/badge/📊_PPT-Download-orange?style=for-the-badge)](docs/AP22110010128_PPT.pdf)
 
 </div>
 
