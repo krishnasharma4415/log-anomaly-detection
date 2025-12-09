@@ -1,0 +1,16 @@
+03-17 16:13:38.907  1702 10454 D PowerManagerService: ready=true,policy=3,wakefulness=1,wksummary=0x23,uasummary=0x1,bootcompleted=true,boostinprogress=false,waitmodeenable=false,mode=false,manual=38,auto=-1,adj=0.0userId=0
+[Sun Dec 04 04:51:37 2005] [notice] jk2_init() Found child 6736 in scoreboard slot 10
+- 1117956980 2005.06.05 R24-M1-NB-C:J15-U11 2005-06-05-00.36.20.945796 R24-M1-NB-C:J15-U11 RAS KERNEL INFO generating core.728
+2015-10-18 18:01:50,588 INFO [main] org.apache.hadoop.yarn.event.AsyncDispatcher: Registering class org.apache.hadoop.mapreduce.v2.app.launcher.ContainerLauncher$EventType for class org.apache.hadoop.mapreduce.v2.app.MRAppMaster$ContainerLauncherRouter
+081109 204324 34 INFO dfs.FSNamesystem: BLOCK* NameSystem.addStoredBlock: blockMap updated: 10.251.203.80:50010 is added to blk_7888946331804732825 size 67108864
+20171223-22:15:29:792|Step_LSC|30002312|onStandStepChanged 3580
+460773 node-199 unix.hw state_change.unavailable 1145552100 1 Component State Change: Component \042alt0\042 is in the unavailable state (HWID=2608)
+Jun 15 02:04:59 combo sshd(pam_unix)[20896]: authentication failure; logname= uid=0 euid=0 tty=NODEVssh ruser= rhost=220-135-151-1.hinet-ip.hinet.net  user=root
+Jul  1 09:21:57 authorMacBook-Pro corecaptured[31174]: CCIOReporterFormatter::addRegistryChildToChannelDictionary streams 7
+Dec 10 07:07:38 LabSZ sshd[24206]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=ec2-52-80-34-196.cn-north-1.compute.amazonaws.com.cn 
+nova-api.log.1.2017-05-16_13:53:08 2017-05-16 00:00:07.864 25746 INFO nova.osapi_compute.wsgi.server [req-546e2e6a-b85e-434a-91dc-53a0a9124a4f 113d3a99c3da401fbd62cc2caa5b96d2 54fadb412c4e40cdbaed9335e4c35a9e - - -] 10.11.10.1 "GET /v2/54fadb412c4e40cdbaed9335e4c35a9e/servers/detail HTTP/1.1" status: 200 len: 1893 time: 0.2733629
+[10.30 16:49:08] chrome.exe - proxy.cse.cuhk.edu.hk:5070 close, 0 bytes sent, 0 bytes received, lifetime <1 sec
+17/06/09 20:10:42 INFO executor.Executor: Starting executor ID 5 on host mesos-slave-07
+- 1131566461 2005.11.09 dn73 Nov 9 12:01:01 dn73/dn73 crond[2918]: (root) CMD (run-parts /etc/cron.hourly)
+2016-09-28 04:30:31, Info                  CSI    00000005 Creating NT transaction (seq 1), objectname [6]"(null)"
+2015-07-29 19:14:54,354 - WARN  [SendWorker:188978561024:QuorumCnxManager$SendWorker@688] - Send worker leaving thread

@@ -1,3 +1,12 @@
+# =============================================================================
+# TRADITIONAL MACHINE LEARNING MODELS FOR LOG ANOMALY DETECTION
+# Cross-Source Evaluation with Imbalanced Data Handling
+# =============================================================================
+
+# =============================================================================
+# IMPORTS AND DEPENDENCIES
+# =============================================================================
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,6 +23,7 @@ from joblib import Parallel, delayed
 
 warnings.filterwarnings('ignore')
 
+# Scikit-learn imports
 from sklearn.metrics import (
     f1_score, matthews_corrcoef, accuracy_score, confusion_matrix,
     precision_score, recall_score,
@@ -29,21 +39,33 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
+
 import xgboost
 from xgboost import XGBClassifier
+
 import lightgbm
 from lightgbm import LGBMClassifier
+
 import imblearn
 from imblearn.over_sampling import SMOTE, BorderlineSMOTE, ADASYN
 from imblearn.ensemble import BalancedBaggingClassifier, BalancedRandomForestClassifier, EasyEnsembleClassifier
 from imblearn.pipeline import Pipeline as ImbPipeline
+
+# =============================================================================
+# CONFIGURATION AND SETTINGS
+# =============================================================================
+
 SEED = 42
 np.random.seed(SEED)
 
 N_JOBS_MODELS = 4  
 N_JOBS_CV = 3
 
-f1_macro_scorer = make_scorer(f1_score, average='macro', zero_division=0)      
+f1_macro_scorer = make_scorer(f1_score, average='macro', zero_division=0)
+
+# =============================================================================
+# PATHS AND DIRECTORY SETUP
+# =============================================================================
 
 ROOT = Path(r"C:\Computer Science\AIMLDL\log-anomaly-detection")
 FEAT_PATH = ROOT / "features"
@@ -72,6 +94,11 @@ ORIGINAL_LABEL_MAP = {
     5: 'config_error',
     6: 'hardware_issue'
 }
+
+# =============================================================================
+# DATA LOADING
+# =============================================================================
+
 feat_file = FEAT_PATH / "enhanced_imbalanced_features.pkl"
 if not feat_file.exists():
     print(f"Error: {feat_file} not found")
@@ -99,6 +126,11 @@ else:
     optimal_config = None
 
 optimal_config
+
+# =============================================================================
+# SAMPLING AND PIPELINE FUNCTIONS
+# =============================================================================
+
 def build_sampler_for(y):
     """
     Build appropriate sampler based on data-driven imbalance ratio.
@@ -195,9 +227,9 @@ def calculate_focal_weights(y, alpha=0.25, gamma=2.0):
     print(f"Focal weights calculated: {weights}")
     return weights
 
-
-# Removed apply_advanced_sampling - now handled inside CV pipeline
-
+# =============================================================================
+# METRICS CALCULATION
+# =============================================================================
 
 def calculate_geometric_mean(y_true, y_pred):
     unique_classes = np.unique(y_true)
@@ -289,6 +321,11 @@ def calc_enhanced_metrics(y_true, y_pred, y_proba=None, y_scores=None):
     metrics['confusion_matrix_classes'] = [int(x) for x in labels]
     
     return metrics
+
+# =============================================================================
+# MODEL CONFIGURATIONS
+# =============================================================================
+
 mod_config = {
     'lr': {
         'model': LogisticRegression(random_state=SEED, max_iter=2000, solver='saga'),
@@ -356,6 +393,11 @@ mod_config = {
         'p': {'clf__n_estimators': [30, 50]},
     }
 }
+
+# =============================================================================
+# MODEL TRAINING FUNCTIONS
+# =============================================================================
+
 def train_single_model(m_name, m_config, X_tr, y_tr, X_ts, y_ts, class_weights):
     """
     Train a single model using imblearn pipeline with proper CV.
@@ -579,6 +621,11 @@ def process_single_split(split_idx, split, feat_type_to_test):
         'train_samples': int(len(y_tr)),
         'test_samples': int(len(y_ts))
     }
+
+# =============================================================================
+# CROSS-SOURCE EVALUATION - ALL SPLITS
+# =============================================================================
+
 print("\n" + "="*80)
 print("STARTING BINARY CLASSIFICATION PIPELINE - ALL SPLITS")
 print("="*80 + "\n")
@@ -651,6 +698,11 @@ aggregate_dir.mkdir(exist_ok=True)
 
 df_summary.to_csv(aggregate_dir / "all_splits_summary.csv", index=False)
 print(f"\n✓ Aggregate results saved to: {aggregate_dir}")
+
+# =============================================================================
+# FINAL MODEL TRAINING ON ALL DATA
+# =============================================================================
+
 print("\n" + "="*80)
 print("TRAINING FINAL MODEL ON ALL DATA")
 print("="*80 + "\n")
@@ -737,6 +789,11 @@ print(f"  Training samples: {len(y_tr_all):,}")
 print(f"  Evaluated on: {len(all_split_results)} cross-source splits")
 print(f"  Average F1-Macro: {df_summary['F1-Macro'].mean():.4f}")
 print(f"  Pipeline: {' -> '.join(final_model.named_steps.keys())}")
+
+# =============================================================================
+# VISUALIZATION AND REPORTING
+# =============================================================================
+
 print("\n" + "="*80)
 print("GENERATING AGGREGATE VISUALIZATIONS")
 print("="*80 + "\n")

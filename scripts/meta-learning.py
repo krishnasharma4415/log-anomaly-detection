@@ -1,4 +1,14 @@
-Meta-Learning for Few-Shot Log Anomaly Detection in Extreme Imbalance Settings
+# =============================================================================
+# META-LEARNING FOR FEW-SHOT LOG ANOMALY DETECTION
+# Extreme Imbalance Settings with MAML
+# =============================================================================
+
+"""Meta-Learning for Few-Shot Log Anomaly Detection in Extreme Imbalance Settings"""
+
+# =============================================================================
+# IMPORTS AND DEPENDENCIES
+# =============================================================================
+
 import os
 import sys
 import pickle
@@ -14,6 +24,7 @@ import threading
 
 warnings.filterwarnings('ignore')
 
+# PyTorch imports
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -29,10 +40,16 @@ except ImportError:
     from torch.cuda.amp import autocast, GradScaler
     USE_NEW_AMP_API = False
 
+# Scikit-learn imports
 from sklearn.metrics import f1_score, accuracy_score, balanced_accuracy_score, matthews_corrcoef
 from sklearn.metrics import precision_score, recall_score, roc_auc_score, average_precision_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+
+# =============================================================================
+# RANDOM SEED AND REPRODUCIBILITY
+# =============================================================================
+
 SEED = 42
 np.random.seed(SEED)
 torch.manual_seed(SEED)
@@ -57,6 +74,11 @@ MODELS_PATH = ROOT / "models" / "meta_learning"
 
 RESULTS_PATH.mkdir(parents=True, exist_ok=True)
 MODELS_PATH.mkdir(parents=True, exist_ok=True)
+
+# =============================================================================
+# DATA LOADING
+# =============================================================================
+
 feat_file = FEAT_PATH / "enhanced_imbalanced_features.pkl"
 with open(feat_file, 'rb') as f:
     feat_data = pickle.load(f)
@@ -72,6 +94,11 @@ print(f"Loaded {len(data_dict)} sources")
 print(f"Classes: {num_classes}")
 
 LABEL_MAP = {0: 'normal', 1: 'anomaly'}
+
+# =============================================================================
+# METRICS CALCULATION
+# =============================================================================
+
 def calculate_metrics(y_true, y_pred, y_proba=None):
     metrics = {}
     metrics['accuracy'] = accuracy_score(y_true, y_pred)
@@ -105,6 +132,11 @@ def calculate_metrics(y_true, y_pred, y_proba=None):
         metrics['auprc'] = 0.0
     
     return metrics
+
+# =============================================================================
+# FEW-SHOT EPISODE CREATION
+# =============================================================================
+
 def create_few_shot_episode(X, y, n_way, k_shot, q_query, balance=True):
     classes = np.unique(y)
     if len(classes) < n_way:
@@ -258,6 +290,11 @@ def create_imbalanced_episode(X, y, minority_k_shot, majority_k_shot, q_query_pe
     query_y = query_y[shuffle_query]
     
     return support_X, support_y, query_X, query_y
+
+# =============================================================================
+# LOSS FUNCTIONS
+# =============================================================================
+
 def prototypical_loss(embeddings, labels, n_way):
     classes = torch.unique(labels)
     prototypes = []
@@ -320,6 +357,11 @@ def combined_meta_loss(embeddings, logits, labels, prototypes=None,
         focal = focal + alpha_contrastive * contrastive
     
     return focal
+
+# =============================================================================
+# EPISODE CACHING AND DATA AUGMENTATION
+# =============================================================================
+
 class EpisodeCache:
     def __init__(self, cache_size=500):
         self.cache = {}
@@ -396,6 +438,11 @@ class TaskAdaptiveLR:
         elif imbalance_ratio < 5:
             return self.base_lr * 1.5  # Faster for balanced
         return self.base_lr
+
+# =============================================================================
+# NEURAL NETWORK BUILDING BLOCKS
+# =============================================================================
+
 class ResidualBlock(nn.Module):
     def __init__(self, dim, dropout=0.4):
         super().__init__()
@@ -628,6 +675,11 @@ def refined_prototypes(embeddings, labels, momentum=0.9):
         prototypes.append(refined_proto)
     
     return torch.stack(prototypes)
+
+# =============================================================================
+# MODEL CONFIGURATION
+# =============================================================================
+
 OPTIMIZED_CONFIG = {
     'input_dim': 200,
     'hidden_dims': [512, 256, 128],
@@ -672,6 +724,11 @@ input_dim = OPTIMIZED_CONFIG['input_dim']
 hidden_dims = OPTIMIZED_CONFIG['hidden_dims']
 embedding_dim = OPTIMIZED_CONFIG['embedding_dim']
 dropout = OPTIMIZED_CONFIG['dropout']
+
+# =============================================================================
+# META-LEARNER MODEL ARCHITECTURES
+# =============================================================================
+
 class ImprovedMetaLearner(nn.Module):
     def __init__(self, input_dim, hidden_dims, embedding_dim, dropout, num_classes):
         super().__init__()

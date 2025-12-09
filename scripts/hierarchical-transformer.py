@@ -1,3 +1,12 @@
+# =============================================================================
+# HIERARCHICAL LOG TRANSFORMER (HLogFormer)
+# Template-aware Transformer for Cross-Source Log Anomaly Detection
+# =============================================================================
+
+# =============================================================================
+# IMPORTS AND DEPENDENCIES
+# =============================================================================
+
 import os
 import sys
 import gc
@@ -13,6 +22,7 @@ import random
 
 warnings.filterwarnings('ignore')
 
+# PyTorch imports
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -20,9 +30,11 @@ from torch.utils.data import Dataset, DataLoader
 from torch.optim import AdamW
 from torch.cuda.amp import autocast, GradScaler
 
+# Transformers
 from transformers import BertModel, BertTokenizer, BertConfig
 from transformers import get_cosine_schedule_with_warmup
 
+# Metrics
 from sklearn.metrics import f1_score, accuracy_score, balanced_accuracy_score
 from sklearn.metrics import matthews_corrcoef, roc_auc_score, precision_score, recall_score
 
@@ -30,6 +42,11 @@ from drain3 import TemplateMiner
 from drain3.template_miner_config import TemplateMinerConfig
 
 from tqdm import tqdm
+
+# =============================================================================
+# RANDOM SEED AND REPRODUCIBILITY
+# =============================================================================
+
 SEED = 42
 random.seed(SEED)
 np.random.seed(SEED)
@@ -39,6 +56,10 @@ if torch.cuda.is_available():
     torch.backends.cudnn.deterministic = False
     torch.backends.cudnn.benchmark = True
 
+# =============================================================================
+# DEVICE CONFIGURATION
+# =============================================================================
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Device: {device}")
 if torch.cuda.is_available():
@@ -46,6 +67,10 @@ if torch.cuda.is_available():
 
 TEST_MODE = False
 TRAIN_FINAL_MODEL = True
+
+# =============================================================================
+# PATHS AND DIRECTORY SETUP
+# =============================================================================
 
 ROOT = Path(r"C:\Computer Science\AIMLDL\log-anomaly-detection")
 FEAT_PATH = ROOT / "features"
@@ -155,6 +180,11 @@ else:
     response = input("Continue anyway? (y/n): ")
     if response.lower() != 'y':
         sys.exit(0)
+
+# =============================================================================
+# TEMPLATE EXTRACTION FUNCTIONS
+# =============================================================================
+
 def extract_templates_for_source(texts, source_name):
     config = TemplateMinerConfig()
     config.drain_sim_th = 0.4
@@ -271,6 +301,11 @@ def prepare_source_data(source_name):
             timestamps = timestamps[selected_indices]
     
     return texts, labels, template_ids, timestamps, source_id
+
+# =============================================================================
+# DATASET CLASSES
+# =============================================================================
+
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 
 # OPTIMIZATION 1: Pre-tokenized dataset (30-40% faster)
@@ -453,6 +488,11 @@ class AugmentedLogDataset(Dataset):
             'timestamps': torch.tensor(float(self.timestamps[idx]), dtype=torch.float32),
             'source_ids': torch.tensor(int(self.source_ids[idx]), dtype=torch.long)
         }
+
+# =============================================================================
+# MODEL COMPONENTS AND ARCHITECTURES
+# =============================================================================
+
 class GradientReversalFunction(torch.autograd.Function):
     @staticmethod
     def forward(ctx, x, lambda_):
@@ -667,6 +707,11 @@ class HLogFormer(nn.Module):
             for i in range(self.freeze_layers):
                 self.bert.encoder.layer[i].eval()
         return self
+
+# =============================================================================
+# LOSS FUNCTIONS
+# =============================================================================
+
 def compute_class_weights(labels):
     """Compute balanced class weights"""
     unique, counts = np.unique(labels, return_counts=True)
@@ -792,6 +837,11 @@ def calculate_metrics(y_true, y_pred, y_proba=None):
         metrics['auroc'] = 0.0
     
     return metrics
+
+# =============================================================================
+# TRAINING AND EVALUATION FUNCTIONS
+# =============================================================================
+
 def train_epoch(model, dataloader, optimizer, scheduler, scaler, device, class_weights=None):
     model.train()
     total_loss = 0

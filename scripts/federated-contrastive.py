@@ -1,4 +1,14 @@
-Federated Contrastive Learning for Privacy-Preserving Cross-Source Log Anomaly Detection
+# =============================================================================
+# FEDERATED CONTRASTIVE LEARNING FOR LOG ANOMALY DETECTION
+# Privacy-Preserving Cross-Source Learning
+# =============================================================================
+
+"""Federated Contrastive Learning for Privacy-Preserving Cross-Source Log Anomaly Detection"""
+
+# =============================================================================
+# IMPORTS AND DEPENDENCIES
+# =============================================================================
+
 import os
 import sys
 import pickle
@@ -14,6 +24,7 @@ import random
 
 warnings.filterwarnings('ignore')
 
+# PyTorch imports
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -23,12 +34,18 @@ from torch.cuda.amp import autocast, GradScaler
 
 from transformers import AutoTokenizer, AutoModel, get_linear_schedule_with_warmup
 
+# Scikit-learn and metrics
 from sklearn.metrics import f1_score, accuracy_score, balanced_accuracy_score, roc_auc_score, matthews_corrcoef
 from sklearn.model_selection import train_test_split
 from scipy import stats
 
 from drain3 import TemplateMiner
 from drain3.template_miner_config import TemplateMinerConfig
+
+# =============================================================================
+# CONFIGURATION AND HYPERPARAMETERS
+# =============================================================================
+
 TEST_MODE = True
 
 SEED = 42
@@ -56,6 +73,11 @@ if TEST_MODE:
     print("  - Max 500 pairs per client")
     print("Set TEST_MODE = False for full training")
     print("="*80 + "\n")
+
+# =============================================================================
+# PATHS AND DIRECTORY SETUP
+# =============================================================================
+
 ROOT = Path(r"C:\Computer Science\AIMLDL\log-anomaly-detection")
 FEAT_PATH = ROOT / "features"
 DATA_PATH = ROOT / "dataset" / "labeled_data" / "normalized"
@@ -89,6 +111,11 @@ BETA_TEMPLATES = 0.4
 GAMMA_IMBALANCE = 0.3
 
 TEMPERATURE = 0.07
+
+# =============================================================================
+# DATA LOADING
+# =============================================================================
+
 print("Loading features...")
 feat_file = FEAT_PATH / "enhanced_imbalanced_features.pkl"
 with open(feat_file, 'rb') as f:
@@ -104,6 +131,11 @@ with open(split_file, 'rb') as f:
 usable_sources = [s for s in data_dict.keys() if s not in EXCLUDED_SOURCES and data_dict[s]['labels'] is not None]
 print(f"Usable sources: {len(usable_sources)}")
 print(f"Sources: {usable_sources}")
+
+# =============================================================================
+# TEMPLATE EXTRACTION FUNCTIONS
+# =============================================================================
+
 def extract_templates(texts, source_name):
     config = TemplateMinerConfig()
     config.drain_sim_th = 0.4
@@ -122,6 +154,11 @@ def extract_templates(texts, source_name):
             templates[tid] = result["template_mined"]
     
     return np.array(template_ids), templates
+
+# =============================================================================
+# CONTRASTIVE PAIR CREATION
+# =============================================================================
+
 def create_contrastive_pairs(texts, labels, template_ids, source_name, augment=False):
     pairs = []
     pair_labels = []
@@ -171,6 +208,11 @@ def create_contrastive_pairs(texts, labels, template_ids, source_name, augment=F
                 pair_labels.append(minority_label)
     
     return pairs, pair_labels
+
+# =============================================================================
+# DATASET CLASS
+# =============================================================================
+
 class ContrastivePairDataset(Dataset):
     def __init__(self, texts, labels, template_ids, pairs, tokenizer, max_length=64):
         self.texts = texts
@@ -209,6 +251,10 @@ class ContrastivePairDataset(Dataset):
             'template_id2': torch.tensor(tid2, dtype=torch.long),
             'is_similar': torch.tensor(is_similar, dtype=torch.float)
         }
+
+# =============================================================================
+# MODEL ARCHITECTURE
+# =============================================================================
 
 class TemplateAwareAttention(nn.Module):
     def __init__(self, hidden_dim, num_templates):
@@ -254,6 +300,11 @@ class FedLogCLModel(nn.Module):
         
         logits = self.classifier(projected)
         return projected, logits
+
+# =============================================================================
+# LOSS FUNCTIONS
+# =============================================================================
+
 def contrastive_loss(z1, z2, is_similar, temperature=0.07):
     z1 = F.normalize(z1, dim=1)
     z2 = F.normalize(z2, dim=1)
@@ -284,6 +335,11 @@ def template_alignment_loss(z1, z2, tid1, tid2):
     similarity = F.cosine_similarity(z1, z2)
     loss = F.binary_cross_entropy_with_logits(similarity, same_template)
     return loss
+
+# =============================================================================
+# TRAINING AND EVALUATION FUNCTIONS
+# =============================================================================
+
 def train_client(model, dataloader, optimizer, scheduler, scaler, device):
     model.train()
     total_loss = 0
@@ -364,6 +420,11 @@ def evaluate_client(model, dataloader, device):
             pass
     
     return f1, bal_acc, auroc
+
+# =============================================================================
+# FEDERATED LEARNING FUNCTIONS
+# =============================================================================
+
 def federated_averaging(global_model, client_models, client_weights):
     global_dict = global_model.state_dict()
     
@@ -552,6 +613,11 @@ def evaluate_global_model(global_model, test_texts, test_labels, test_template_i
             pass
     
     return f1, bal_acc, auroc, all_embeddings
+
+# =============================================================================
+# LEAVE-ONE-SOURCE-OUT (LOSO) EVALUATION
+# =============================================================================
+
 def run_loso_split(split_idx, split, data_dict, tokenizer, device):
     test_source = split['test_source']
     train_sources = [s for s in split['train_sources'] if s in usable_sources]
@@ -658,6 +724,11 @@ def run_loso_split(split_idx, split, data_dict, tokenizer, device):
         'history': history,
         'embeddings_path': str(embeddings_path)
     }
+
+# =============================================================================
+# MAIN EXECUTION
+# =============================================================================
+
 print("\nInitializing tokenizer...")
 tokenizer = AutoTokenizer.from_pretrained(BERT_MODEL)
 

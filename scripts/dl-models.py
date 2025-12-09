@@ -1,3 +1,7 @@
+# =============================================================================
+# IMPORTS AND DEPENDENCIES
+# =============================================================================
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -15,6 +19,7 @@ from collections import Counter
 
 warnings.filterwarnings('ignore')
 
+# PyTorch imports
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -22,6 +27,7 @@ from torch.utils.data import Dataset, DataLoader, WeightedRandomSampler
 from torch.optim import Adam, AdamW
 from torch.optim.lr_scheduler import ReduceLROnPlateau, CosineAnnealingWarmRestarts
 
+# Scikit-learn imports
 from sklearn.metrics import (
     f1_score, matthews_corrcoef, accuracy_score, confusion_matrix,
     precision_score, recall_score, balanced_accuracy_score, 
@@ -31,6 +37,11 @@ from sklearn.model_selection import StratifiedKFold, train_test_split
 from sklearn.preprocessing import StandardScaler
 
 from imblearn.over_sampling import SMOTE, BorderlineSMOTE, ADASYN
+
+# =============================================================================
+# RANDOM SEED AND REPRODUCIBILITY
+# =============================================================================
+
 SEED = 42
 np.random.seed(SEED)
 torch.manual_seed(SEED)
@@ -46,6 +57,10 @@ if torch.cuda.is_available():
     print(f"CUDA Version: {torch.version.cuda}")
     print(f"Memory: {torch.cuda.get_device_properties(0).total_memory / 1e9:.2f} GB")
 
+# =============================================================================
+# PATHS AND DIRECTORY SETUP
+# =============================================================================
+
 # Make paths portable - use script location as reference
 ROOT = Path(r"C:\Computer Science\AIMLDL\log-anomaly-detection")
 FEAT_PATH = ROOT / "features"
@@ -60,6 +75,10 @@ CACHE_PATH.mkdir(parents=True, exist_ok=True)
 print(f"Root directory: {ROOT}")
 print(f"DL Models will be saved to: {MODELS_PATH}")
 print(f"DL Results will be saved to: {RESULTS_PATH}")
+
+# =============================================================================
+# DATA LOADING AND CONFIGURATION
+# =============================================================================
 
 LABEL_MAP = {0: 'normal', 1: 'anomaly'}
 # Load features
@@ -85,6 +104,11 @@ with open(split_file, 'rb') as f:
 
 print(f"Loaded {len(dat)} sources, {len(splts)} splits")
 print(f"Classes: {num_classes} (Binary Classification)")
+
+# =============================================================================
+# DATASET CLASS
+# =============================================================================
+
 class LogAnomalyDataset(Dataset):
     def __init__(self, X, y):
         self.X = torch.FloatTensor(X)
@@ -119,6 +143,11 @@ class FocalLoss(nn.Module):
             return focal_loss.sum()
         else:
             return focal_loss
+
+# =============================================================================
+# MODEL 1: FOCAL LOSS NEURAL NETWORK
+# =============================================================================
+
 class FocalLossNN(nn.Module):
     def __init__(self, input_dim, hidden_dims=[512, 256, 128], dropout=0.3, num_classes=2):
         super(FocalLossNN, self).__init__()
@@ -714,6 +743,9 @@ def calculate_metrics(y_true, y_pred, y_proba=None):
     
     return metrics
 
+# =============================================================================
+# VAE SPECIFIC FUNCTIONS
+# =============================================================================
 
 def find_optimal_vae_threshold(model, X_val, y_val, device, percentiles=None):
     """Find optimal VAE threshold on validation set

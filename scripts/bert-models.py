@@ -1,3 +1,7 @@
+# =============================================================================
+# IMPORTS AND DEPENDENCIES
+# =============================================================================
+
 import os
 import sys
 import json
@@ -17,6 +21,7 @@ from tqdm import tqdm
 
 warnings.filterwarnings('ignore')
 
+# PyTorch imports
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -40,6 +45,11 @@ from sklearn.metrics import (
 from sklearn.model_selection import StratifiedKFold, train_test_split
 
 from imblearn.over_sampling import SMOTE, BorderlineSMOTE, ADASYN
+
+# =============================================================================
+# RANDOM SEED AND REPRODUCIBILITY
+# =============================================================================
+
 SEED = 42
 np.random.seed(SEED)
 torch.manual_seed(SEED)
@@ -48,6 +58,10 @@ if torch.cuda.is_available():
     torch.cuda.manual_seed_all(SEED)
     torch.backends.cudnn.deterministic = False  # False for better performance
     torch.backends.cudnn.benchmark = True       # True for better performance
+
+# =============================================================================
+# DEVICE CONFIGURATION AND SETUP
+# =============================================================================
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -77,7 +91,10 @@ else:
     print(f"⚠️  CUDA not available. Using CPU (will be very slow!)")
 print(f"{'='*80}\n")
 
-# Paths
+# =============================================================================
+# PATHS AND DIRECTORY SETUP
+# =============================================================================
+
 ROOT = Path(r"C:\Computer Science\AIMLDL\log-anomaly-detection")
 FEAT_PATH = ROOT / "features"
 MODELS_PATH = ROOT / "models" / "bert_models"
@@ -90,6 +107,10 @@ CACHE_PATH.mkdir(parents=True, exist_ok=True)
 
 print(f"Models will be saved to: {MODELS_PATH}")
 print(f"Results will be saved to: {RESULTS_PATH}")
+
+# =============================================================================
+# DATA LOADING AND CONFIGURATION
+# =============================================================================
 
 LABEL_MAP = {0: 'normal', 1: 'anomaly'}
 feat_file = FEAT_PATH / "enhanced_imbalanced_features.pkl"
@@ -114,6 +135,11 @@ with open(split_file, 'rb') as f:
 print(f"Loaded {len(dat)} log sources")
 print(f"Loaded {len(splts)} cross-source splits")
 print(f"Number of classes: {num_classes}")
+
+# =============================================================================
+# BERT MODEL CONFIGURATION
+# =============================================================================
+
 BERT_CONFIG = {
     'max_length': 256,              # FIXED: Increased from 32
     'batch_size': 32,               # FIXED: Reduced from 256 for stability
@@ -169,6 +195,11 @@ print(f"Batch size: {BERT_CONFIG['batch_size']}")
 print(f"Learning rate: {BERT_CONFIG['learning_rate']}")
 print(f"Epochs: {BERT_CONFIG['num_epochs']}")
 print(f"Device: {device}")
+
+# =============================================================================
+# TEXT PREPROCESSING FUNCTIONS
+# =============================================================================
+
 def preprocess_log(text):
     """Preprocess log text to normalize patterns"""
     text = str(text).lower()
@@ -183,6 +214,11 @@ def preprocess_log(text):
     text = re.sub(r'\s+', ' ', text)  # Multiple spaces
     
     return text.strip()
+
+# =============================================================================
+# DATASET CLASSES
+# =============================================================================
+
 class LogDataset(Dataset):
     """Dataset for log anomaly detection with text and optional features"""
     
@@ -254,10 +290,6 @@ class LogDataset(Dataset):
         
         return ' '.join(words)
 
-# =============================================================================
-# LOSS FUNCTIONS
-# =============================================================================
-
 class FocalLoss(nn.Module):
     """Focal Loss for handling class imbalance"""
     
@@ -295,6 +327,11 @@ class LabelSmoothingCrossEntropy(nn.Module):
         nll = F.nll_loss(log_preds, target, reduction='mean')
         
         return self.smoothing * loss / n_classes + (1 - self.smoothing) * nll
+
+# =============================================================================
+# BERT MODEL ARCHITECTURES
+# =============================================================================
+
 class LogBERT(nn.Module):
     """LogBERT: BERT with log-specific adaptations and MLM pretraining"""
     
@@ -564,6 +601,11 @@ class MPNetClassifier(nn.Module):
         logits = self.classifier(pooled_output)
         
         return logits
+
+# =============================================================================
+# UTILITY FUNCTIONS FOR DATA HANDLING
+# =============================================================================
+
 def compute_file_hash(filepath):
     """Compute MD5 hash of file for reproducibility"""
     with open(filepath, 'rb') as f:
@@ -729,6 +771,11 @@ def apply_smote_if_needed(texts, labels, imbalance_ratio):
     except Exception as e:
         print(f"  ⚠️  SMOTE failed: {e}. Using original data.")
         return texts, labels, np.arange(len(texts))
+
+# =============================================================================
+# TRAINING FUNCTIONS
+# =============================================================================
+
 def train_epoch(model, dataloader, optimizer, scheduler, criterion, device, 
                 accumulation_steps=1, gradient_clip=1.0, use_amp=True, scaler=None):
     """Train for one epoch with mixed precision support - FIXED version"""
